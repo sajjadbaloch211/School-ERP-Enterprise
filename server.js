@@ -5,7 +5,6 @@ console.log({
   port: process.env.DB_PORT,
   pass: process.env.DB_PASS ? "FOUND" : "MISSING"
 });
-});
 const express = require('express');
 const mysql = require('mysql2');
 const session = require('express-session');
