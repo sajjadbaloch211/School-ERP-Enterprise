@@ -504,8 +504,8 @@ app.use(session({
     cookie: {
         maxAge: 3600000, // 1 hour
         httpOnly: true, // Prevents client-side JS from reading the cookie
-        secure: process.env.NODE_ENV === 'production', // ✅ SECURITY FIX: Enable in production
-        sameSite: 'strict' // ✅ SECURITY FIX: CSRF protection
+        secure: false,// ✅ SECURITY FIX: Enable in production
+        sameSite: 'lax' // ✅ SECURITY FIX: CSRF protection
     }
 }));
 
