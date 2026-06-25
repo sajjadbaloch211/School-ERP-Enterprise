@@ -1,0 +1,112 @@
+<%- include('../../partials/header') %>
+    <div class="admin-layout animate-fade-in" style="margin-top: 80px;">
+        <%- include('../../partials/sidebar', { active: 'cms' }) %>
+
+            <main class="main-content">
+                <div style="margin-bottom: 2rem;">
+                    <a href="/admin/cms/pages"
+                        style="color: var(--text-muted); text-decoration: none; font-weight: 600;">
+                        <i class="fas fa-arrow-left"></i> Back to Pages
+                    </a>
+                    <h1 style="font-size: 2rem; color: var(--primary); font-weight: 800; margin-top: 1rem;">
+                        Editing: <span style="color: var(--secondary);">
+                            <%= page.title %>
+                        </span>
+                    </h1>
+                </div>
+
+                <!-- Live Preview Link -->
+                <div
+                    style="margin-bottom: 2rem; background: #e0f2fe; border: 1px solid #7dd3fc; padding: 1rem; border-radius: 12px; display: flex; align-items: center; justify-content: space-between;">
+                    <p style="color: #0c4a6e; margin: 0;"><strong>Tip:</strong> Click "Edit" on any section below to
+                        change
+                        text, images, or colors.</p>
+                    <a href="/<%= page.slug %>" target="_blank"
+                        style="background: white; color: #0284c7; padding: 8px 15px; border-radius: 8px; text-decoration: none; font-weight: 700;">
+                        Preview Page <i class="fas fa-external-link-alt"></i>
+                    </a>
+                </div>
+
+                <div class="sections-list" style="display: flex; flex-direction: column; gap: 1.5rem;">
+                    <% sections.forEach((section, index)=> { %>
+                        <div class="card"
+                            style="display: flex; align-items: center; gap: 2rem; padding: 2rem; border-left: 5px solid <%= section.enabled ? 'var(--success)' : '#cbd5e1' %>;">
+                            <div style="font-size: 1.5rem; color: var(--text-muted); font-weight: 800; opacity: 0.3;">
+                                <%= String(index + 1).padStart(2, '0' ) %>
+                            </div>
+
+                            <div style="flex: 1;">
+                                <div style="display: flex; gap: 10px; align-items: center; margin-bottom: 0.5rem;">
+                                    <h3 style="font-weight: 700; margin: 0;">
+                                        <%= section.section_name %>
+                                    </h3>
+                                    <span
+                                        style="background: #f1f5f9; padding: 2px 8px; border-radius: 4px; font-size: 0.7rem; color: var(--text-muted); text-transform: uppercase;">
+                                        <%= section.section_type %>
+                                    </span>
+                                </div>
+                                <p style="color: var(--text-muted); font-size: 0.9rem;">
+                                    <%= section.section_type==='hero' ? 'Main banner with image and text' : '' %>
+                                        <%= section.section_type==='features' ? 'Grid of feature cards/icons' : '' %>
+                                            <%= section.section_type==='gallery' ? 'Photo grid section' : '' %>
+                                                <%= section.section_type==='content' ? 'Standard text block' : '' %>
+                                </p>
+                            </div>
+
+                            <div style="display: flex; gap: 10px;">
+                                <a href="/admin/cms/sections/edit/<%= section.id %>" class="btn-primary"
+                                    style="text-decoration: none;">
+                                    <i class="fas fa-edit"></i> Edit
+                                </a>
+                                <form action="/admin/cms/sections/delete/<%= section.id %>" method="POST"
+                                    onsubmit="return confirm('Are you sure you want to delete this section? This cannot be undone.');">
+                                    <input type="hidden" name="_csrf" value="<%= locals.csrfToken %>">
+                                    <button type="submit" class="btn-danger"
+                                        style="background: #ef4444; color: white; border: none; padding: 10px 15px; border-radius: 8px; cursor: pointer;">
+                                        <i class="fas fa-trash"></i>
+                                    </button>
+                                </form>
+                            </div>
+                        </div>
+                        <% }) %>
+                </div>
+
+                <!-- ADD NEW SECTION -->
+                <div class="card"
+                    style="margin-top: 3rem; padding: 2rem; border: 2px dashed #cbd5e1; background: #f8fafc;">
+                    <h3 style="margin-bottom: 1.5rem; font-weight: 700; color: var(--text-muted); text-align: center;">
+                        Add
+                        New
+                        Content Block</h3>
+                    <form action="/admin/cms/sections/add" method="POST"
+                        style="display: flex; gap: 15px; flex-wrap: wrap; justify-content: center;">
+                        <input type="hidden" name="_csrf" value="<%= locals.csrfToken %>">
+                        <input type="hidden" name="page_id" value="<%= page.id %>">
+
+                        <div class="form-group" style="margin-bottom: 0; flex: 1; min-width: 200px;">
+                            <input type="text" name="section_name" class="form-control"
+                                placeholder="Section Name (e.g. My Hero)" required>
+                        </div>
+
+                        <div class="form-group" style="margin-bottom: 0; flex: 1; min-width: 200px;">
+                            <select name="section_type" class="form-control" required>
+                                <option value="" disabled selected>Select Layout Type...</option>
+                                <option value="hero">Hero / Banner</option>
+                                <option value="features">Features Grid</option>
+                                <option value="stats">Stats Counter</option>
+                                <option value="gallery">Photo Gallery</option>
+                                <option value="content">Text Block</option>
+                            </select>
+                        </div>
+
+                        <button type="submit" class="btn-primary" style="background: var(--success);">
+                            <i class="fas fa-plus"></i> Add Section
+                        </button>
+                    </form>
+                </div>
+            </main>
+
+    </div>
+    </body>
+
+    </html>

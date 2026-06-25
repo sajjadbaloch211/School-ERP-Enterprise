@@ -1,0 +1,133 @@
+<%- include('../partials/header') %>
+
+    <div class="admin-layout animate-fade-in" style="margin-top: 80px;">
+        <!-- Sidebar -->
+        <%- include('../partials/sidebar', { active: 'exams' }) %>
+
+            <main class="main-content">
+                <header style="margin-bottom: 3rem;">
+                    <div>
+                        <a href="/admin/exams"
+                            style="color: var(--text-muted); font-weight: 600; text-decoration: none; display: flex; align-items: center; gap: 5px; margin-bottom: 10px;">
+                            <i class="fas fa-arrow-left"></i> Back to Exams
+                        </a>
+                        <h2 style="font-size: 2rem; font-weight: 800; color: var(--primary);">
+                            <%= exam.exam_name %> Results
+                        </h2>
+                        <p style="color: var(--text-muted);">View student performance by class</p>
+                    </div>
+                </header>
+
+                <% if(viewMode==='overview' ) { %>
+                    <!-- CLASS OVERVIEW GRID (Simplified) -->
+                    <div class="grid"
+                        style="grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 1.5rem;">
+                        <% overview.forEach(cls=> {
+                            const hasResults = cls.results_count > 0;
+                            %>
+                            <a href="/admin/exams/<%= exam.id %>/results?class_id=<%= cls.id %>"
+                                class="card animate-slide-up"
+                                style="text-decoration: none; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 2.5rem; transition: transform 0.2s, box-shadow 0.2s; cursor: pointer;">
+
+                                <div
+                                    style="width: 60px; height: 60px; background: var(--bg-light); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin-bottom: 1rem;">
+                                    <i class="fas fa-users" style="font-size: 1.5rem; color: var(--primary);"></i>
+                                </div>
+
+                                <h3
+                                    style="font-size: 1.5rem; font-weight: 800; color: var(--primary); margin-bottom: 0.5rem;">
+                                    <%= cls.class_name %>
+                                </h3>
+
+                                <% if(hasResults) { %>
+                                    <span
+                                        style="background: #ecfdf5; color: #10b981; padding: 4px 12px; border-radius: 20px; font-size: 0.8rem; font-weight: 700;">
+                                        View Results
+                                    </span>
+                                    <% } else { %>
+                                        <span
+                                            style="background: #f1f5f9; color: var(--text-muted); padding: 4px 12px; border-radius: 20px; font-size: 0.8rem; font-weight: 600;">
+                                            No Results
+                                        </span>
+                                        <% } %>
+                            </a>
+                            <% }); %>
+                    </div>
+
+                    <% } else { %>
+                        <!-- DETAIL VIEW (Results Sheet) -->
+                        <div class="card animate-slide-up">
+                            <div
+                                style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
+                                <div>
+                                    <h3 style="font-weight: 800; color: var(--primary);">
+                                        <%= currentClass.class_name %> (<%= currentClass.section %>)
+                                    </h3>
+                                    <p style="color: var(--text-muted);">Result Sheet</p>
+                                </div>
+                                <a href="/admin/exams/<%= exam.id %>/results" class="btn"
+                                    style="background: #f1f5f9; color: var(--text-main); font-weight: 600;">
+                                    <i class="fas fa-th"></i> View All Classes
+                                </a>
+                            </div>
+
+                            <table class="data-table" style="width: 100%; border-collapse: collapse;">
+                                <thead>
+                                    <tr style="background: var(--bg-light); text-align: left;">
+                                        <th style="padding: 1rem; border-radius: 12px 0 0 12px;">Roll No</th>
+                                        <th style="padding: 1rem;">Student Name</th>
+                                        <th style="padding: 1rem;">Subject</th>
+                                        <th style="padding: 1rem;">Marks Obtained</th>
+                                        <th style="padding: 1rem;">Total Marks</th>
+                                        <th style="padding: 1rem;">Grade</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <% if(results.length===0) { %>
+                                        <tr>
+                                            <td colspan="6"
+                                                style="padding: 3rem; text-align: center; color: var(--text-muted);">
+                                                No results uploaded for this class yet.
+                                            </td>
+                                        </tr>
+                                        <% } %>
+                                            <% results.forEach(res=> { %>
+                                                <% if(res.marks_obtained !==null) { let bg='#f8fafc' ; let
+                                                    color='#64748b' ; if(res.grade==='A+' || res.grade==='A' ) {
+                                                    bg='#ecfdf5' ; color='#10b981' ; } else if(res.grade==='F' ) {
+                                                    bg='#fef2f2' ; color='#ef4444' ; } %>
+                                                    <tr style="border-bottom: 1px solid #f1f5f9;">
+                                                        <td
+                                                            style="padding: 1rem; font-family: monospace; font-weight: 600;">
+                                                            <%= res.roll_no %>
+                                                        </td>
+                                                        <td style="padding: 1rem; font-weight: 700;">
+                                                            <%= res.full_name %>
+                                                        </td>
+                                                        <td style="padding: 1rem;">
+                                                            <%= res.subject %>
+                                                        </td>
+                                                        <td style="padding: 1rem; font-weight: 700;">
+                                                            <%= res.marks_obtained %>
+                                                        </td>
+                                                        <td style="padding: 1rem; color: var(--text-muted);">
+                                                            <%= res.total_marks %>
+                                                        </td>
+                                                        <td style="padding: 1rem;">
+                                                            <span
+                                                                style="background: <%= bg %>; color: <%= color %>; padding: 4px 12px; border-radius: 20px; font-weight: 800; font-size: 0.85rem;">
+                                                                <%= res.grade %>
+                                                            </span>
+                                                        </td>
+                                                    </tr>
+                                                    <% } %>
+                                                        <% }); %>
+                                </tbody>
+                            </table>
+                        </div>
+                        <% } %>
+
+            </main>
+    </div>
+
+    <%- include('../partials/footer') %>

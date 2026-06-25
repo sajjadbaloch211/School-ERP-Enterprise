@@ -1,0 +1,263 @@
+<%- include('../partials/header') %>
+
+    <style>
+        .attendance-selector {
+            display: flex;
+            background: #f1f5f9;
+            padding: 5px;
+            border-radius: 12px;
+            gap: 5px;
+            width: fit-content;
+        }
+
+        .attendance-option {
+            position: relative;
+            flex: 1;
+        }
+
+        .attendance-option input {
+            position: absolute;
+            opacity: 0;
+            cursor: pointer;
+            height: 0;
+            width: 0;
+        }
+
+        .attendance-label {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 8px 15px;
+            border-radius: 10px;
+            cursor: pointer;
+            font-weight: 800;
+            font-size: 0.8rem;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            color: #64748b;
+            min-width: 45px;
+        }
+
+        /* Present */
+        .option-present input:checked~.attendance-label {
+            background: #10b981;
+            color: white;
+            box-shadow: 0 4px 10px rgba(16, 185, 129, 0.3);
+        }
+
+        .option-present:hover .attendance-label {
+            color: #10b981;
+            background: rgba(16, 185, 129, 0.1);
+        }
+
+        /* Absent */
+        .option-absent input:checked~.attendance-label {
+            background: #ef4444;
+            color: white;
+            box-shadow: 0 4px 10px rgba(239, 68, 68, 0.3);
+        }
+
+        .option-absent:hover .attendance-label {
+            color: #ef4444;
+            background: rgba(239, 68, 68, 0.1);
+        }
+
+        /* Late */
+        .option-late input:checked~.attendance-label {
+            background: #f59e0b;
+            color: white;
+            box-shadow: 0 4px 10px rgba(245, 158, 11, 0.3);
+        }
+
+        .option-late:hover .attendance-label {
+            color: #f59e0b;
+            background: rgba(245, 158, 11, 0.1);
+        }
+
+        /* Leave */
+        .option-leave input:checked~.attendance-label {
+            background: #6366f1;
+            color: white;
+            box-shadow: 0 4px 10px rgba(99, 102, 241, 0.3);
+        }
+
+        .option-leave:hover .attendance-label {
+            color: #6366f1;
+            background: rgba(99, 102, 241, 0.1);
+        }
+
+        .stat-pill {
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+    </style>
+
+    <div class="admin-layout animate-fade-in" style="margin-top: 80px;">
+        <!-- Sidebar -->
+        <%- include('../partials/sidebar_teacher', { active: 'attendance' }) %>
+
+            <main class="main-content">
+                <header style="margin-bottom: 2rem;">
+                    <h2 style="font-size: 2rem; font-weight: 800; color: var(--primary);">Smart Attendance Register</h2>
+                    <p style="color: var(--text-muted);">Effortless daily tracking with modern controls</p>
+                </header>
+
+                <!-- Selection Panel -->
+                <div class="card"
+                    style="margin-bottom: 2rem; padding: 1.5rem; background: linear-gradient(135deg, white 0%, #f8fafc 100%);">
+                    <form method="GET" action="/teacher/attendance"
+                        style="display: flex; gap: 1.5rem; align-items: center; flex-wrap: wrap;">
+                        <div style="flex: 1; min-width: 250px;">
+                            <label
+                                style="font-weight: 700; color: var(--primary); margin-bottom: 8px; display: block;">Choose
+                                Class</label>
+                            <select name="class_id" required class="form-control"
+                                style="width: 100%; height: 45px; border-radius: 12px; border: 2px solid #e2e8f0;">
+                                <option value="">-- Select Class --</option>
+                                <% classes.forEach(cls=> { %>
+                                    <option value="<%= cls.id %>" <%=selectedClass==cls.id ? 'selected' : '' %>><%=
+                                            cls.class_name %> - <%= cls.section %>
+                                    </option>
+                                    <% }); %>
+                            </select>
+                        </div>
+                        <div style="width: 200px;">
+                            <label
+                                style="font-weight: 700; color: var(--primary); margin-bottom: 8px; display: block;">Selected
+                                Date</label>
+                            <input type="date" name="date" value="<%= selectedDate %>" class="form-control"
+                                style="width: 100%; height: 45px; border-radius: 12px; border: 2px solid #e2e8f0;">
+                        </div>
+                        <div style="align-self: flex-end;">
+                            <button type="submit" class="btn-primary"
+                                style="height: 45px; padding: 0 30px; border-radius: 12px; font-weight: 700; box-shadow: 0 4px 12px rgba(59, 130, 246, 0.2);">
+                                Fetch Students <i class="fas fa-sync-alt" style="margin-left: 8px;"></i>
+                            </button>
+                        </div>
+                    </form>
+                </div>
+
+                <% if (selectedClass && students.length> 0) { %>
+                    <div class="card animate-slide-up"
+                        style="padding: 0; overflow: hidden; border: none; box-shadow: var(--card-shadow);">
+                        <form action="/teacher/attendance/save" method="POST">
+                            <input type="hidden" name="_csrf"
+                                value="<%= typeof csrfToken !== 'undefined' ? csrfToken : '' %>">
+                            <input type="hidden" name="class_id" value="<%= selectedClass %>">
+                            <input type="hidden" name="date" value="<%= selectedDate %>">
+
+                            <!-- Bulk Actions Header -->
+                            <div
+                                style="background: #f8fafc; padding: 1.5rem; border-bottom: 1px solid #e2e8f0; display: flex; justify-content: space-between; align-items: center;">
+                                <div style="display: flex; gap: 1rem; align-items: center;">
+                                    <span
+                                        style="font-weight: 800; color: var(--primary); text-transform: uppercase; font-size: 0.8rem; letter-spacing: 1px;">Quick
+                                        Mark</span>
+                                    <button type="button" onclick="markAll('present')"
+                                        style="background: white; color: #10b981; border: 2px solid #10b981; padding: 6px 15px; border-radius: 10px; cursor: pointer; font-size: 0.85rem; font-weight: 800; transition: all 0.2s;">
+                                        <i class="fas fa-check"></i> Present All
+                                    </button>
+                                    <button type="button" onclick="markAll('absent')"
+                                        style="background: white; color: #ef4444; border: 2px solid #ef4444; padding: 6px 15px; border-radius: 10px; cursor: pointer; font-size: 0.85rem; font-weight: 800; transition: all 0.2s;">
+                                        <i class="fas fa-times"></i> Absent All
+                                    </button>
+                                </div>
+                                <div class="stat-pill"
+                                    style="background: rgba(59, 130, 246, 0.1); color: var(--accent);">
+                                    <i class="fas fa-users"></i>
+                                    <%= students.length %> Students Ready
+                                </div>
+                            </div>
+
+                            <table class="data-table" style="width: 100%; border-collapse: collapse;">
+                                <thead>
+                                    <tr style="background: #f1f5f9; text-align: left;">
+                                        <th style="padding: 1.2rem; color: #64748b; font-weight: 700; width: 100px;">
+                                            Roll No
+                                        </th>
+                                        <th style="padding: 1.2rem; color: #64748b; font-weight: 700;">Student Details
+                                        </th>
+                                        <th
+                                            style="padding: 1.2rem; color: #64748b; font-weight: 700; text-align: right;">
+                                            Current Status</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <% students.forEach((std, index)=> { %>
+                                        <tr style="border-bottom: 1px solid #f1f5f9; transition: background 0.2s;"
+                                            onmouseover="this.style.background='#f8fafc'"
+                                            onmouseout="this.style.background='transparent'">
+                                            <td style="padding: 1.2rem;">
+                                                <div
+                                                    style="background: #e2e8f0; width: 40px; height: 40px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-weight: 800; color: var(--primary);">
+                                                    <%= std.roll_no %>
+                                                </div>
+                                            </td>
+                                            <td style="padding: 1.2rem;">
+                                                <div
+                                                    style="font-weight: 800; color: var(--primary); font-size: 1.1rem;">
+                                                    <%= std.full_name %>
+                                                </div>
+                                                <div
+                                                    style="font-size: 0.8rem; color: var(--text-muted); margin-top: 2px;">
+                                                    Student ID: #ST-<%= std.id %>
+                                                </div>
+                                            </td>
+                                            <td style="padding: 1.2rem; text-align: right;">
+                                                <input type="hidden" name="student_ids[]" value="<%= std.id %>">
+                                                <div class="attendance-selector" style="display: inline-flex;">
+                                                    <div class="attendance-option option-present">
+                                                        <input type="radio" name="status[<%= index %>]" value="present"
+                                                            class="radio-present" id="p_<%= index %>" <%=(!std.status ||
+                                                            std.status==='present' ) ? 'checked' : '' %>>
+                                                        <label for="p_<%= index %>" class="attendance-label">P</label>
+                                                    </div>
+                                                    <div class="attendance-option option-absent">
+                                                        <input type="radio" name="status[<%= index %>]" value="absent"
+                                                            class="radio-absent" id="a_<%= index %>"
+                                                            <%=(std.status==='absent' ) ? 'checked' : '' %>>
+                                                        <label for="a_<%= index %>" class="attendance-label">A</label>
+                                                    </div>
+                                                    <div class="attendance-option option-late">
+                                                        <input type="radio" name="status[<%= index %>]" value="late"
+                                                            class="radio-late" id="l_<%= index %>"
+                                                            <%=(std.status==='late' ) ? 'checked' : '' %>>
+                                                        <label for="l_<%= index %>" class="attendance-label">L</label>
+                                                    </div>
+                                                    <div class="attendance-option option-leave">
+                                                        <input type="radio" name="status[<%= index %>]" value="leave"
+                                                            class="radio-leave" id="lv_<%= index %>"
+                                                            <%=(std.status==='leave' ) ? 'checked' : '' %>>
+                                                        <label for="lv_<%= index %>" class="attendance-label">LV</label>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                        <% }); %>
+                                </tbody>
+                            </table>
+
+                            <div
+                                style="padding: 2rem; background: #f8fafc; border-top: 1px solid #e2e8f0; text-align: right;">
+                                <button type="submit" class="btn-primary"
+                                    style="padding: 15px 50px; border-radius: 12px; font-weight: 800; font-size: 1.1rem; box-shadow: 0 10px 20px rgba(59, 130, 246, 0.3);">
+                                    <i class="fas fa-save" style="margin-right: 10px;"></i> Finalize Attendance
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                    <% } %>
+            </main>
+    </div>
+
+    <script>
+        function markAll(status) {
+            document.querySelectorAll(`.radio-${status}`).forEach(radio => radio.checked = true);
+        }
+    </script>
+
+    <%- include('../partials/footer') %>

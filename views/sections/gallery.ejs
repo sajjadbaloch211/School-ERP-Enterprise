@@ -1,0 +1,74 @@
+<!-- Gallery Section Template -->
+<section class="gallery-section section">
+    <div class="container">
+        <% if (content.title) { %>
+            <h2 class="section-title">
+                <%= content.title %>
+            </h2>
+            <% } %>
+                <% if (content.subtitle) { %>
+                    <p class="section-subtitle">
+                        <%= content.subtitle %>
+                    </p>
+                    <% } %>
+
+                        <div class="gallery-grid">
+                            <% (content.images || []).forEach(image=> { %>
+                                <div class="gallery-item">
+                                    <img src="<%= image.url %>" alt="<%= image.caption || '' %>">
+                                    <% if (image.caption) { %>
+                                        <div class="gallery-caption">
+                                            <%= image.caption %>
+                                        </div>
+                                        <% } %>
+                                </div>
+                                <% }); %>
+                        </div>
+    </div>
+</section>
+
+<style>
+    .gallery-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+        gap: 20px;
+        margin-top: 40px;
+    }
+
+    .gallery-item {
+        position: relative;
+        overflow: hidden;
+        border-radius: 12px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        cursor: pointer;
+        transition: transform 0.3s ease;
+    }
+
+    .gallery-item:hover {
+        transform: scale(1.05);
+    }
+
+    .gallery-item img {
+        width: 100%;
+        height: 250px;
+        object-fit: cover;
+        display: block;
+    }
+
+    .gallery-caption {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        background: linear-gradient(to top, rgba(0, 0, 0, 0.8), transparent);
+        color: white;
+        padding: 20px 15px 15px;
+        font-size: 14px;
+        transform: translateY(100%);
+        transition: transform 0.3s ease;
+    }
+
+    .gallery-item:hover .gallery-caption {
+        transform: translateY(0);
+    }
+</style>

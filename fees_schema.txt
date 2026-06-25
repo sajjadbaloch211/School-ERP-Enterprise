@@ -1,0 +1,20 @@
+CREATE TABLE `fees` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `student_id` int(11) NOT NULL,
+  `amount` decimal(10,2) NOT NULL,
+  `month` varchar(191) NOT NULL,
+  `year` int(4) NOT NULL,
+  `status` enum('paid','unpaid','partially_paid') DEFAULT 'unpaid',
+  `date_paid` datetime(3) DEFAULT NULL,
+  `previous_dues` decimal(10,2) DEFAULT 0.00,
+  `total_amount` decimal(10,2) DEFAULT 0.00,
+  `paid_amount` decimal(10,2) DEFAULT 0.00,
+  `remaining_amount` decimal(10,2) DEFAULT 0.00,
+  `voucher_id` int(11) DEFAULT NULL,
+  `carried_due` decimal(10,2) DEFAULT 0.00,
+  `line_total` decimal(10,2) DEFAULT 0.00,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `student_month_year` (`student_id`,`month`,`year`),
+  UNIQUE KEY `unique_voucher_month` (`voucher_id`,`month`,`year`),
+  CONSTRAINT `fees_student_id_fkey` FOREIGN KEY (`student_id`) REFERENCES `students` (`id`) ON UPDATE CASCADE
+) ENGINE=InnoDB AUTO_INCREMENT=80 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci

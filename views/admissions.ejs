@@ -1,0 +1,127 @@
+<%- include('partials/frontend_header') %>
+
+    <!-- Hero Banner -->
+    <section class="hero-section" style="min-height: 52vh; background-image: url('/images/school-bg.jpg');">
+        <div class="hero-overlay"></div>
+        <div class="container hero-content text-center animate-up">
+            <span class="hero-badge"><i class="fas fa-graduation-cap"></i> Admissions Open 2026-27</span>
+            <h1 class="hero-title">Admission <span style="color: var(--accent-color);">Process</span></h1>
+            <p class="hero-lead mx-auto" style="max-width: 600px;">
+                Join our community of over 1,500 students. Follow these simple steps to begin your journey with us.
+            </p>
+            <a href="#steps" class="btn btn-primary btn-lg px-5 py-3 rounded-pill fw-bold">
+                View Steps <i class="fas fa-arrow-down ms-2"></i>
+            </a>
+        </div>
+    </section>
+
+    <!-- Timeline Section -->
+    <section id="steps" class="section-padding" style="background: var(--bg-light);">
+        <div class="container">
+            <div class="text-center mb-5">
+                <span class="section-label">How to Apply</span>
+                <h2 class="section-title">Admission Steps</h2>
+                <p class="section-desc">Our streamlined process makes it easy to join our school family.</p>
+            </div>
+            <div class="row justify-content-center g-5">
+                <div class="col-lg-7">
+                    <!-- Step 1 -->
+                    <div class="d-flex gap-4 mb-5 animate-up">
+                        <div class="flex-shrink-0">
+                            <div class="d-flex align-items-center justify-content-center rounded-circle text-white shadow-lg"
+                                style="width:64px;height:64px;background:var(--primary-color);font-size:1.4rem;font-weight:800;">1</div>
+                        </div>
+                        <div class="bg-white p-4 rounded-4 shadow-sm flex-grow-1 border-start border-4" style="border-color: var(--primary-color) !important;">
+                            <h4 class="fw-bold mb-2" style="color: var(--primary-color);">Online Inquiry / Visit</h4>
+                            <p class="text-muted mb-0">Fill out our online inquiry form or visit the school campus to collect the prospectus and admission form. Our admission office is open Mon–Sat, 9AM–2PM.</p>
+                        </div>
+                    </div>
+                    <!-- Step 2 -->
+                    <div class="d-flex gap-4 mb-5 animate-up delay-100">
+                        <div class="flex-shrink-0">
+                            <div class="d-flex align-items-center justify-content-center rounded-circle text-white shadow-lg"
+                                style="width:64px;height:64px;background:var(--secondary-color);font-size:1.4rem;font-weight:800;">2</div>
+                        </div>
+                        <div class="bg-white p-4 rounded-4 shadow-sm flex-grow-1 border-start border-4" style="border-color: var(--secondary-color) !important;">
+                            <h4 class="fw-bold mb-2" style="color: var(--secondary-color);">Assessment Test</h4>
+                            <p class="text-muted mb-0">Candidates (Grade 3 onwards) will undergo a basic competency test in Mathematics, English, and General Science to help place them in the right environment.</p>
+                        </div>
+                    </div>
+                    <!-- Step 3 -->
+                    <div class="d-flex gap-4 mb-5 animate-up delay-200">
+                        <div class="flex-shrink-0">
+                            <div class="d-flex align-items-center justify-content-center rounded-circle text-white shadow-lg"
+                                style="width:64px;height:64px;background:#7c3aed;font-size:1.4rem;font-weight:800;">3</div>
+                        </div>
+                        <div class="bg-white p-4 rounded-4 shadow-sm flex-grow-1 border-start border-4" style="border-color: #7c3aed !important;">
+                            <h4 class="fw-bold mb-2" style="color: #7c3aed;">Interview</h4>
+                            <p class="text-muted mb-0">A formal interactive session with the Principal and parents to discuss educational goals, school policies, and the student's aspirations.</p>
+                        </div>
+                    </div>
+                    <!-- Step 4 -->
+                    <div class="d-flex gap-4 animate-up delay-300">
+                        <div class="flex-shrink-0">
+                            <div class="d-flex align-items-center justify-content-center rounded-circle text-white shadow-lg"
+                                style="width:64px;height:64px;background:#059669;font-size:1.4rem;font-weight:800;"><i class="fas fa-check"></i></div>
+                        </div>
+                        <div class="bg-white p-4 rounded-4 shadow-sm flex-grow-1 border-start border-4" style="border-color: #059669 !important;">
+                            <h4 class="fw-bold mb-2" style="color: #059669;">Documentation & Fee</h4>
+                            <p class="text-muted mb-0">Upon selection, complete the admission file with required documents and deposit the admission fee to secure your seat.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Sidebar -->
+                <div class="col-lg-5">
+                    <div class="bg-white rounded-4 shadow-lg p-5 sticky-top animate-up" style="top: 100px;">
+                        <h4 class="fw-bold mb-4" style="color: var(--primary-color);">
+                            <i class="fas fa-folder-open me-2"></i> Required Documents
+                        </h4>
+                        <ul class="list-unstyled">
+                            <% const docs = [
+                                'Birth Certificate (Copy)',
+                                'Previous School Leaving Certificate',
+                                '4 Recent Passport Size Photos',
+                                'CNIC Copy of Parents / Guardian',
+                                'Previous Year Report Card / Marksheet'
+                            ]; docs.forEach(d => { %>
+                            <li class="mb-3 d-flex gap-3">
+                                <div class="d-flex align-items-center justify-content-center rounded-circle flex-shrink-0"
+                                    style="width:32px;height:32px;background:rgba(5,150,105,0.1);">
+                                    <i class="fas fa-check text-success" style="font-size:0.8rem;"></i>
+                                </div>
+                                <span class="text-muted"><%= d %></span>
+                            </li>
+                            <% }); %>
+                        </ul>
+                        <hr class="my-4">
+                        <div class="p-4 rounded-3 mb-4" style="background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));">
+                            <p class="text-white fw-bold mb-1"><i class="fas fa-clock me-2"></i> Admission Hours</p>
+                            <p class="text-white-50 mb-0 small">Monday – Saturday: 9:00 AM – 2:00 PM</p>
+                        </div>
+                        <a href="/contact" class="btn btn-primary w-100 rounded-pill py-3 fw-bold">
+                            <i class="fas fa-phone-alt me-2"></i> Contact Admissions Office
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section class="section-padding" style="background: linear-gradient(135deg, var(--primary-color) 0%, #312e81 100%);">
+        <div class="container text-center text-white">
+            <h2 class="fw-bold mb-3" style="font-size: 2.5rem;">Ready to Apply?</h2>
+            <p class="mb-4 text-white-50 fs-5">Seats are limited. Contact us today to secure your child's future.</p>
+            <div class="d-flex gap-3 justify-content-center flex-wrap">
+                <a href="/contact" class="btn btn-light btn-lg rounded-pill fw-bold px-5">
+                    <i class="fas fa-envelope me-2"></i> Contact Us
+                </a>
+                <a href="/fee-structure" class="btn btn-outline-light btn-lg rounded-pill fw-bold px-5">
+                    <i class="fas fa-file-invoice-dollar me-2"></i> View Fee Structure
+                </a>
+            </div>
+        </div>
+    </section>
+
+<%- include('partials/frontend_footer') %>

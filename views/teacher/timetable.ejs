@@ -1,0 +1,89 @@
+<%- include('../partials/header') %>
+
+    <div class="admin-layout animate-fade-in" style="margin-top: 80px;">
+        <!-- Sidebar -->
+        <aside class="sidebar glass" style="margin: 20px; border-radius: 24px;">
+            <div style="margin-bottom: 3rem; text-align: center;">
+                <div
+                    style="width: 80px; height: 80px; background: #fef3c7; border-radius: 20px; display: flex; align-items: center; justify-content: center; margin: 0 auto 1rem; border: 3px solid var(--warning);">
+                    <i class="fas fa-chalkboard-teacher" style="font-size: 2rem; color: #d97706;"></i>
+                </div>
+                <h3 style="color: var(--primary); font-weight: 800;">Teacher Portal</h3>
+                <p style="font-size: 0.8rem; color: var(--text-muted);">
+                    <%= teacherData ? teacherData.subject : 'Faculty' %> Instructor
+                </p>
+            </div>
+            <ul class="sidebar-nav">
+                <li><a href="/teacher/dashboard"><i class="fas fa-home"></i> Home</a></li>
+                <li><a href="/teacher/attendance"><i class="fas fa-tasks"></i> Mark Attendance</a></li>
+                <li><a href="/teacher/exams"><i class="fas fa-clipboard-list"></i> Exam Results</a></li>
+                <li><a href="/teacher/timetable" class="active"><i class="fas fa-calendar-alt"></i> My Timetable</a>
+                </li>
+                <li><a href="/library"><i class="fas fa-book-reader"></i> Digital Library</a></li>
+                <li style="margin-top: 2rem;"><a href="/logout" style="color: var(--danger);"><i
+                            class="fas fa-sign-out-alt"></i> Logout</a></li>
+            </ul>
+        </aside>
+
+        <main class="main-content">
+            <header style="margin-bottom: 2.5rem;">
+                <h2 style="font-size: 2.2rem; font-weight: 800; color: var(--primary);">My Timetable</h2>
+                <p style="color: var(--text-muted);">Weekly schedule for assigned classes</p>
+            </header>
+
+            <div class="card animate-slide-up" style="padding: 1rem;">
+                <table class="data-table" style="width: 100%; border-collapse: collapse;">
+                    <thead>
+                        <tr style="background: var(--bg-light); text-align: left;">
+                            <th style="padding: 1.2rem; border-radius: 15px 0 0 15px;">Day</th>
+                            <th style="padding: 1.2rem;">Class</th>
+                            <th style="padding: 1.2rem;">Time Slot</th>
+                            <th style="padding: 1.2rem; border-radius: 0 15px 15px 0;">Subject</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <% if(timetable.length===0) { %>
+                            <tr>
+                                <td colspan="4" style="padding: 4rem; text-align: center; color: var(--text-muted);">
+                                    <div style="font-size: 3rem; margin-bottom: 1rem; opacity: 0.3;"><i
+                                            class="fas fa-calendar-times"></i></div>
+                                    No classes assigned to you yet.
+                                </td>
+                            </tr>
+                            <% } %>
+                                <% timetable.forEach(row=> { %>
+                                    <tr style="border-bottom: 1px solid #f1f5f9; transition: all 0.3s ease;"
+                                        class="hover-row">
+                                        <td style="padding: 1.2rem;">
+                                            <span
+                                                style="background: var(--primary); color: white; padding: 5px 12px; border-radius: 20px; font-size: 0.8rem; font-weight: 700; text-transform: uppercase;">
+                                                <%= row.day %>
+                                            </span>
+                                        </td>
+                                        <td style="padding: 1.2rem; font-weight: 700; color: var(--primary);">
+                                            <%= row.class_name %> - <%= row.section %>
+                                        </td>
+                                        <td style="padding: 1.2rem; font-weight: 600;">
+                                            <i class="far fa-clock"
+                                                style="margin-right: 5px; color: var(--accent);"></i>
+                                            <%= row.start_time %> - <%= row.end_time %>
+                                        </td>
+                                        <td style="padding: 1.2rem; font-weight: 600;">
+                                            <%= row.subject %>
+                                        </td>
+                                    </tr>
+                                    <% }); %>
+                    </tbody>
+                </table>
+            </div>
+        </main>
+    </div>
+
+    <style>
+        .hover-row:hover {
+            background-color: #f8fafc;
+            transform: translateX(5px);
+        }
+    </style>
+
+    <%- include('../partials/footer') %>

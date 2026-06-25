@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>
+        <%= page && page.title ? page.title : (settings && settings.site_title ? settings.site_title
+            : 'Waqar Public Higher Secondary School' ) %>
+    </title>
+    <link rel="stylesheet" href="/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+        :root {
+            --primary: <%=theme.colors.primary %>;
+            --secondary: <%=theme.colors.secondary %>;
+            --accent: <%=theme.colors.accent %>;
+        }
+    </style>
+</head>
+
+<body>
+    <nav id="navbar" class="glass">
+        <a href="/" class="logo" style="display: flex; align-items: center; gap: 15px;">
+            <img src="<%= settings.site_logo || '/images/waqar.png' %>" alt="School Logo"
+                style="height: 50px; width: auto; border-radius: 8px;">
+            <h1 style="font-size: 1.1rem; line-height: 1.2; color: var(--primary);">
+                <%= settings.site_name || 'Waqar Public Higher Secondary School' %>
+            </h1>
+        </a>
+        <ul class="nav-links">
+            <% if (headerMenu && headerMenu.length> 0) { %>
+                <% headerMenu.forEach(item=> { %>
+                    <li><a href="<%= item.url %>">
+                            <%= item.label %>
+                        </a></li>
+                    <% }) %>
+                        <% } else { %>
+                            <!-- Fallback menu if none in database -->
+                            <li><a href="/">Home</a></li>
+                            <li><a href="/about">About</a></li>
+                            <li><a href="/admissions">Admissions</a></li>
+                            <li><a href="/fee-structure">Fees</a></li>
+                            <li><a href="/contact">Contact</a></li>
+                            <% } %>
+
+                                <% if(typeof user !=='undefined' && user) { %>
+                                    <li><a href="/<%= user.role %>/dashboard" class="btn-portal">Portal</a></li>
+                                    <% } else { %>
+                                        <li><a href="/login" class="btn-portal">Portal Login</a></li>
+                                        <% } %>
+        </ul>
+
+        <button class="mobile-header-btn" id="sidebarToggle" style="display: none;">
+            <i class="fas fa-bars"></i>
+        </button>
+    </nav>
+
+    <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+    <script>
+        window.addEventListener('scroll', () => {
+            const nav = document.getElementById('navbar');
+            if (window.scrollY > 50) nav.classList.add('scrolled');
+            else nav.classList.remove('scrolled');
+        });
+    </script>

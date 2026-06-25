@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Brand Identity - CMS</title>
+    <link rel="stylesheet" href="/style.css">
+    <link rel="stylesheet" href="/cms_styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        .brand-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 30px;
+            margin-top: 30px;
+        }
+
+        .identity-card {
+            background: white;
+            border-radius: 24px;
+            padding: 35px;
+            box-shadow: 0 10px 40px -10px rgba(0, 0, 0, 0.05);
+            border: 1.5px solid #f1f5f9;
+            transition: all 0.3s ease;
+        }
+
+        .identity-card:hover {
+            transform: translateY(-5px);
+            border-color: #3b82f6;
+        }
+
+        .swatch-group {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            padding: 15px;
+            background: #f8fafc;
+            border-radius: 16px;
+            margin-bottom: 20px;
+            border: 1.5px solid #f1f5f9;
+        }
+
+        .swatch-picker {
+            width: 60px;
+            height: 60px;
+            border: none;
+            border-radius: 12px;
+            cursor: pointer;
+            padding: 0;
+            overflow: hidden;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .identity-label {
+            font-size: 0.95rem;
+            font-weight: 800;
+            color: #334155;
+            margin-bottom: 5px;
+            display: block;
+        }
+
+        .identity-desc {
+            font-size: 0.8rem;
+            color: #94a3b8;
+        }
+
+        .premium-select {
+            width: 100%;
+            padding: 14px 18px;
+            border: 2px solid #f1f5f9;
+            border-radius: 14px;
+            font-size: 1rem;
+            background: #f8fafc;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .premium-select:focus {
+            border-color: #3b82f6;
+            background: white;
+            outline: none;
+        }
+    </style>
+</head>
+
+<body style="background: #f8fafc;">
+    <div class="admin-layout" style="margin-top: 80px;">
+        <%- include('../../partials/sidebar') %>
+            <main class="main-content">
+                <div class="cms-dashboard-container">
+
+                    <header style="margin-bottom: 40px;">
+                        <h1 style="font-size: 2.5rem; font-weight: 900; color: #0f172a; letter-spacing: -1px;">
+                            <i class="fas fa-palette" style="color: #6366f1;"></i> Brand Identity
+                        </h1>
+                        <p style="color: #64748b; font-size: 1.1rem; margin-top: 5px;">Define the visual language and
+                            aesthetic profile of your school.</p>
+                    </header>
+
+                    <form action="/admin/cms/theme/update" method="POST">
+                        <input type="hidden" name="_csrf" value="<%= locals.csrfToken %>">
+
+                        <div class="brand-grid">
+                            <!-- Colors section -->
+                            <div class="identity-card animate-step">
+                                <h3
+                                    style="margin-bottom: 25px; display: flex; align-items: center; gap: 12px; color: #1e293b;">
+                                    <i class="fas fa-droplet" style="color: #3b82f6;"></i> Color Palette
+                                </h3>
+
+                                <div class="swatch-group">
+                                    <input type="color" name="colors[primary]" class="swatch-picker"
+                                        value="<%= theme ? theme.colors.primary : '#1e3a8a' %>">
+                                    <div>
+                                        <label class="identity-label">Primary Brand</label>
+                                        <span class="identity-desc">Main surface and institutional color.</span>
+                                    </div>
+                                </div>
+
+                                <div class="swatch-group">
+                                    <input type="color" name="colors[secondary]" class="swatch-picker"
+                                        value="<%= theme ? theme.colors.secondary : '#3b82f6' %>">
+                                    <div>
+                                        <label class="identity-label">Secondary Action</label>
+                                        <span class="identity-desc">Highlight and interaction color.</span>
+                                    </div>
+                                </div>
+
+                                <div class="swatch-group">
+                                    <input type="color" name="colors[accent]" class="swatch-picker"
+                                        value="<%= theme ? theme.colors.accent : '#60a5fa' %>">
+                                    <div>
+                                        <label class="identity-label">Soft Accent</label>
+                                        <span class="identity-desc">Subtle details and focus elements.</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Typography section -->
+                            <div class="identity-card animate-step" style="animation-delay: 0.1s;">
+                                <h3
+                                    style="margin-bottom: 25px; display: flex; align-items: center; gap: 12px; color: #1e293b;">
+                                    <i class="fas fa-font-case" style="color: #6366f1;"></i> Typography
+                                </h3>
+
+                                <div style="margin-bottom: 25px;">
+                                    <label class="identity-label">Heading Typeface</label>
+                                    <select name="fonts[heading]" class="premium-select">
+                                        <option value="Inter, sans-serif" <%=theme &&
+                                            theme.fonts.heading==='Inter, sans-serif' ? 'selected' : '' %>>Inter
+                                            (Dynamic & Modern)</option>
+                                        <option value="Roboto, sans-serif" <%=theme &&
+                                            theme.fonts.heading==='Roboto, sans-serif' ? 'selected' : '' %>>Roboto
+                                            (Solid & Reliable)</option>
+                                        <option value="Outfit, sans-serif" <%=theme &&
+                                            theme.fonts.heading==='Outfit, sans-serif' ? 'selected' : '' %>>Outfit
+                                            (Premium & Soft)</option>
+                                        <option value="Playfair Display, serif" <%=theme &&
+                                            theme.fonts.heading==='Playfair Display, serif' ? 'selected' : '' %>
+                                            >Playfair (Elegant & Academic)</option>
+                                    </select>
+                                </div>
+
+                                <div>
+                                    <label class="identity-label">Body Text Typeface</label>
+                                    <select name="fonts[body]" class="premium-select">
+                                        <option value="Inter, sans-serif" <%=theme &&
+                                            theme.fonts.body==='Inter, sans-serif' ? 'selected' : '' %>>Inter</option>
+                                        <option value="Roboto, sans-serif" <%=theme &&
+                                            theme.fonts.body==='Roboto, sans-serif' ? 'selected' : '' %>>Roboto</option>
+                                        <option value="Georgia, serif" <%=theme && theme.fonts.body==='Georgia, serif'
+                                            ? 'selected' : '' %>>Georgia</option>
+                                        <option value="Source Sans Pro, sans-serif" <%=theme &&
+                                            theme.fonts.body==='Source Sans Pro, sans-serif' ? 'selected' : '' %>>Source
+                                            Sans</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <!-- Components Design -->
+                            <div class="identity-card animate-step" style="animation-delay: 0.2s;">
+                                <h3
+                                    style="margin-bottom: 25px; display: flex; align-items: center; gap: 12px; color: #1e293b;">
+                                    <i class="fas fa-cubes-stacked" style="color: #f59e0b;"></i> UI Components
+                                </h3>
+
+                                <div style="margin-bottom: 25px;">
+                                    <label class="identity-label">Global Border Radius</label>
+                                    <div style="display: flex; gap: 10px;">
+                                        <input type="text" name="button_styles[borderRadius]" class="premium-select"
+                                            style="flex: 1;"
+                                            value="<%= theme ? theme.button_styles.borderRadius : '12px' %>">
+                                        <div
+                                            style="padding: 14px; background: #f1f5f9; border-radius: 12px; font-weight: bold; color: #64748b;">
+                                            px</div>
+                                    </div>
+                                </div>
+
+                                <div>
+                                    <label class="identity-label">Elevation Depth (Shadows)</label>
+                                    <select name="button_styles[shadow]" class="premium-select">
+                                        <option value="none">Flat (None)</option>
+                                        <option value="0 2px 10px rgba(0,0,0,0.05)" <%=theme &&
+                                            theme.button_styles.shadow.includes('2px') ? 'selected' : '' %>>Subtle
+                                        </option>
+                                        <option value="0 10px 30px rgba(0,0,0,0.08)" <%=theme &&
+                                            theme.button_styles.shadow.includes('10px') ? 'selected' : '' %>>Balanced
+                                        </option>
+                                        <option value="0 20px 50px rgba(0,0,0,0.12)" <%=theme &&
+                                            theme.button_styles.shadow.includes('20px') ? 'selected' : '' %>>Premium
+                                            Float</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div style="margin-top: 50px; text-align: center;">
+                            <button type="submit" class="cms-btn cms-btn-primary"
+                                style="padding: 20px 60px; font-size: 1.25rem; border-radius: 50px; box-shadow: 0 20px 40px rgba(59, 130, 246, 0.3);">
+                                <i class="fas fa-sparkles"></i> COMMIT BRAND UPDATES
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </main>
+    </div>
+</body>
+
+</html>

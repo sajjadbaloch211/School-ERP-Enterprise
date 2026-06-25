@@ -1,0 +1,387 @@
+<%- include('../partials/header') %>
+
+    <main class="main-content">
+        <div class="container">
+            <header
+                style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 3rem; background: white; padding: 2rem; border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.05);">
+                <div>
+                    <h1 style="font-size: 2.2rem; font-weight: 900; color: var(--primary); margin: 0;">Master Ledger
+                        Center</h1>
+                    <p style="color: var(--text-muted); font-weight: 600; margin-top: 5px;">One-Voucher Policy: Managing
+                        school revenue through master student ledgers</p>
+                </div>
+                <div style="display: flex; gap: 15px;">
+                    <a href="/admin/dashboard" class="btn"
+                        style="background: #f1f5f9; color: var(--text-main); padding: 12px 20px; border-radius: 12px; font-weight: 700; display: flex; align-items: center; gap: 10px; text-decoration: none;">
+                        <i class="fas fa-arrow-left"></i> Back
+                    </a>
+                    <button class="btn-primary" onclick="document.getElementById('addFeeModal').style.display='flex'"
+                        style="padding: 12px 25px; border-radius: 12px; font-weight: 700; display: flex; align-items: center; gap: 10px; background: var(--text-main); box-shadow: 0 10px 20px rgba(0,0,0, 0.2);">
+                        <i class="fas fa-plus-circle"></i> Add Fee
+                    </button>
+                    <button class="btn-primary" onclick="document.getElementById('generateModal').style.display='flex'"
+                        style="padding: 12px 25px; border-radius: 12px; font-weight: 700; display: flex; align-items: center; gap: 10px; box-shadow: 0 10px 20px rgba(59, 130, 246, 0.2);">
+                        <i class="fas fa-magic"></i> Sync Monthly Fees
+                    </button>
+                    <a href="/admin/fees/export/excel" class="btn"
+                        style="background: #10b981; color: white; padding: 12px 25px; border-radius: 12px; font-weight: 700; display: flex; align-items: center; gap: 10px; text-decoration: none; border: none; cursor: pointer;">
+                        <i class="fas fa-file-excel"></i> Export Excel
+                    </a>
+                    <button onclick="window.print()" class="btn"
+                        style="background: #f1f5f9; color: var(--text-main); padding: 12px 25px; border-radius: 12px; font-weight: 700; display: flex; align-items: center; gap: 10px; border: none; cursor: pointer;">
+                        <i class="fas fa-print"></i> Annual Report
+                    </button>
+                </div>
+            </header>
+
+            <!-- Stats Overview (Voucher-Based) -->
+            <% const totalReceivable=vouchers.reduce((sum, v)=> sum + parseFloat(v.total_charged), 0);
+                const totalCollected = vouchers.reduce((sum, v) => sum + parseFloat(v.total_paid), 0);
+                const totalBalance = vouchers.reduce((sum, v) => sum + parseFloat(v.remaining_balance), 0);
+                %>
+                <div class="grid" style="grid-template-columns: repeat(3, 1fr); gap: 2rem; margin-bottom: 3rem;">
+                    <div class="card glass"
+                        style="padding: 2rem; border-radius: 20px; border-left: 6px solid var(--primary);">
+                        <p
+                            style="color: var(--text-muted); font-weight: 700; font-size: 0.8rem; text-transform: uppercase;">
+                            Annual Receivable</p>
+                        <h2 style="font-size: 2rem; font-weight: 900; color: var(--primary);">RS <%=
+                                totalReceivable.toLocaleString() %>
+                        </h2>
+                    </div>
+                    <div class="card glass" style="padding: 2rem; border-radius: 20px; border-left: 6px solid #10b981;">
+                        <p style="color: #10b981; font-weight: 700; font-size: 0.8rem; text-transform: uppercase;">Total
+                            Collected</p>
+                        <h2 style="font-size: 2rem; font-weight: 900; color: #10b981;">RS <%=
+                                totalCollected.toLocaleString() %>
+                        </h2>
+                    </div>
+                    <div class="card glass" style="padding: 2rem; border-radius: 20px; border-left: 6px solid #ef4444;">
+                        <p style="color: #ef4444; font-weight: 700; font-size: 0.8rem; text-transform: uppercase;">
+                            Current Dues Balance</p>
+                        <h2 style="font-size: 2rem; font-weight: 900; color: #ef4444;">RS <%=
+                                totalBalance.toLocaleString() %>
+                        </h2>
+                    </div>
+                </div>
+
+                <div class="card"
+                    style="padding: 0; border-radius: 20px; overflow: hidden; border: none; box-shadow: 0 10px 30px rgba(0,0,0,0.05);">
+                    <div
+                        style="background: white; padding: 1.5rem 2rem; border-bottom: 1px solid #f1f5f9; display: flex; justify-content: space-between; align-items: center;">
+                        <h3 style="margin: 0; font-weight: 800; color: var(--text-main);"><i class="fas fa-book-open"
+                                style="color: var(--primary); margin-right: 10px;"></i> Master Voucher Ledger</h3>
+
+                        <!-- Search Bar -->
+                        <div style="position: relative; width: 350px;">
+                            <i class="fas fa-search"
+                                style="position: absolute; left: 15px; top: 50%; transform: translateY(-50%); color: var(--text-muted);"></i>
+                            <input type="text" id="studentSearch" placeholder="Search by name, ID, class, or year..."
+                                style="width: 100%; padding: 10px 15px 10px 45px; border-radius: 12px; border: 1px solid #e2e8f0; background: #f8fafc; font-weight: 600;"
+                                onkeyup="filterStudents()">
+                        </div>
+                    </div>
+                    <div style="overflow-x: auto;">
+                        <table style="width: 100%; border-collapse: collapse;">
+                            <thead>
+                                <tr style="background: #f8fafc; text-align: left;">
+                                    <th
+                                        style="padding: 1.2rem 2rem; color: var(--text-muted); font-size: 0.75rem; text-transform: uppercase; font-weight: 800;">
+                                        Student / Master ID</th>
+                                    <% if (typeof isSuperAdmin !=='undefined' && isSuperAdmin) { %>
+                                        <th
+                                            style="padding: 1.2rem 2rem; color: var(--text-muted); font-size: 0.75rem; text-transform: uppercase; font-weight: 800;">
+                                            Campus</th>
+                                        <% } %>
+                                            <th
+                                                style="padding: 1.2rem 2rem; color: var(--text-muted); font-size: 0.75rem; text-transform: uppercase; font-weight: 800;">
+                                                Year</th>
+                                            <th
+                                                style="padding: 1.2rem 2rem; color: var(--text-muted); font-size: 0.75rem; text-transform: uppercase; font-weight: 800;">
+                                                Annual Total</th>
+                                            <th
+                                                style="padding: 1.2rem 2rem; color: var(--text-muted); font-size: 0.75rem; text-transform: uppercase; font-weight: 800;">
+                                                Amount Paid</th>
+                                            <th
+                                                style="padding: 1.2rem 2rem; color: var(--text-muted); font-size: 0.75rem; text-transform: uppercase; font-weight: 800;">
+                                                Balance Due</th>
+                                            <th
+                                                style="padding: 1.2rem 2rem; color: var(--text-muted); font-size: 0.75rem; text-transform: uppercase; font-weight: 800;">
+                                                Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <% vouchers.forEach(v=> { %>
+                                    <tr style="border-bottom: 1px solid #f1f5f9; transition: all 0.3s;"
+                                        onmouseover="this.style.background='#fcfdfe'"
+                                        onmouseout="this.style.background='white'">
+                                        <td style="padding: 1.5rem 2rem;">
+                                            <div style="display: flex; align-items: center; gap: 15px;">
+                                                <div
+                                                    style="width: 40px; height: 40px; background: #f1f5f9; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-weight: 900; color: var(--primary);">
+                                                    #<%= v.id %>
+                                                </div>
+                                                <div>
+                                                    <p style="font-weight: 800; color: var(--text-main); margin: 0;">
+                                                        <%= v.full_name %>
+                                                    </p>
+                                                    <p
+                                                        style="font-size: 0.7rem; color: var(--text-muted); margin: 0; font-weight: 700;">
+                                                        <%= v.class_name %> - <%= v.section %>
+                                                    </p>
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <% if (typeof isSuperAdmin !=='undefined' && isSuperAdmin) { %>
+                                            <td style="padding: 1.5rem 2rem; font-weight: 800;">
+                                                <span class="badge badge-sm badge-info"
+                                                    style="background: #e0f2fe; color: var(--primary); padding: 4px 10px; border-radius: 8px; font-weight: 600; font-size: 0.8rem;">
+                                                    <%= v.campus_name || '-' %>
+                                                </span>
+                                            </td>
+                                            <% } %>
+                                                <td style="padding: 1.5rem 2rem; font-weight: 800;">
+                                                    <%= v.academic_year %>
+                                                </td>
+                                                <td style="padding: 1.5rem 2rem; font-weight: 700;">RS <%=
+                                                        v.total_charged.toLocaleString() %>
+                                                </td>
+                                                <td style="padding: 1.5rem 2rem; font-weight: 800; color: #10b981;">RS
+                                                    <%= v.total_paid.toLocaleString() %>
+                                                </td>
+                                                <td style="padding: 1.5rem 2rem;">
+                                                    <div
+                                                        style="font-weight: 900; color: <%= v.remaining_balance > 0 ? '#ef4444' : '#10b981' %>;">
+                                                        RS <%= v.remaining_balance.toLocaleString() %>
+                                                    </div>
+                                                </td>
+                                                <td style="padding: 1.5rem 2rem;">
+                                                    <div style="display: flex; gap: 10px;">
+                                                        <button
+                                                            onclick="openPaymentModal('<%= v.id %>', '<%= v.full_name %>', '<%= v.remaining_balance %>')"
+                                                            class="btn"
+                                                            style="background: var(--primary); color: white; border: none; padding: 8px 15px; border-radius: 8px; font-weight: 700; cursor: pointer;">
+                                                            <i class="fas fa-hand-holding-usd"></i> Pay
+                                                        </button>
+                                                        <a href="/receipt/<%= v.id %>" class="btn"
+                                                            style="background: #f1f5f9; color: var(--primary); padding: 8px; border-radius: 8px; text-decoration: none;">
+                                                            <i class="fas fa-print"></i>
+                                                        </a>
+                                                        <button
+                                                            onclick="if(confirm('Are you sure? This will delete the entire MASTER LEDGER for this student!')) window.location.href='/admin/fees/delete/<%= v.id %>'"
+                                                            class="btn"
+                                                            style="background: #fff1f2; color: #ef4444; border: none; padding: 8px; border-radius: 8px; cursor: pointer;">
+                                                            <i class="fas fa-trash-alt"></i>
+                                                        </button>
+                                                    </div>
+                                                </td>
+                                    </tr>
+                                    <% }) %>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+        </div>
+    </main>
+
+    <!-- Partial Payment Modal -->
+    <div id="paymentModal"
+        style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); backdrop-filter: blur(5px); z-index: 9999; align-items: center; justify-content: center; padding: 20px;">
+        <div
+            style="background: white; padding: 2.5rem; border-radius: 24px; width: 100%; max-width: 400px; box-shadow: 0 20px 40px rgba(0,0,0,0.2);">
+            <h2 style="font-weight: 900; color: var(--primary); margin-bottom: 5px;">Record Ledger Payment</h2>
+            <p id="modalStudentName" style="color: var(--text-muted); font-weight: 700; margin-bottom: 2rem;"></p>
+
+            <form id="paymentForm" action="" method="POST">
+                <input type="hidden" name="_csrf" value="<%= typeof csrfToken !== 'undefined' ? csrfToken : '' %>">
+                <div style="margin-bottom: 1.5rem;">
+                    <label style="display: block; font-weight: 800; margin-bottom: 8px;">Payment Amount (RS)</label>
+                    <input type="number" name="payment_amount" id="paymentInput" step="0.01" min="1" required
+                        style="width: 100%; padding: 15px; border-radius: 12px; border: 2px solid #eee; font-weight: 800; font-size: 1.2rem; color: var(--primary);">
+                    <p style="margin-top: 5px; font-size: 0.8rem; color: #ef4444; font-weight: 700;">Outstanding: <span
+                            id="modalMaxAmount"></span></p>
+                </div>
+                <div style="margin-bottom: 2rem;">
+                    <label style="display: block; font-weight: 800; margin-bottom: 8px;">Method</label>
+                    <select name="method"
+                        style="width: 100%; padding: 12px; border-radius: 10px; border: 1px solid #ddd; font-weight: 600;">
+                        <option value="Cash">Cash</option>
+                        <option value="Bank">Bank Deposit</option>
+                        <option value="Online">Online Transfer</option>
+                    </select>
+                </div>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
+                    <button type="submit" class="btn-primary"
+                        style="padding: 12px; border-radius: 10px; font-weight: 800;">Confirm</button>
+                    <button type="button" onclick="closePaymentModal()"
+                        style="background: #f1f5f9; border: none; border-radius: 10px; font-weight: 800;">Cancel</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Sync Global Fees Modal -->
+    <div id="generateModal"
+        style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); backdrop-filter: blur(5px); z-index: 9999; align-items: center; justify-content: center; padding: 20px;">
+        <div style="background: white; padding: 2.5rem; border-radius: 24px; width: 100%; max-width: 450px;">
+            <h2 style="font-weight: 900; color: var(--primary); margin-bottom: 10px;">Sync Monthly Line Items</h2>
+            <p style="font-size: 0.9rem; color: var(--text-muted); margin-bottom: 2rem;">This will add the specified
+                month as a line item to the master voucher of each student.</p>
+            <form action="/admin/fees/generate-all" method="POST">
+                <input type="hidden" name="_csrf" value="<%= typeof csrfToken !== 'undefined' ? csrfToken : '' %>">
+                <div style="display: grid; gap: 20px; margin-bottom: 2rem;">
+                    <div>
+                        <label style="display: block; font-weight: 800; margin-bottom: 8px;">Target Month</label>
+                        <select name="month"
+                            style="width: 100%; padding: 12px; border-radius: 10px; border: 1px solid #ddd; font-weight: 600;"
+                            required>
+                            <%
+                                ['January','February','March','April','May','June','July','August','September','October','November','December'].forEach(m=>
+                                { %>
+                                <option value="<%= m %>" <%=new Date().toLocaleString('default', { month: 'long' })===m
+                                    ? 'selected' : '' %>><%= m %>
+                                </option>
+                                <% }) %>
+                        </select>
+                    </div>
+                    <div>
+                        <label style="display: block; font-weight: 800; margin-bottom: 8px;">Academic Year</label>
+                        <select name="year"
+                            style="width: 100%; padding: 12px; border-radius: 10px; border: 1px solid #ddd; font-weight: 600;"
+                            required>
+                            <% for(let y=2024; y<=2030; y++) { %>
+                                <option value="<%= y %>" <%=y===new Date().getFullYear() ? 'selected' : '' %>><%= y %>
+                                </option>
+                                <% } %>
+                        </select>
+                    </div>
+                </div>
+                <div style="display: flex; gap: 15px;">
+                    <button type="submit" class="btn-primary"
+                        style="flex: 1; padding: 12px; border-radius: 10px; font-weight: 800;">Run Sync</button>
+                    <button type="button" onclick="document.getElementById('generateModal').style.display='none'"
+                        style="padding: 12px; font-weight: 800; background: #f1f5f9; border: none; border-radius: 10px;">Close</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Add Single Fee Modal -->
+    <div id="addFeeModal"
+        style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); backdrop-filter: blur(5px); z-index: 9999; align-items: center; justify-content: center; padding: 20px;">
+        <div style="background: white; padding: 2.5rem; border-radius: 24px; width: 100%; max-width: 450px;">
+            <h2 style="font-weight: 900; color: var(--primary); margin-bottom: 10px;">Add Individual Fee</h2>
+            <p style="font-size: 0.9rem; color: var(--text-muted); margin-bottom: 2rem;">Add a specific fee amount
+                for a single student (e.g. Fine, Arrears, or Specific Month).</p>
+            <form action="/admin/fees/add-single" method="POST">
+                <input type="hidden" name="_csrf" value="<%= typeof csrfToken !== 'undefined' ? csrfToken : '' %>">
+                <div style="display: grid; gap: 15px; margin-bottom: 2rem;">
+                    <div>
+                        <label style="display: block; font-weight: 800; margin-bottom: 8px;">Select Student</label>
+                        <select name="student_id" id="studentSelect"
+                            style="width: 100%; padding: 12px; border-radius: 10px; border: 1px solid #ddd; font-weight: 600;"
+                            required>
+                            <option value="">-- Choose Student --</option>
+                            <% if(students && students.length> 0) { %>
+                                <% students.forEach(s=> { %>
+                                    <option value="<%= s.id %>">
+                                        <%= s.full_name %>
+                                            <% if (typeof isSuperAdmin !=='undefined' && isSuperAdmin && s.campus_name)
+                                                { %> [<%= s.campus_name %>] <% } %>
+                                    </option>
+                                    <% }) %>
+                                        <% } else { %>
+                                            <option value="" disabled>No Students Found</option>
+                                            <% } %>
+                        </select>
+                    </div>
+                    <div>
+                        <label style="display: block; font-weight: 800; margin-bottom: 8px;">Amount (RS)</label>
+                        <input type="number" name="amount" step="0.01" required
+                            style="width: 100%; padding: 12px; border-radius: 10px; border: 1px solid #ddd; font-weight: 600;">
+                    </div>
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
+                        <div>
+                            <label style="display: block; font-weight: 800; margin-bottom: 8px;">Month</label>
+                            <select name="month"
+                                style="width: 100%; padding: 12px; border-radius: 10px; border: 1px solid #ddd; font-weight: 600;"
+                                required>
+                                <%
+                                    ['January','February','March','April','May','June','July','August','September','October','November','December'].forEach(m=>
+                                    { %>
+                                    <option value="<%= m %>" <%=new Date().toLocaleString('default', { month: 'long'
+                                        })===m ? 'selected' : '' %>><%= m %>
+                                    </option>
+                                    <% }) %>
+                            </select>
+                        </div>
+                        <div>
+                            <label style="display: block; font-weight: 800; margin-bottom: 8px;">Year</label>
+                            <select name="year"
+                                style="width: 100%; padding: 12px; border-radius: 10px; border: 1px solid #ddd; font-weight: 600;"
+                                required>
+                                <% for(let y=2024; y<=2030; y++) { %>
+                                    <option value="<%= y %>" <%=y===new Date().getFullYear() ? 'selected' : '' %>><%= y
+                                            %>
+                                    </option>
+                                    <% } %>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div style="display: flex; gap: 15px;">
+                    <button type="submit" class="btn-primary"
+                        style="flex: 1; padding: 12px; border-radius: 10px; font-weight: 800;">Add Fee</button>
+                    <button type="button" onclick="document.getElementById('addFeeModal').style.display='none'"
+                        style="padding: 12px; font-weight: 800; background: #f1f5f9; border: none; border-radius: 10px;">Close</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        function openPaymentModal(id, name, max) {
+            document.getElementById('paymentModal').style.display = 'flex';
+            document.getElementById('modalStudentName').innerText = 'Ledger: ' + name;
+            document.getElementById('modalMaxAmount').innerText = 'RS ' + max;
+            document.getElementById('paymentInput').max = max;
+            document.getElementById('paymentInput').value = max;
+            document.getElementById('paymentForm').action = '/admin/fees/pay/' + id;
+        }
+
+        function closePaymentModal() {
+            document.getElementById('paymentModal').style.display = 'none';
+        }
+
+        // Deterministic UI Protection: Prevent Double Submission
+        document.querySelectorAll('form').forEach(form => {
+            form.onsubmit = function () {
+                const btn = form.querySelector('button[type="submit"]');
+                if (btn) {
+                    btn.disabled = true;
+                    btn.innerText = 'Processing...';
+                    btn.style.opacity = '0.5';
+                    btn.style.cursor = 'not-allowed';
+                }
+            };
+        });
+
+        // Real-time Student Search Filter
+        function filterStudents() {
+            const searchInput = document.getElementById('studentSearch').value.toLowerCase();
+            const table = document.querySelector('table tbody');
+            const rows = table.getElementsByTagName('tr');
+
+            for (let i = 0; i < rows.length; i++) {
+                const row = rows[i];
+                const text = row.textContent.toLowerCase();
+
+                if (text.includes(searchInput)) {
+                    row.style.display = '';
+                } else {
+                    row.style.display = 'none';
+                }
+            }
+        }
+    </script>
+    <%- include('../partials/footer') %>

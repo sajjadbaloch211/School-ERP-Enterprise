@@ -1,0 +1,230 @@
+<%- include('../partials/header') %>
+
+    <div class="admin-layout animate-fade-in" style="margin-top: 80px;">
+        <!-- Sidebar -->
+        <%- include('../partials/sidebar_student', { active: 'dashboard' }) %>
+
+            <main class="main-content">
+                <header
+                    style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 3rem; background: white; padding: 2rem; border-radius: 24px; box-shadow: var(--card-shadow);">
+                    <div>
+                        <div
+                            style="display: inline-block; background: var(--accent); color: white; padding: 4px 15px; border-radius: 50px; font-size: 0.75rem; font-weight: 800; margin-bottom: 10px; text-transform: uppercase; letter-spacing: 1px;">
+                            <i class="fas fa-shield-alt"></i> Secure Class Block: <%= studentData.class_name %>
+                        </div>
+                        <h2 style="font-size: 2.2rem; font-weight: 900; color: var(--primary); margin-top: 5px;">
+                            Welcome,
+                            <%= user.full_name %>!
+                        </h2>
+                        <p style="color: var(--text-muted); font-weight: 500;">You are currently viewing the <span
+                                style="color: var(--primary); font-weight: 700;">
+                                <%= studentData.class_name %> - <%= studentData.section %>
+                            </span> portal.</p>
+                    </div>
+                    <div style="text-align: right;">
+                        <div class="glass"
+                            style="padding: 12px 25px; border-radius: 15px; font-weight: 800; color: var(--accent); border: 2px solid var(--accent); background: rgba(59, 130, 246, 0.05); margin-bottom: 5px;">
+                            ROLL NO: <%= studentData.roll_no %>
+                        </div>
+                        <p style="font-size: 0.75rem; color: var(--text-muted); font-weight: 600;"><i
+                                class="fas fa-lock"></i> Class-Locked Access</p>
+                    </div>
+                </header>
+
+                <!-- Stats Grid -->
+                <div class="stat-group animate-slide-up"
+                    style="display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 1.5rem;">
+                    <div class="card"
+                        style="display: flex; align-items: center; gap: 1.5rem; padding: 1.5rem; border-left: 5px solid var(--accent);">
+                        <div
+                            style="width: 60px; height: 60px; background: rgba(59, 130, 246, 0.1); color: var(--accent); border-radius: 15px; display: flex; align-items: center; justify-content: center; font-size: 1.5rem;">
+                            <i class="fas fa-user-check"></i>
+                        </div>
+                        <div>
+                            <p
+                                style="color: var(--text-muted); font-size: 0.85rem; font-weight: 700; text-transform: uppercase; margin-bottom: 5px;">
+                                Attendance</p>
+                            <h3 style="font-size: 1.8rem; font-weight: 900; color: var(--primary);">
+                                <%= attPercent %>%
+                            </h3>
+                        </div>
+                    </div>
+
+                    <div class="card"
+                        style="display: flex; align-items: center; gap: 1.5rem; padding: 1.5rem; border-left: 5px solid #10b981;">
+                        <div
+                            style="width: 60px; height: 60px; background: rgba(16, 185, 129, 0.1); color: #10b981; border-radius: 15px; display: flex; align-items: center; justify-content: center; font-size: 1.5rem;">
+                            <i class="fas fa-chart-line"></i>
+                        </div>
+                        <div>
+                            <p
+                                style="color: var(--text-muted); font-size: 0.85rem; font-weight: 700; text-transform: uppercase; margin-bottom: 5px;">
+                                Avg. Performance</p>
+                            <h3 style="font-size: 1.8rem; font-weight: 900; color: var(--primary);">
+                                <%= results.length> 0 ? (results.reduce((s,r)=>s+r.marks_obtained,
+                                    0)/results.length).toFixed(1) : 'N/A' %>
+                            </h3>
+                        </div>
+                    </div>
+
+                    <div class="card"
+                        style="display: flex; align-items: center; gap: 1.5rem; padding: 1.5rem; border-left: 5px solid #f59e0b;">
+                        <div
+                            style="width: 60px; height: 60px; background: rgba(245, 158, 11, 0.1); color: #f59e0b; border-radius: 15px; display: flex; align-items: center; justify-content: center; font-size: 1.5rem;">
+                            <i class="fas fa-coins"></i>
+                        </div>
+                        <div>
+                            <p
+                                style="color: var(--text-muted); font-size: 0.85rem; font-weight: 700; text-transform: uppercase; margin-bottom: 5px;">
+                                Fee Status</p>
+                            <h3 style="font-size: 1.8rem; font-weight: 900; color: var(--primary);">
+                                <% if (vouchers.length> 0) { %>
+                                    <% if (vouchers[0].remaining_balance <=0) { %>
+                                        <span style="color: #10b981;">Paid</span>
+                                        <% } else { %>
+                                            <span style="color: #ef4444;">Due</span>
+                                            <% } %>
+                                                <% } else { %>
+                                                    No Record
+                                                    <% } %>
+                            </h3>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="grid animate-slide-up"
+                    style="grid-template-columns: 1.5fr 1fr; gap: 2rem; margin-top: 2rem;">
+                    <!-- Latest Results -->
+                    <div class="card" style="padding: 0; overflow: hidden; border-radius: 20px;">
+                        <div
+                            style="padding: 1.5rem; background: #f8fafc; border-bottom: 1px solid #edf2f7; display: flex; justify-content: space-between; align-items: center;">
+                            <h3 style="font-weight: 800; color: var(--primary);">Recent Exam Scores</h3>
+                            <a href="/student/results"
+                                style="font-size: 0.8rem; font-weight: 700; color: var(--accent);">View All</a>
+                        </div>
+                        <div style="padding: 1.5rem;">
+                            <% if (results.length> 0) { %>
+                                <table style="width: 100%; border-collapse: collapse;">
+                                    <thead>
+                                        <tr style="text-align: left; border-bottom: 2px solid #f1f5f9;">
+                                            <th
+                                                style="padding: 12px; color: #64748b; font-size: 0.8rem; text-transform: uppercase;">
+                                                Subject</th>
+                                            <th
+                                                style="padding: 12px; color: #64748b; font-size: 0.8rem; text-transform: uppercase;">
+                                                Score</th>
+                                            <th
+                                                style="padding: 12px; color: #64748b; font-size: 0.8rem; text-transform: uppercase; text-align: right;">
+                                                Grade</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <% results.forEach(res=> { %>
+                                            <tr style="border-bottom: 1px solid #f8fafc;">
+                                                <td
+                                                    style="padding: 15px 12px; font-weight: 700; color: var(--primary);">
+                                                    <%= res.subject %>
+                                                </td>
+                                                <td style="padding: 15px 12px; font-weight: 600;">
+                                                    <%= res.marks_obtained %> / <%= res.total_marks %>
+                                                </td>
+                                                <td style="padding: 15px 12px; text-align: right;">
+                                                    <span
+                                                        style="background: rgba(16, 185, 129, 0.1); color: #10b981; padding: 4px 12px; border-radius: 8px; font-weight: 900;">
+                                                        <%= res.grade %>
+                                                    </span>
+                                                </td>
+                                            </tr>
+                                            <% }) %>
+                                    </tbody>
+                                </table>
+                                <% } else { %>
+                                    <div style="text-align: center; padding: 3rem; color: var(--text-muted);">
+                                        <i class="fas fa-clipboard-list"
+                                            style="font-size: 2.5rem; opacity: 0.2; display: block; margin-bottom: 1rem;"></i>
+                                        No exam results recorded yet.
+                                    </div>
+                                    <% } %>
+                        </div>
+                    </div>
+
+                    <!-- Right Column: Notices & Fellows -->
+                    <div style="display: flex; flex-direction: column; gap: 2rem;">
+                        <!-- Notice Board -->
+                        <div>
+                            <h3
+                                style="margin-bottom: 1.5rem; font-weight: 900; color: var(--primary); display: flex; align-items: center; gap: 10px;">
+                                <i class="fas fa-bullhorn" style="color: #ef4444;"></i> Important Notices
+                            </h3>
+                            <% notices.forEach(notice=> { %>
+                                <div class="card hover-scale"
+                                    style="margin-bottom: 1.2rem; padding: 1.5rem; border-radius: 15px; border-left: 5px solid var(--accent);">
+                                    <div
+                                        style="font-size: 0.7rem; color: var(--accent); font-weight: 800; margin-bottom: 8px; text-transform: uppercase;">
+                                        <%= new Date(notice.created_at).toLocaleDateString() %>
+                                    </div>
+                                    <h4
+                                        style="font-weight: 800; font-size: 1rem; color: var(--primary); margin-bottom: 10px;">
+                                        <%= notice.title %>
+                                    </h4>
+                                    <p style="font-size: 0.9rem; line-height: 1.6; color: var(--text-muted);">
+                                        <%= notice.content %>
+                                    </p>
+                                </div>
+                                <% }) %>
+                                    <% if(notices.length===0) { %>
+                                        <div class="card"
+                                            style="text-align: center; color: var(--text-muted); padding: 2rem;">
+                                            No active notices.
+                                        </div>
+                                        <% } %>
+                        </div>
+
+                        <!-- Class Fellows -->
+                        <div class="card" style="border-radius: 20px; padding: 1.5rem;">
+                            <h3
+                                style="font-weight: 800; color: var(--primary); margin-bottom: 1.5rem; font-size: 1.1rem;">
+                                Your Class Fellows
+                            </h3>
+                            <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 1rem;">
+                                <% fellows.forEach(fellow=> { %>
+                                    <div
+                                        style="display: flex; align-items: center; gap: 10px; background: #f8fafc; padding: 10px; border-radius: 12px;">
+                                        <div
+                                            style="width: 30px; height: 30px; border-radius: 8px; background: #e2e8f0; display: flex; align-items: center; justify-content: center; font-size: 0.7rem; font-weight: 800; color: var(--primary);">
+                                            <%= fellow.full_name.charAt(0) %>
+                                        </div>
+                                        <div style="overflow: hidden;">
+                                            <p
+                                                style="font-size: 0.75rem; font-weight: 700; color: var(--primary); margin: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
+                                                <%= fellow.full_name %>
+                                            </p>
+                                            <p style="font-size: 0.65rem; color: var(--text-muted); margin: 0;">Roll:
+                                                <%= fellow.roll_no %>
+                                            </p>
+                                        </div>
+                                    </div>
+                                    <% }) %>
+                                        <% if (fellows.length===0) { %>
+                                            <p
+                                                style="grid-column: span 2; text-align: center; font-size: 0.8rem; color: var(--text-muted);">
+                                                No other students in this class.</p>
+                                            <% } %>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </main>
+    </div>
+
+    <style>
+        .hover-scale {
+            transition: transform 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        .hover-scale:hover {
+            transform: translateY(-5px);
+        }
+    </style>
+
+    <%- include('../partials/footer') %>

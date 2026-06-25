@@ -1,0 +1,129 @@
+<%- include('partials/frontend_header') %>
+
+    <!-- Hero Banner -->
+    <section class="hero-section" style="min-height: 52vh; background-image: url('/images/school-bg.jpg');">
+        <div class="hero-overlay"></div>
+        <div class="container hero-content text-center animate-up">
+            <span class="hero-badge"><i class="fas fa-headset me-2"></i> We're Here to Help</span>
+            <h1 class="hero-title">Contact <span style="color: var(--accent-color);">Us</span></h1>
+            <p class="hero-lead mx-auto" style="max-width:600px;">
+                Have questions about admissions, fees, or school programs? Our team is ready to assist you.
+            </p>
+        </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section class="section-padding bg-white">
+        <div class="container">
+            <div class="row g-5">
+                <!-- Contact Info -->
+                <div class="col-lg-5 animate-up">
+                    <span class="section-label">Get in Touch</span>
+                    <h2 class="section-title mb-4">We'd Love to Hear From You</h2>
+                    <p class="text-muted mb-5 lead">Have unique administration needs or questions about admissions? Our team is ready to help you anytime.</p>
+
+                    <div class="d-flex gap-4 mb-4 p-4 rounded-3 shadow-sm" style="background:#f8fafc;">
+                        <div class="flex-shrink-0 d-flex align-items-center justify-content-center rounded-circle text-white" style="width:52px;height:52px;background:var(--primary-color);font-size:1.1rem;">
+                            <i class="fas fa-map-marker-alt"></i>
+                        </div>
+                        <div>
+                            <h5 class="fw-bold mb-1">Our Location</h5>
+                            <p class="text-muted mb-0">
+                                <%= (typeof settings !== 'undefined' && settings.school_address) ? settings.school_address : "Main Road, Khairpur Mir's, Sindh, Pakistan" %>
+                            </p>
+                        </div>
+                    </div>
+
+                    <div class="d-flex gap-4 mb-4 p-4 rounded-3 shadow-sm" style="background:#f8fafc;">
+                        <div class="flex-shrink-0 d-flex align-items-center justify-content-center rounded-circle text-white" style="width:52px;height:52px;background:var(--secondary-color);font-size:1.1rem;">
+                            <i class="fas fa-phone-alt"></i>
+                        </div>
+                        <div>
+                            <h5 class="fw-bold mb-1">Phone Number</h5>
+                            <p class="text-muted mb-0">
+                                <%= (typeof settings !== 'undefined' && settings.school_phone) ? settings.school_phone : "+92 123 4567890" %>
+                            </p>
+                        </div>
+                    </div>
+
+                    <div class="d-flex gap-4 mb-4 p-4 rounded-3 shadow-sm" style="background:#f8fafc;">
+                        <div class="flex-shrink-0 d-flex align-items-center justify-content-center rounded-circle text-white" style="width:52px;height:52px;background:#7c3aed;font-size:1.1rem;">
+                            <i class="fas fa-envelope"></i>
+                        </div>
+                        <div>
+                            <h5 class="fw-bold mb-1">Email Address</h5>
+                            <p class="text-muted mb-0">
+                                <%= (typeof settings !== 'undefined' && settings.school_email) ? settings.school_email : "info@waqar.edu.pk" %>
+                            </p>
+                        </div>
+                    </div>
+
+                    <div class="mt-4 p-4 rounded-3" style="background:linear-gradient(135deg, var(--primary-color), var(--secondary-color));">
+                        <p class="text-white fw-bold mb-1"><i class="fas fa-clock me-2"></i> Office Hours</p>
+                        <p class="text-white-50 mb-0">Monday – Saturday: 8:00 AM – 2:00 PM</p>
+                    </div>
+
+                    <div class="mt-4">
+                        <h6 class="fw-bold mb-3">Follow Us</h6>
+                        <div class="d-flex gap-2">
+                            <a href="<%= (typeof settings !== 'undefined' && settings.social_facebook) ? settings.social_facebook : '#' %>" class="social-icon" style="background:rgba(30,58,138,0.1);color:var(--primary-color);"><i class="fab fa-facebook-f"></i></a>
+                            <a href="<%= (typeof settings !== 'undefined' && settings.social_twitter) ? settings.social_twitter : '#' %>" class="social-icon" style="background:rgba(59,130,246,0.1);color:var(--secondary-color);"><i class="fab fa-twitter"></i></a>
+                            <a href="<%= (typeof settings !== 'undefined' && settings.social_instagram) ? settings.social_instagram : '#' %>" class="social-icon" style="background:rgba(124,58,237,0.1);color:#7c3aed;"><i class="fab fa-instagram"></i></a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Contact Form -->
+                <div class="col-lg-7 animate-up delay-200">
+                    <div class="card border-0 shadow-lg rounded-4 p-5">
+                        <h3 class="fw-bold mb-2" style="color:var(--primary-color);">Send us a Message</h3>
+                        <p class="text-muted mb-4">Fill out the form below and we'll get back to you within 24 hours.</p>
+                        <form>
+                            <div class="row g-3">
+                                <div class="col-md-6">
+                                    <label class="form-label fw-semibold small text-muted text-uppercase">Your Name</label>
+                                    <input type="text" class="form-control bg-light border-0 py-3 px-4 rounded-3" placeholder="e.g. Ahmed Ali">
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label fw-semibold small text-muted text-uppercase">Email Address</label>
+                                    <input type="email" class="form-control bg-light border-0 py-3 px-4 rounded-3" placeholder="you@example.com">
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label fw-semibold small text-muted text-uppercase">Phone</label>
+                                    <input type="tel" class="form-control bg-light border-0 py-3 px-4 rounded-3" placeholder="+92 300 0000000">
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label fw-semibold small text-muted text-uppercase">Subject</label>
+                                    <select class="form-select bg-light border-0 py-3 px-4 rounded-3">
+                                        <option>Admission Inquiry</option>
+                                        <option>Fee Information</option>
+                                        <option>Academic Query</option>
+                                        <option>General Inquiry</option>
+                                    </select>
+                                </div>
+                                <div class="col-12">
+                                    <label class="form-label fw-semibold small text-muted text-uppercase">Message</label>
+                                    <textarea class="form-control bg-light border-0 py-3 px-4 rounded-3" rows="5" placeholder="Write your message here..."></textarea>
+                                </div>
+                                <div class="col-12">
+                                    <button type="button" class="btn btn-primary w-100 rounded-pill py-3 fw-bold fs-6" style="background:var(--primary-color);">
+                                        <i class="fas fa-paper-plane me-2"></i> Send Message
+                                    </button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Map Section -->
+    <section class="w-100" style="height: 420px;">
+        <iframe
+            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d57920.89555743117!2d68.7199346!3d27.5298416!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x393bd78b5d1e2ea5%3A0x5fe6c94e06daff8a!2sKhairpur%20Mir%27s%2C%20Sindh%2C%20Pakistan!5e0!3m2!1sen!2s!4v1700000000000!5m2!1sen!2s"
+            width="100%" height="100%" style="border:0;display:block;" allowfullscreen="" loading="lazy">
+        </iframe>
+    </section>
+
+<%- include('partials/frontend_footer') %>

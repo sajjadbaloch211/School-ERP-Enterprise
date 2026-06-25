@@ -1,0 +1,560 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Portal Login | W.P. Higher Secondary School (WPHSS)</title>
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+        :root {
+            --navy: #0B1C3D;
+            --navy-mid: #112347;
+            --navy-light: #162d5a;
+            --gold: #F5A623;
+            --gold-dark: #d4881a;
+            --gold-light: #ffc04d;
+            --white: #FFFFFF;
+            --off-white: #F8F9FC;
+            --text-main: #FFFFFF;
+            --text-muted: #94a3b8;
+            --radius-lg: 24px;
+            --radius-md: 14px;
+            --transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background-color: var(--navy);
+            background-image: 
+                radial-gradient(circle at 10% 20%, rgba(245, 166, 35, 0.05) 0%, transparent 40%),
+                radial-gradient(circle at 90% 80%, rgba(59, 130, 246, 0.06) 0%, transparent 50%),
+                radial-gradient(circle, rgba(255, 255, 255, 0.015) 1px, transparent 1px);
+            background-size: 100% 100%, 100% 100%, 24px 24px;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        /* Ambient glowing circles */
+        .glow-circle {
+            position: absolute;
+            width: 300px;
+            height: 300px;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(245, 166, 35, 0.08) 0%, transparent 70%);
+            filter: blur(40px);
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        .glow-1 { top: 10%; left: 15%; }
+        .glow-2 { bottom: 10%; right: 15%; }
+
+        .login-wrap {
+            width: 100%;
+            max-width: 480px;
+            z-index: 1;
+            animation: fadeInUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        }
+
+        .premium-card {
+            background: rgba(17, 35, 71, 0.45);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-top: 1px solid rgba(255, 255, 255, 0.15);
+            border-left: 1px solid rgba(255, 255, 255, 0.12);
+            padding: 3.5rem 3rem;
+            border-radius: var(--radius-lg);
+            box-shadow: 
+                0 30px 60px rgba(0, 0, 0, 0.4),
+                inset 0 1px 0 rgba(255, 255, 255, 0.1);
+            text-align: center;
+            color: var(--white);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .premium-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, transparent, var(--gold), transparent);
+        }
+
+        .logo-container {
+            margin-bottom: 2rem;
+            display: inline-block;
+            position: relative;
+        }
+
+        .logo-box {
+            width: 90px;
+            height: 90px;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: var(--radius-md);
+            padding: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2), 0 0 0 1px rgba(255, 255, 255, 0.1);
+            transition: var(--transition);
+        }
+
+        .logo-box img {
+            max-width: 100%;
+            max-height: 100%;
+            object-fit: contain;
+        }
+
+        .logo-container:hover .logo-box {
+            transform: scale(1.05) rotate(3deg);
+            box-shadow: 0 15px 30px rgba(245, 166, 35, 0.2);
+        }
+
+        h2 {
+            font-family: 'Playfair Display', Georgia, serif;
+            font-size: 2.2rem;
+            font-weight: 700;
+            color: var(--white);
+            margin-bottom: 0.5rem;
+            letter-spacing: -0.5px;
+        }
+
+        p.subtitle {
+            font-size: 0.95rem;
+            color: var(--text-muted);
+            margin-bottom: 2.5rem;
+        }
+
+        /* Visual Role Selector (Tabs) */
+        .role-selector {
+            display: flex;
+            background: rgba(11, 28, 61, 0.6);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            padding: 4px;
+            border-radius: 30px;
+            margin-bottom: 2rem;
+            gap: 2px;
+        }
+
+        .role-tab {
+            flex: 1;
+            padding: 10px 5px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            border-radius: 20px;
+            color: var(--text-muted);
+            cursor: pointer;
+            transition: var(--transition);
+            border: none;
+            background: transparent;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .role-tab.active {
+            background: var(--gold);
+            color: var(--navy);
+            box-shadow: 0 4px 12px rgba(245, 166, 35, 0.25);
+            font-weight: 700;
+        }
+
+        .input-group {
+            position: relative;
+            margin-bottom: 1.5rem;
+            text-align: left;
+        }
+
+        .input-label {
+            display: block;
+            font-size: 0.78rem;
+            font-weight: 600;
+            color: var(--gold);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 6px;
+            padding-left: 4px;
+        }
+
+        .input-wrapper {
+            position: relative;
+        }
+
+        .input-wrapper i {
+            position: absolute;
+            left: 20px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-muted);
+            font-size: 1.05rem;
+            transition: var(--transition);
+        }
+
+        .input-wrapper input {
+            width: 100%;
+            background: rgba(11, 28, 61, 0.5);
+            border: 1.5px solid rgba(255, 255, 255, 0.08);
+            padding: 16px 20px 16px 54px;
+            border-radius: var(--radius-md);
+            color: var(--white);
+            font-size: 0.95rem;
+            font-family: 'Inter', sans-serif;
+            transition: var(--transition);
+        }
+
+        .input-wrapper input::placeholder {
+            color: rgba(255, 255, 255, 0.3);
+        }
+
+        .input-wrapper input:focus {
+            outline: none;
+            border-color: var(--gold);
+            background: rgba(11, 28, 61, 0.8);
+            box-shadow: 0 0 0 4px rgba(245, 166, 35, 0.1);
+        }
+
+        .input-wrapper input:focus + i {
+            color: var(--gold);
+        }
+
+        /* QR Code Styling */
+        .qr-card {
+            margin-bottom: 2rem;
+            background: rgba(245, 166, 35, 0.05);
+            padding: 16px;
+            border-radius: var(--radius-md);
+            border: 1px dashed rgba(245, 166, 35, 0.25);
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            text-align: left;
+            animation: pulse-border 3s infinite;
+        }
+
+        .qr-card img {
+            width: 80px;
+            height: 80px;
+            border-radius: var(--radius-sm);
+            background: white;
+            padding: 6px;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .qr-title {
+            margin: 0;
+            font-size: 0.9rem;
+            font-weight: 700;
+            color: var(--white);
+        }
+
+        .qr-desc {
+            margin: 4px 0 0;
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            line-height: 1.4;
+        }
+
+        .options-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+            font-size: 0.85rem;
+        }
+
+        .checkbox-container {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: var(--text-muted);
+            cursor: pointer;
+            user-select: none;
+        }
+
+        .checkbox-container input {
+            cursor: pointer;
+            accent-color: var(--gold);
+        }
+
+        .forgot-link {
+            color: var(--gold);
+            text-decoration: none;
+            font-weight: 600;
+            transition: var(--transition);
+        }
+
+        .forgot-link:hover {
+            color: var(--gold-light);
+            text-decoration: underline;
+        }
+
+        .btn-submit {
+            width: 100%;
+            padding: 16px;
+            background: var(--gold);
+            color: var(--navy);
+            border: none;
+            border-radius: var(--radius-md);
+            font-size: 1rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: var(--transition);
+            box-shadow: 0 4px 15px rgba(245, 166, 35, 0.2);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .btn-submit:hover {
+            background: var(--gold-light);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(245, 166, 35, 0.4);
+        }
+
+        .btn-submit:active {
+            transform: translateY(0);
+        }
+
+        .error-msg {
+            background: rgba(239, 68, 68, 0.15);
+            color: #fca5a5;
+            padding: 14px 18px;
+            border-radius: var(--radius-md);
+            margin-bottom: 2rem;
+            font-size: 0.9rem;
+            border: 1px solid rgba(239, 68, 68, 0.25);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            text-align: left;
+            animation: shake 0.5s ease-in-out;
+        }
+
+        .error-msg i {
+            font-size: 1.1rem;
+            color: #ef4444;
+        }
+
+        .back-home {
+            margin-top: 2rem;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            color: var(--text-muted);
+            text-decoration: none;
+            font-size: 0.9rem;
+            font-weight: 500;
+            transition: var(--transition);
+        }
+
+        .back-home:hover {
+            color: var(--white);
+            transform: translateX(-4px);
+        }
+
+        /* Animations */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            20%, 60% { transform: translateX(-6px); }
+            40%, 80% { transform: translateX(6px); }
+        }
+
+        @keyframes pulse-border {
+            0%, 100% { border-color: rgba(245, 166, 35, 0.25); }
+            50% { border-color: rgba(245, 166, 35, 0.6); }
+        }
+
+        @media (max-width: 480px) {
+            .premium-card {
+                padding: 2.5rem 1.5rem;
+            }
+            h2 {
+                font-size: 1.8rem;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Ambient backgrounds -->
+    <div class="glow-circle glow-1"></div>
+    <div class="glow-circle glow-2"></div>
+
+    <div class="login-wrap">
+        <div class="premium-card">
+            <div class="logo-container">
+                <div class="logo-box">
+                    <img src="/images/waqar.png" alt="WPHSS Logo" onerror="this.src='/images/logo.png'; this.onerror=null;">
+                </div>
+            </div>
+            <h2>WPHSS Portal</h2>
+            <p class="subtitle">W.P. Higher Secondary School Gateway</p>
+
+            <!-- Role tabs (purely visual for portal aesthetics) -->
+            <div class="role-selector">
+                <button type="button" class="role-tab active" onclick="selectRole('student', this)">Student</button>
+                <button type="button" class="role-tab" onclick="selectRole('teacher', this)">Teacher</button>
+                <button type="button" class="role-tab" onclick="selectRole('admin', this)">Admin</button>
+            </div>
+
+            <% if (typeof error !=='undefined' && error) { %>
+                <div class="error-msg">
+                    <i class="fas fa-exclamation-circle"></i>
+                    <span><%= error %></span>
+                </div>
+            <% } %>
+
+            <form action="/auth/login" method="POST" id="loginForm">
+                <!-- 🔒 CSRF Protection -->
+                <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+                <input type="hidden" name="return_to" value="<%= typeof returnTo !== 'undefined' ? returnTo : '' %>">
+
+                <!-- 📍 Location Capture (Hidden) -->
+                <input type="hidden" name="latitude" id="lat">
+                <input type="hidden" name="longitude" id="lng">
+                <input type="hidden" name="city" id="city">
+                <input type="hidden" name="country" id="country">
+
+                <!-- Campus Code -->
+                <div class="input-group">
+                    <label class="input-label" for="campus_code">Campus Code</label>
+                    <div class="input-wrapper">
+                        <i class="fas fa-university"></i>
+                        <input type="text" id="campus_code" name="campus_code" placeholder="e.g. MAIN" required
+                            autocomplete="organization"
+                            value="<%= typeof campusCode !== 'undefined' ? campusCode : 'MAIN' %>"
+                            style="text-transform: uppercase;">
+                    </div>
+                </div>
+
+                <!-- QR Code Quick Login if available -->
+                <% if (typeof qrCode !=='undefined' && qrCode) { %>
+                    <div class="qr-card">
+                        <img src="<%= qrCode %>" alt="QR Code">
+                        <div>
+                            <h4 class="qr-title">Quick Mobile Login</h4>
+                            <p class="qr-desc">Scan this QR code to login instantly on your mobile device.</p>
+                        </div>
+                    </div>
+                <% } %>
+
+                <!-- Username -->
+                <div class="input-group">
+                    <label class="input-label" id="usernameLabel" for="username">Username / ID</label>
+                    <div class="input-wrapper">
+                        <i class="fas fa-id-card-alt" id="usernameIcon"></i>
+                        <input type="text" id="username" name="username" placeholder="Student ID or Email" required
+                            autocomplete="username">
+                    </div>
+                </div>
+
+                <!-- Password -->
+                <div class="input-group">
+                    <label class="input-label" for="password">Password</label>
+                    <div class="input-wrapper">
+                        <i class="fas fa-shield-alt"></i>
+                        <input type="password" id="password" name="password" placeholder="••••••••" required
+                            autocomplete="current-password">
+                    </div>
+                </div>
+
+                <div class="options-row">
+                    <label class="checkbox-container">
+                        <input type="checkbox" name="remember_me"> Remember me
+                    </label>
+                    <a href="/forgot-password" class="forgot-link">Forgot Password?</a>
+                </div>
+
+                <button type="submit" class="btn-submit">
+                    <span>Sign In to Portal</span>
+                    <i class="fas fa-arrow-right"></i>
+                </button>
+            </form>
+
+            <a href="/" class="back-home">
+                <i class="fas fa-arrow-left"></i>
+                <span>Back to school website</span>
+            </a>
+        </div>
+    </div>
+
+    <script>
+        // Role tab helper
+        function selectRole(role, element) {
+            // Remove active class from all tabs
+            document.querySelectorAll('.role-tab').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            // Add active class to clicked tab
+            element.classList.add('active');
+
+            // Change placeholder to guide the user
+            const usernameInput = document.getElementById('username');
+            const usernameLabel = document.getElementById('usernameLabel');
+            const usernameIcon = document.getElementById('usernameIcon');
+            
+            if (role === 'student') {
+                usernameInput.placeholder = "Student ID or Email";
+                usernameLabel.textContent = "Student Username / ID";
+                usernameIcon.className = "fas fa-id-card-alt";
+            } else if (role === 'teacher') {
+                usernameInput.placeholder = "Teacher Email or Username";
+                usernameLabel.textContent = "Teacher ID / Username";
+                usernameIcon.className = "fas fa-chalkboard-teacher";
+            } else if (role === 'admin') {
+                usernameInput.placeholder = "Admin Username";
+                usernameLabel.textContent = "Administrator ID";
+                usernameIcon.className = "fas fa-user-shield";
+            }
+        }
+
+        // 📍 Capture Location Automatically
+        document.addEventListener('DOMContentLoaded', () => {
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(
+                    (position) => {
+                        document.getElementById('lat').value = position.coords.latitude;
+                        document.getElementById('lng').value = position.coords.longitude;
+                    },
+                    (error) => {
+                        console.log("Location access denied or unavailable:", error.message);
+                    },
+                    { enableHighAccuracy: true }
+                );
+            }
+        });
+    </script>
+</body>
+
+</html>

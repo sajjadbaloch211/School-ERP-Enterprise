@@ -1,0 +1,123 @@
+<%- include('../../partials/header') %>
+    <div class="admin-layout animate-fade-in" style="margin-top: 80px;">
+        <%- include('../../partials/sidebar', { active: 'cms' }) %>
+
+            <main class="main-content">
+                <div style="margin-bottom: 2rem;">
+                    <a href="/admin/cms/pages/edit/<%= section.page_id %>"
+                        style="color: var(--text-muted); text-decoration: none; font-weight: 600;">
+                        <i class="fas fa-arrow-left"></i> Back to Sections
+                    </a>
+                    <h1 style="font-size: 2rem; color: var(--primary); font-weight: 800; margin-top: 1rem;">
+                        Edit Section: <span style="color: var(--secondary);">
+                            <%= section.section_name %>
+                        </span>
+                    </h1>
+                </div>
+
+                <div class="card" style="padding: 2rem;">
+                    <form action="/admin/cms/sections/update/<%= section.id %>" method="POST"
+                        enctype="multipart/form-data">
+                        <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+
+                        <!-- HERO SECTION FORM -->
+                        <% if (section.section_type==='hero' ) { %>
+                            <div class="form-group">
+                                <label>Main Heading</label>
+                                <input type="text" name="heading" class="form-control"
+                                    value="<%= section.content.heading %>">
+                            </div>
+                            <div class="form-group">
+                                <label>Subheading / Description</label>
+                                <textarea name="subheading" class="form-control"
+                                    rows="3"><%= section.content.subheading %></textarea>
+                            </div>
+                            <div class="form-group">
+                                <label>CTA Button Text</label>
+                                <input type="text" name="cta_text" class="form-control"
+                                    value="<%= section.content.cta_text || '' %>">
+                            </div>
+                            <!-- Image Upload -->
+                            <div class="form-group">
+                                <label>Hero Image</label>
+                                <% if (section.content.image) { %>
+                                    <div style="margin-bottom: 10px;">
+                                        <img src="<%= section.content.image %>"
+                                            style="width: 150px; border-radius: 8px;">
+                                    </div>
+                                    <% } %>
+                                        <input type="file" name="image" class="form-control" accept="image/*">
+                            </div>
+
+                            <!-- STATS SECTION FORM -->
+                            <% } else if (section.section_type==='stats' ) { %>
+                                <div class="alert alert-info">
+                                    Update the numbers and labels for your stats counters.
+                                </div>
+                                <% section.content.items.forEach((item, i)=> { %>
+                                    <div
+                                        style="background: #f8fafc; padding: 15px; margin-bottom: 10px; border-radius: 8px; border: 1px solid #e2e8f0;">
+                                        <h4 style="margin-bottom: 10px; font-size: 0.9rem; color: var(--text-muted);">
+                                            Stat #<%= i + 1 %>
+                                        </h4>
+                                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+                                            <div class="form-group" style="margin-bottom: 0;">
+                                                <label>Number (Target)</label>
+                                                <input type="text" name="stats[<%= i %>][number]" class="form-control"
+                                                    value="<%= item.number %>">
+                                            </div>
+                                            <div class="form-group" style="margin-bottom: 0;">
+                                                <label>Label</label>
+                                                <input type="text" name="stats[<%= i %>][label]" class="form-control"
+                                                    value="<%= item.label %>">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <% }) %>
+
+                                        <!-- GENERIC CONTENT/FEATURES/GALLERY FORM -->
+                                        <% } else if (section.section_type==='content' ||
+                                            section.section_type==='features' || section.section_type==='gallery' ) { %>
+                                            <div class="form-group">
+                                                <label>Section Title</label>
+                                                <input type="text" name="title" class="form-control"
+                                                    value="<%= section.content.title %>">
+                                            </div>
+                                            <% if (section.content.description !==undefined) { %>
+                                                <div class="form-group">
+                                                    <label>Description</label>
+                                                    <textarea name="description" class="form-control"
+                                                        rows="3"><%= section.content.description %></textarea>
+                                                </div>
+                                                <% } %>
+
+                                                    <% if (section.section_type==='content' ) { %>
+                                                        <div class="form-group">
+                                                            <label>Body Content (HTML allowed)</label>
+                                                            <textarea name="body" class="form-control"
+                                                                rows="10"><%= section.content.body %></textarea>
+                                                        </div>
+                                                        <% } %>
+
+                                                            <% } else { %>
+                                                                <div class="alert alert-warning">
+                                                                    This section type (<%= section.section_type %>) uses
+                                                                        complex
+                                                                        data
+                                                                        structures. Please ask an admin to edit the raw
+                                                                        JSON if
+                                                                        needed.
+                                                                </div>
+                                                                <% } %>
+
+                                                                    <button type="submit" class="btn-primary"
+                                                                        style="margin-top: 2rem; width: 100%;">Save
+                                                                        Changes</button>
+                    </form>
+                </div>
+            </main>
+
+    </div>
+    </body>
+
+    </html>

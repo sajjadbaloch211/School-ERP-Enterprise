@@ -1,0 +1,78 @@
+<%- include('../partials/header') %>
+
+    <div class="admin-layout animate-fade-in" style="margin-top: 80px;">
+        <!-- Sidebar -->
+        <!-- Sidebar -->
+        <%- include('../partials/sidebar', { active: 'email' }) %>
+
+            <!-- Main Content -->
+            <main class="main-content">
+                <header
+                    style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 3rem;">
+                    <div>
+                        <h2 style="font-size: 2rem; font-weight: 800; color: var(--primary);">Email Communication</h2>
+                        <p style="color: var(--text-muted);">Send bulk emails to students and teachers.</p>
+                    </div>
+                </header>
+
+                <div class="animate-slide-up"
+                    style="background: white; width: 100%; max-width: 800px; margin: 0 auto; border-radius: 24px; padding: 3rem; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);">
+                    <form action="/admin/send-email" method="POST">
+                        <input type="hidden" name="_csrf"
+                            value="<%= typeof csrfToken !== 'undefined' ? csrfToken : '' %>">
+
+                        <% if (typeof success !=='undefined' && success) { %>
+                            <div
+                                style="background-color: #dcfce7; color: #166534; padding: 1rem; border-radius: 12px; margin-bottom: 1.5rem; border: 1px solid #bbf7d0;">
+                                <i class="fas fa-check-circle"></i>
+                                <%= success %>
+                            </div>
+                            <% } %>
+
+                                <% if (typeof error !=='undefined' && error) { %>
+                                    <div
+                                        style="background-color: #fee2e2; color: #991b1b; padding: 1rem; border-radius: 12px; margin-bottom: 1.5rem; border: 1px solid #fecaca;">
+                                        <i class="fas fa-exclamation-circle"></i>
+                                        <%= error %>
+                                    </div>
+                                    <% } %>
+
+                                        <div style="margin-bottom: 1.5rem;">
+                                            <label
+                                                style="display: block; font-weight: 700; margin-bottom: 8px; font-size: 0.9rem;">Recipient
+                                                Group</label>
+                                            <select name="recipient_group" required
+                                                style="width: 100%; padding: 12px 16px; border-radius: 12px; border: 1px solid #e2e8f0; background: #f8fafc; font-size: 1rem;">
+                                                <option value="both">Both (All Students & Teachers)</option>
+                                                <option value="students">All Students</option>
+                                                <option value="teachers">All Teachers</option>
+                                            </select>
+                                        </div>
+
+                                        <div style="margin-bottom: 1.5rem;">
+                                            <label
+                                                style="display: block; font-weight: 700; margin-bottom: 8px; font-size: 0.9rem;">Subject</label>
+                                            <input type="text" name="subject" required
+                                                placeholder="e.g. Important Announcement"
+                                                style="width: 100%; padding: 12px 16px; border-radius: 12px; border: 1px solid #e2e8f0; background: #f8fafc; font-size: 1rem;">
+                                        </div>
+
+                                        <div style="margin-bottom: 2rem;">
+                                            <label
+                                                style="display: block; font-weight: 700; margin-bottom: 8px; font-size: 0.9rem;">Message</label>
+                                            <textarea name="message" required rows="10"
+                                                placeholder="Type your message here..."
+                                                style="width: 100%; padding: 12px 16px; border-radius: 12px; border: 1px solid #e2e8f0; background: #f8fafc; resize: vertical; font-size: 1rem;"></textarea>
+                                        </div>
+
+                                        <button type="submit" class="btn btn-primary"
+                                            style="width: 100%; padding: 15px; font-size: 1.1rem; display: flex; align-items: center; justify-content: center; gap: 10px;">
+                                            <i class="fas fa-paper-plane"></i> Send Email
+                                        </button>
+                    </form>
+                </div>
+            </main>
+    </div>
+    </body>
+
+    </html>

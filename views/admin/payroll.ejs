@@ -1,0 +1,153 @@
+<%- include('../partials/header') %>
+
+    <div class="admin-layout animate-fade-in" style="margin-top: 80px;">
+        <!-- Sidebar -->
+        <!-- Sidebar -->
+        <%- include('../partials/sidebar', { active: 'payroll' }) %>
+
+            <main class="main-content">
+                <header
+                    style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
+                    <div>
+                        <h2 style="font-size: 2rem; font-weight: 800; color: var(--primary);">Staff Payroll</h2>
+                        <p style="color: var(--text-muted);">Manage and track teacher salaries</p>
+                    </div>
+
+                    <div style="display: flex; gap: 15px; align-items: center;">
+                        <!-- Search Bar -->
+                        <div style="position: relative; width: 250px;">
+                            <i class="fas fa-search"
+                                style="position: absolute; left: 15px; top: 50%; transform: translateY(-50%); color: var(--text-muted);"></i>
+                            <input type="text" id="teacherSearch" placeholder="Search staff..."
+                                style="width: 100%; padding: 10px 15px 10px 40px; border-radius: 12px; border: 1px solid #e2e8f0; background: white; font-size: 0.9rem;"
+                                onkeyup="filterTable('teacherSearch', 'payrollTableBody')">
+                        </div>
+
+                        <form action="/admin/payroll" method="GET"
+                            style="display: flex; gap: 10px; align-items: center;" id="payrollForm">
+                            <div style="position: relative;">
+                                <i class="fas fa-calendar-alt"
+                                    style="position: absolute; left: 12px; top: 50%; transform: translateY(-50%); color: var(--text-muted); pointer-events: none; z-index: 1;"></i>
+                                <input type="month" id="monthYearPicker"
+                                    value="<%= selectedYear %>-<%= String(months.indexOf(selectedMonth) + 1).padStart(2, '0') %>"
+                                    style="padding: 10px 15px 10px 40px; border-radius: 12px; border: 1px solid #ddd; background: white; font-size: 0.9rem; min-width: 180px; cursor: pointer;"
+                                    onchange="updateMonthYear()">
+                            </div>
+                            <input type="hidden" name="month" id="monthInput" value="<%= selectedMonth %>">
+                            <input type="hidden" name="year" id="yearInput" value="<%= selectedYear %>">
+                            <button type="submit" class="btn-primary"
+                                style="padding: 10px 20px; display: flex; align-items: center; gap: 8px;">
+                                <i class="fas fa-sync-alt"></i> Load
+                            </button>
+                        </form>
+                    </div>
+                </header>
+
+                <div class="card animate-slide-up" style="overflow-x: auto;">
+                    <table class="data-table" style="width: 100%; border-collapse: collapse;">
+                        <thead>
+                            <tr style="background: var(--bg-light); text-align: left;">
+                                <th style="padding: 1.2rem; border-radius: 12px 0 0 12px;">Teacher Name</th>
+                                <th style="padding: 1.2rem;">Basic Salary</th>
+                                <th style="padding: 1.2rem;">Month / Year</th>
+                                <th style="padding: 1.2rem;">Status</th>
+                                <th style="padding: 1.2rem; border-radius: 0 12px 12px 0;">Action</th>
+                            </tr>
+                        </thead>
+                        <tbody id="payrollTableBody">
+                            <% results.forEach(row=> { %>
+                                <tr style="border-bottom: 1px solid #f1f5f9;">
+                                    <td style="padding: 1.2rem; font-weight: 700; color: var(--primary);">
+                                        <%= row.full_name %>
+                                    </td>
+                                    <td style="padding: 1.2rem; font-weight: 600;">Rs. <%= row.salary || 0 %>
+                                    </td>
+                                    <td style="padding: 1.2rem; color: var(--text-muted);">
+                                        <%= selectedMonth %>
+                                            <%= selectedYear %>
+                                    </td>
+                                    <td style="padding: 1.2rem;">
+                                        <% if(row.status==='paid' ) { %>
+                                            <span
+                                                style="background: #ecfdf5; color: #10b981; padding: 5px 12px; border-radius: 20px; font-weight: 700; font-size: 0.8rem;">
+                                                <i class="fas fa-check-circle"></i> PAID
+                                            </span>
+                                            <div style="font-size: 0.7rem; color: var(--text-muted); margin-top: 5px;">
+                                                On:
+                                                <%= new Date(row.paid_date).toLocaleDateString() %>
+                                            </div>
+                                            <% } else { %>
+                                                <span
+                                                    style="background: #fffbeb; color: #f59e0b; padding: 5px 12px; border-radius: 20px; font-weight: 700; font-size: 0.8rem;">
+                                                    <i class="fas fa-clock"></i> PENDING
+                                                </span>
+                                                <% } %>
+                                    </td>
+                                    <td style="padding: 1.2rem;">
+                                        <% if(row.status !=='paid' ) { %>
+                                            <form action="/admin/payroll/pay" method="POST">
+                                                <input type="hidden" name="_csrf"
+                                                    value="<%= typeof csrfToken !== 'undefined' ? csrfToken : '' %>">
+                                                <input type="hidden" name="teacher_id" value="<%= row.teacher_id %>">
+                                                <input type="hidden" name="amount" value="<%= row.salary %>">
+                                                <input type="hidden" name="month" value="<%= selectedMonth %>">
+                                                <input type="hidden" name="year" value="<%= selectedYear %>">
+                                                <button type="submit" class="btn-primary"
+                                                    style="padding: 8px 15px; font-size: 0.85rem; border-radius: 8px;">
+                                                    Mark Paid
+                                                </button>
+                                            </form>
+                                            <% } else { %>
+                                                <button disabled
+                                                    style="background: #f1f5f9; color: #94a3b8; padding: 8px 15px; border-radius: 8px; border: none; cursor: not-allowed;">
+                                                    Completed
+                                                </button>
+                                                <% } %>
+                                    </td>
+                                </tr>
+                                <% }); %>
+                        </tbody>
+                    </table>
+                </div>
+            </main>
+    </div>
+
+    <script>
+        function filterTable(inputId, tableId) {
+            const input = document.getElementById(inputId);
+            const filter = input.value.toLowerCase();
+            const tbody = document.getElementById(tableId);
+            const rows = tbody.getElementsByTagName('tr');
+
+            for (let i = 0; i < rows.length; i++) {
+                const row = rows[i];
+                const text = row.textContent.toLowerCase();
+                if (text.includes(filter)) {
+                    row.style.display = "";
+                } else {
+                    row.style.display = "none";
+                }
+            }
+        }
+
+        // Convert month picker to month name and year
+        function updateMonthYear() {
+            const picker = document.getElementById('monthYearPicker');
+            const value = picker.value; // Format: "YYYY-MM"
+
+            if (value) {
+                const [year, month] = value.split('-');
+                const monthNames = ["January", "February", "March", "April", "May", "June",
+                    "July", "August", "September", "October", "November", "December"];
+
+                document.getElementById('monthInput').value = monthNames[parseInt(month) - 1];
+                document.getElementById('yearInput').value = year;
+            }
+        }
+
+        // Initialize on page load
+        document.addEventListener('DOMContentLoaded', function () {
+            updateMonthYear();
+        });
+    </script>
+    <%- include('../partials/footer') %>

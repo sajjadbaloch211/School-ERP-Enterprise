@@ -1,0 +1,73 @@
+<!-- Text Section Template -->
+<section class="text-section section">
+    <div class="container">
+        <% if (content.title) { %>
+            <h2 class="section-title">
+                <%= content.title %>
+            </h2>
+            <% } %>
+
+                <% if (content.subtitle) { %>
+                    <p class="section-subtitle">
+                        <%= content.subtitle %>
+                    </p>
+                    <% } %>
+
+                        <div class="text-content" style="max-width: 900px; margin: 0 auto;">
+                            <% if (content.content) { %>
+                                <%- content.content %>
+                                    <% } %>
+
+                                        <% if (content.image) { %>
+                                            <div style="margin: 30px 0; text-align: center;">
+                                                <img src="<%= content.image %>" alt="<%= content.image_alt || '' %>"
+                                                    style="max-width: 100%; border-radius: 12px; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">
+                                            </div>
+                                            <% } %>
+
+                                                <% if (content.cta_text && content.cta_link) { %>
+                                                    <div style="text-align: center; margin-top: 40px;">
+                                                        <a href="<%= content.cta_link %>" class="btn btn-primary">
+                                                            <%= content.cta_text %>
+                                                        </a>
+                                                    </div>
+                                                    <% } %>
+                        </div>
+    </div>
+</section>
+
+<style>
+    .text-content {
+        font-size: 18px;
+        line-height: 1.8;
+        color: var(--color-text);
+    }
+
+    .text-content h3 {
+        font-size: 28px;
+        margin: 30px 0 15px;
+        color: var(--color-primary);
+    }
+
+    .text-content p {
+        margin-bottom: 20px;
+    }
+
+    .text-content ul,
+    .text-content ol {
+        margin: 20px 0;
+        padding-left: 30px;
+    }
+
+    .text-content li {
+        margin-bottom: 10px;
+    }
+
+    .text-content blockquote {
+        border-left: 4px solid var(--color-primary);
+        padding-left: 20px;
+        margin: 30px 0;
+        font-style: italic;
+        color: var(--color-text-light);
+    }
+</style>

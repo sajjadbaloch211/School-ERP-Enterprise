@@ -1,0 +1,119 @@
+/* 🎨 CMS PREMIUM STYLES */
+:root {
+    --cms-primary: #1e3a8a;
+    --cms-secondary: #3b82f6;
+    --cms-accent: #6366f1;
+    --cms-glass: rgba(255, 255, 255, 0.7);
+    --cms-shadow: 0 10px 30px -5px rgba(0, 0, 0, 0.1);
+    --cms-card-bg: #ffffff;
+}
+
+.cms-premium-dashboard {
+    padding: 30px;
+    background: #f8fafc;
+    min-height: 100vh;
+}
+
+.cms-card {
+    background: var(--cms-card-bg);
+    border-radius: 20px;
+    padding: 25px;
+    box-shadow: var(--cms-shadow);
+    border: 1px solid rgba(0, 0, 0, 0.05);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.cms-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 20px 40px -10px rgba(0, 0, 0, 0.15);
+}
+
+.cms-stat-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 20px;
+    margin-bottom: 40px;
+}
+
+.cms-stat-card {
+    position: relative;
+    overflow: hidden;
+    color: white;
+}
+
+.cms-stat-card::after {
+    content: '';
+    position: absolute;
+    top: -20%;
+    right: -10%;
+    width: 150px;
+    height: 150px;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 50%;
+}
+
+.cms-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+    gap: 25px;
+}
+
+.page-node {
+    border-left: 4px solid var(--cms-primary);
+}
+
+.section-node {
+    margin-left: 20px;
+    padding: 10px 15px;
+    background: #f1f5f9;
+    border-radius: 12px;
+    margin-top: 10px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.cms-btn {
+    padding: 10px 20px;
+    border-radius: 12px;
+    font-weight: 700;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    transition: all 0.2s;
+    border: none;
+    cursor: pointer;
+}
+
+.cms-btn-primary {
+    background: linear-gradient(135deg, var(--cms-primary), var(--cms-secondary));
+    color: white;
+}
+
+.cms-btn-outline {
+    background: white;
+    color: var(--cms-primary);
+    border: 1.5px solid #e2e8f0;
+}
+
+.cms-btn-outline:hover {
+    border-color: var(--cms-primary);
+    background: #f8fafc;
+}
+
+@keyframes slideIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.animate-step {
+    animation: slideIn 0.4s ease-out forwards;
+}

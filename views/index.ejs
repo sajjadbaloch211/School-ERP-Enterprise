@@ -1,0 +1,694 @@
+<%- include('partials/frontend_header', {isHomepage: true}) %>
+
+<!-- ═══════════════════════════════════════════════
+     HERO SECTION — Full Screen Cinematic
+═══════════════════════════════════════════════ -->
+<section class="hero-wphss" id="home"
+    <% if(typeof settings !== 'undefined' && settings.hero_image) { %>
+        style="background-image: url('<%= settings.hero_image %>'); background-size: cover; background-position: center;"
+    <% } %>
+>
+    <!-- Geometric decorative circles -->
+    <div class="hero-shape-1"></div>
+    <div class="hero-shape-2"></div>
+    <div class="hero-shape-3"></div>
+
+    <div class="hero-content-wrap">
+        <div class="container">
+            <div class="hero-inner">
+
+                <!-- Welcome badge -->
+                <div class="hero-badge-pill">
+                    <span class="dot"></span>
+                    <%= (typeof settings !=='undefined' && settings.hero_badge) ? settings.hero_badge : 'Welcome to WPHSS' %>
+                </div>
+
+                <!-- Main heading -->
+                <h1 class="hero-title">
+                    <% const heroTitle = (typeof settings !=='undefined' && settings.hero_title) ? settings.hero_title : 'Excellence in Education'; %>
+                    <%= heroTitle %>
+                </h1>
+
+                <!-- Subheading -->
+                <p class="hero-sub">
+                    <%= (typeof settings !=='undefined' && settings.hero_desc) ? settings.hero_desc : "Empowering students since 1995 through holistic, values-driven learning. Shaping tomorrow's leaders with discipline, excellence, and innovation." %>
+                </p>
+
+                <!-- CTA Buttons -->
+                <div class="hero-ctas">
+                    <% if(typeof user !=='undefined' && user) { %>
+                        <a href="/<%= user.role %>/dashboard" class="btn-primary-wphss">
+                            <i class="fas fa-th-large"></i> Go to Dashboard
+                        </a>
+                    <% } else { %>
+                        <a href="/login" class="btn-primary-wphss">
+                            <i class="fas fa-lock"></i> Login Portal
+                        </a>
+                        <a href="/admissions" class="btn-outline-white">
+                            <i class="fas fa-graduation-cap"></i> Apply Now
+                        </a>
+                    <% } %>
+                </div>
+
+                <!-- Floating stats bar -->
+                <div class="hero-stats-bar">
+                    <div class="hero-stat-item">
+                        <span class="hero-stat-num">2000+</span>
+                        <span class="hero-stat-label">Students</span>
+                    </div>
+                    <div class="hero-stat-item">
+                        <span class="hero-stat-num">150+</span>
+                        <span class="hero-stat-label">Faculty</span>
+                    </div>
+                    <div class="hero-stat-item">
+                        <span class="hero-stat-num">98%</span>
+                        <span class="hero-stat-label">Pass Rate</span>
+                    </div>
+                    <div class="hero-stat-item">
+                        <span class="hero-stat-num">25+</span>
+                        <span class="hero-stat-label">Years</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════
+     NOTICE TICKER
+═══════════════════════════════════════════════ -->
+<% if (typeof notices !=='undefined' && notices && notices.length > 0) { %>
+<div class="notice-ticker">
+    <div class="container">
+        <div class="ticker-inner">
+            <span class="ticker-label"><i class="fas fa-bullhorn" style="margin-right:6px"></i>News</span>
+            <div class="ticker-content">
+                <div class="ticker-track">
+                    <% notices.forEach(notice => { %>
+                        <span><i class="fas fa-circle" style="font-size:0.4rem;vertical-align:middle"></i> <strong><%= notice.title %>:</strong> <%= notice.content.substring(0,80) %>...</span>
+                    <% }); %>
+                    <%# duplicate for seamless loop %>
+                    <% notices.forEach(notice => { %>
+                        <span><i class="fas fa-circle" style="font-size:0.4rem;vertical-align:middle"></i> <strong><%= notice.title %>:</strong> <%= notice.content.substring(0,80) %>...</span>
+                    <% }); %>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<% } %>
+
+<!-- ═══════════════════════════════════════════════
+     STATS / HIGHLIGHTS BAR
+═══════════════════════════════════════════════ -->
+<section class="stats-section" id="highlights">
+    <div class="container">
+        <div class="stats-grid">
+            <div class="stat-card reveal">
+                <div class="stat-icon"><i class="fas fa-user-graduate"></i></div>
+                <span class="stat-num counter" data-target="2000">0</span>+
+                <span class="stat-label">Students Enrolled</span>
+            </div>
+            <div class="stat-card reveal delay-100">
+                <div class="stat-icon"><i class="fas fa-chalkboard-teacher"></i></div>
+                <span class="stat-num counter" data-target="150">0</span>+
+                <span class="stat-label">Expert Faculty</span>
+            </div>
+            <div class="stat-card reveal delay-200">
+                <div class="stat-icon"><i class="fas fa-trophy"></i></div>
+                <span class="stat-num counter" data-target="98">0</span>%
+                <span class="stat-label">Pass Rate</span>
+            </div>
+            <div class="stat-card reveal delay-300">
+                <div class="stat-icon"><i class="fas fa-calendar-alt"></i></div>
+                <span class="stat-num counter" data-target="25">0</span>+
+                <span class="stat-label">Years of Legacy</span>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════
+     ABOUT SECTION — Split Layout
+═══════════════════════════════════════════════ -->
+<section class="about-section" id="about">
+    <div class="container">
+        <div class="row align-items-center g-5">
+
+            <!-- Left: Image with Gold Frame -->
+            <div class="col-lg-5 reveal-left">
+                <div class="about-image-wrap">
+                    <div class="about-image-frame">
+                        <img src="/images/waqar.png"
+                             alt="WPHSS School Building"
+                             style="width:100%;height:420px;object-fit:contain;background:linear-gradient(135deg,#f0f4ff,#e8ecf8);padding:40px;">
+                    </div>
+                    <div class="about-years-badge">
+                        <span class="num">25+</span>
+                        <span class="lbl">Years of<br>Excellence</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Right: Text Content -->
+            <div class="col-lg-7 reveal-right">
+                <span class="overline">Our Story</span>
+                <h2 class="section-heading">
+                    Shaping Minds,<br>Building <span style="color:var(--gold)">Futures</span>
+                </h2>
+                <span class="gold-line"></span>
+
+                <p style="margin-bottom:16px;">
+                    <%= (typeof settings !=='undefined' && settings.about_text1) ? settings.about_text1 : 'W.P. Higher Secondary School has been a cornerstone of academic excellence in the region since 1995. Founded with a vision to provide world-class education accessible to all, we have grown into an institution recognized for discipline, results, and character.' %>
+                </p>
+                <p style="margin-bottom:16px;">
+                    <%= (typeof settings !=='undefined' && settings.about_text2) ? settings.about_text2 : 'Our faculty comprises highly qualified professionals who bring passion and expertise to every classroom. We believe education goes beyond textbooks — it is about nurturing curiosity, resilience, and a lifelong love of learning.' %>
+                </p>
+                <p style="margin-bottom:28px;">
+                    <%= (typeof settings !=='undefined' && settings.about_text3) ? settings.about_text3 : 'From matriculation to higher secondary level, we offer a rigorous curriculum aligned with national standards while incorporating modern pedagogical approaches that prepare students for university and beyond.' %>
+                </p>
+
+                <!-- Feature pills -->
+                <div class="feature-pills">
+                    <span class="feature-pill"><i class="fas fa-shield-alt"></i> Discipline First</span>
+                    <span class="feature-pill"><i class="fas fa-star"></i> Academic Excellence</span>
+                    <span class="feature-pill"><i class="fas fa-lightbulb"></i> Innovation</span>
+                    <span class="feature-pill"><i class="fas fa-heart"></i> Values-Driven</span>
+                </div>
+
+                <div style="margin-top:36px;">
+                    <a href="/about" class="btn-primary-wphss">
+                        <i class="fas fa-arrow-right"></i> Learn More About Us
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════
+     ACADEMICS / DEPARTMENTS SECTION
+═══════════════════════════════════════════════ -->
+<section class="academics-section" id="academics">
+    <div class="dot-bg"></div>
+    <div class="container" style="position:relative;z-index:1;">
+        <div class="text-center reveal" style="margin-bottom:52px;">
+            <span class="overline">What We Offer</span>
+            <h2 class="section-heading">Our Academic <span style="color:var(--gold)">Departments</span></h2>
+            <span class="gold-line center"></span>
+            <p class="section-desc mx-auto">A well-rounded curriculum spanning sciences, humanities, and commerce — designed to unlock every student's potential.</p>
+        </div>
+
+        <div class="dept-grid">
+            <div class="dept-card reveal delay-100">
+                <div class="dept-icon"><i class="fas fa-flask"></i></div>
+                <h4>Sciences</h4>
+                <p>Physics, Chemistry, Biology & Mathematics taught by expert faculty with modern lab facilities.</p>
+            </div>
+            <div class="dept-card reveal delay-200">
+                <div class="dept-icon"><i class="fas fa-calculator"></i></div>
+                <h4>Commerce</h4>
+                <p>Accounting, Economics, and Business Studies preparing students for careers in finance and management.</p>
+            </div>
+            <div class="dept-card reveal delay-300">
+                <div class="dept-icon"><i class="fas fa-book-open"></i></div>
+                <h4>Humanities</h4>
+                <p>Urdu, English, History, and Islamic Studies fostering critical thinking and cultural understanding.</p>
+            </div>
+            <div class="dept-card reveal delay-100">
+                <div class="dept-icon"><i class="fas fa-laptop-code"></i></div>
+                <h4>Computer Science</h4>
+                <p>Programming, IT fundamentals, and digital literacy for the modern technological landscape.</p>
+            </div>
+            <div class="dept-card reveal delay-200">
+                <div class="dept-icon"><i class="fas fa-running"></i></div>
+                <h4>Sports & PE</h4>
+                <p>Cricket, football, athletics, and physical education to build a healthy, disciplined generation.</p>
+            </div>
+            <div class="dept-card reveal delay-300">
+                <div class="dept-icon"><i class="fas fa-palette"></i></div>
+                <h4>Arts & Culture</h4>
+                <p>Fine arts, Nasheeds, debates, and drama fostering creativity and self-expression.</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════
+     ADMISSIONS — TIMELINE SECTION
+═══════════════════════════════════════════════ -->
+<section class="admissions-section" id="admissions">
+    <div class="container">
+        <div class="text-center reveal" style="margin-bottom:8px;">
+            <span class="overline">Join Our Family</span>
+            <h2 class="section-heading">Admission <span style="color:var(--gold)">Process</span></h2>
+            <span class="gold-line center"></span>
+            <p class="section-desc mx-auto">Simple, transparent, and merit-based. Follow these steps to secure your seat at WPHSS.</p>
+        </div>
+
+        <div class="timeline-steps">
+            <div class="timeline-step reveal delay-100">
+                <div class="step-circle">1</div>
+                <div class="step-title">Online Apply</div>
+                <div class="step-desc">Fill out the admission form online or visit the office</div>
+            </div>
+            <div class="timeline-step reveal delay-200">
+                <div class="step-circle">2</div>
+                <div class="step-title">Documents</div>
+                <div class="step-desc">Submit result cards, B-form & passport photos</div>
+            </div>
+            <div class="timeline-step reveal delay-300">
+                <div class="step-circle">3</div>
+                <div class="step-title">Entry Test</div>
+                <div class="step-desc">Appear for the merit assessment test</div>
+            </div>
+            <div class="timeline-step reveal delay-400">
+                <div class="step-circle">4</div>
+                <div class="step-title">Merit List</div>
+                <div class="step-desc">Check announced merit list on website & notice board</div>
+            </div>
+            <div class="timeline-step reveal delay-500">
+                <div class="step-circle">5</div>
+                <div class="step-title">Enrollment</div>
+                <div class="step-desc">Complete fee payment and receive your school ID</div>
+            </div>
+        </div>
+
+        <div class="text-center reveal">
+            <a href="/admissions" class="btn-gold" style="font-size:1rem;padding:16px 44px;">
+                <i class="fas fa-graduation-cap"></i> Start Your Application
+            </a>
+        </div>
+    </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════
+     FEE STRUCTURE — PRICING CARDS
+═══════════════════════════════════════════════ -->
+<section class="fees-section" id="fees">
+    <div class="container">
+        <div class="text-center reveal" style="margin-bottom:8px;">
+            <span class="overline">Transparent Pricing</span>
+            <h2 class="section-heading">Fee <span style="color:var(--gold)">Structure</span></h2>
+            <span class="gold-line center"></span>
+            <p class="section-desc mx-auto">Affordable, class-wise monthly fees. No hidden charges. Financial assistance available for deserving students.</p>
+        </div>
+
+        <div class="fee-cards-grid">
+            <div class="fee-card reveal delay-100">
+                <div class="fee-icon"><i class="fas fa-seedling"></i></div>
+                <h3>Primary</h3>
+                <span class="fee-amount">Rs. 800</span>
+                <span class="fee-label">/ per month</span>
+                <hr class="fee-divider">
+                <ul class="fee-features">
+                    <li><i class="fas fa-check"></i> Classes 1 – 5</li>
+                    <li><i class="fas fa-check"></i> Core subjects included</li>
+                    <li><i class="fas fa-check"></i> Library access</li>
+                </ul>
+            </div>
+
+            <div class="fee-card reveal delay-200">
+                <div class="fee-icon"><i class="fas fa-book"></i></div>
+                <h3>Middle</h3>
+                <span class="fee-amount">Rs. 1,200</span>
+                <span class="fee-label">/ per month</span>
+                <hr class="fee-divider">
+                <ul class="fee-features">
+                    <li><i class="fas fa-check"></i> Classes 6 – 8</li>
+                    <li><i class="fas fa-check"></i> Lab sessions</li>
+                    <li><i class="fas fa-check"></i> Extra-curricular</li>
+                </ul>
+            </div>
+
+            <div class="fee-card featured reveal delay-300">
+                <div class="fee-featured-badge">Most Popular</div>
+                <div class="fee-icon"><i class="fas fa-graduation-cap"></i></div>
+                <h3>Secondary</h3>
+                <span class="fee-amount">Rs. 1,800</span>
+                <span class="fee-label">/ per month</span>
+                <hr class="fee-divider">
+                <ul class="fee-features">
+                    <li><i class="fas fa-check"></i> Classes 9 – 10 (Matric)</li>
+                    <li><i class="fas fa-check"></i> Science & Commerce</li>
+                    <li><i class="fas fa-check"></i> Full lab access</li>
+                    <li><i class="fas fa-check"></i> Exam prep support</li>
+                </ul>
+            </div>
+
+            <div class="fee-card reveal delay-400">
+                <div class="fee-icon"><i class="fas fa-university"></i></div>
+                <h3>Higher Sec.</h3>
+                <span class="fee-amount">Rs. 2,500</span>
+                <span class="fee-label">/ per month</span>
+                <hr class="fee-divider">
+                <ul class="fee-features">
+                    <li><i class="fas fa-check"></i> Classes 11 – 12 (FSc/FA)</li>
+                    <li><i class="fas fa-check"></i> University prep</li>
+                    <li><i class="fas fa-check"></i> Career counselling</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="text-center reveal" style="margin-top:40px;">
+            <a href="/fee-structure" class="btn-outline-gold" style="font-size:0.92rem;">
+                <i class="fas fa-file-alt"></i> View Detailed Fee Structure
+            </a>
+        </div>
+    </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════
+     GALLERY — MASONRY GRID
+═══════════════════════════════════════════════ -->
+<section class="gallery-section" id="gallery">
+    <div class="container">
+        <div class="text-center reveal" style="margin-bottom:8px;">
+            <span class="overline">School Life</span>
+            <h2 class="section-heading">Our <span style="color:var(--gold)">Gallery</span></h2>
+            <span class="gold-line center"></span>
+            <p class="section-desc mx-auto">A glimpse into our vibrant campus life — events, sports, ceremonies, and everyday learning.</p>
+        </div>
+
+        <div class="gallery-masonry reveal">
+            <div class="gallery-item" onclick="openLightbox(this.querySelector('img').src, 'Annual Sports Day')">
+                <div style="width:100%;height:100%;background:linear-gradient(135deg,#0B1C3D,#1a3560);display:flex;align-items:center;justify-content:center;">
+                    <div style="text-align:center;color:rgba(255,255,255,0.5);">
+                        <i class="fas fa-running" style="font-size:4rem;margin-bottom:12px;color:var(--gold);display:block;"></i>
+                        <span style="font-size:1.1rem;font-weight:700;color:white;">Annual Sports Day</span>
+                    </div>
+                </div>
+                <div class="gallery-overlay">
+                    <span class="gallery-caption"><i class="fas fa-expand-alt"></i> Annual Sports Day</span>
+                </div>
+            </div>
+            <div class="gallery-item" onclick="openLightbox('', 'Classroom Sessions')">
+                <div style="width:100%;height:100%;background:linear-gradient(135deg,#112347,#0d3267);display:flex;align-items:center;justify-content:center;">
+                    <div style="text-align:center;">
+                        <i class="fas fa-chalkboard-teacher" style="font-size:3rem;margin-bottom:10px;color:var(--gold);display:block;"></i>
+                        <span style="font-size:0.95rem;font-weight:700;color:white;">Classroom Sessions</span>
+                    </div>
+                </div>
+                <div class="gallery-overlay">
+                    <span class="gallery-caption"><i class="fas fa-expand-alt"></i> Classroom Sessions</span>
+                </div>
+            </div>
+            <div class="gallery-item" onclick="openLightbox('', 'Prize Distribution')">
+                <div style="width:100%;height:100%;background:linear-gradient(135deg,#7c3c00,#a05010);display:flex;align-items:center;justify-content:center;">
+                    <div style="text-align:center;">
+                        <i class="fas fa-trophy" style="font-size:3rem;margin-bottom:10px;color:var(--gold);display:block;"></i>
+                        <span style="font-size:0.95rem;font-weight:700;color:white;">Prize Distribution</span>
+                    </div>
+                </div>
+                <div class="gallery-overlay">
+                    <span class="gallery-caption"><i class="fas fa-expand-alt"></i> Prize Distribution</span>
+                </div>
+            </div>
+            <div class="gallery-item" onclick="openLightbox('', 'Science Exhibition')">
+                <div style="width:100%;height:100%;background:linear-gradient(135deg,#0a2540,#153d6b);display:flex;align-items:center;justify-content:center;">
+                    <div style="text-align:center;">
+                        <i class="fas fa-flask" style="font-size:3rem;margin-bottom:10px;color:var(--gold);display:block;"></i>
+                        <span style="font-size:0.95rem;font-weight:700;color:white;">Science Exhibition</span>
+                    </div>
+                </div>
+                <div class="gallery-overlay">
+                    <span class="gallery-caption"><i class="fas fa-expand-alt"></i> Science Exhibition</span>
+                </div>
+            </div>
+            <div class="gallery-item" onclick="openLightbox('', 'Graduation Ceremony')">
+                <div style="width:100%;height:100%;background:linear-gradient(135deg,#1a1a2e,#16213e);display:flex;align-items:center;justify-content:center;">
+                    <div style="text-align:center;">
+                        <i class="fas fa-user-graduate" style="font-size:3rem;margin-bottom:10px;color:var(--gold);display:block;"></i>
+                        <span style="font-size:0.95rem;font-weight:700;color:white;">Graduation</span>
+                    </div>
+                </div>
+                <div class="gallery-overlay">
+                    <span class="gallery-caption"><i class="fas fa-expand-alt"></i> Graduation Ceremony</span>
+                </div>
+            </div>
+            <div class="gallery-item" onclick="openLightbox('', 'Cultural Events')">
+                <div style="width:100%;height:100%;background:linear-gradient(135deg,#2d1b00,#4a2f00);display:flex;align-items:center;justify-content:center;">
+                    <div style="text-align:center;">
+                        <i class="fas fa-music" style="font-size:3rem;margin-bottom:10px;color:var(--gold);display:block;"></i>
+                        <span style="font-size:0.95rem;font-weight:700;color:white;">Cultural Events</span>
+                    </div>
+                </div>
+                <div class="gallery-overlay">
+                    <span class="gallery-caption"><i class="fas fa-expand-alt"></i> Cultural Events</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="text-center reveal" style="margin-top:40px;">
+            <a href="/gallery" class="btn-outline-gold"><i class="fas fa-images"></i> View Full Gallery</a>
+        </div>
+    </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════
+     LATEST NOTICES SECTION
+═══════════════════════════════════════════════ -->
+<section class="notices-section">
+    <div class="container">
+        <div class="d-flex flex-wrap justify-content-between align-items-end mb-5 reveal">
+            <div>
+                <span class="overline">Happenings</span>
+                <h2 class="section-heading mb-0">Latest <span style="color:var(--gold)">Notices</span></h2>
+                <span class="gold-line" style="margin-bottom:0;"></span>
+            </div>
+            <a href="/contact" class="btn-outline-gold" style="padding:10px 24px;font-size:0.85rem;">
+                View All <i class="fas fa-arrow-right"></i>
+            </a>
+        </div>
+
+        <div class="row g-4">
+            <% if (typeof notices !=='undefined' && notices && notices.length > 0) { %>
+                <% notices.slice(0, 3).forEach((notice, index) => { %>
+                <div class="col-md-4 reveal delay-<%= (index+1)*100 %>">
+                    <div class="notice-card">
+                        <span class="notice-date-badge">
+                            <i class="fas fa-calendar-alt" style="margin-right:5px"></i>
+                            <%= notice.created_at ? new Date(notice.created_at).toLocaleDateString('en-PK', {day:'numeric',month:'short',year:'numeric'}) : 'Recent' %>
+                        </span>
+                        <h4><%= notice.title %></h4>
+                        <p><%= notice.content.substring(0, 110) %>...</p>
+                        <a href="/contact" class="notice-read-more">
+                            Read More <i class="fas fa-arrow-right"></i>
+                        </a>
+                    </div>
+                </div>
+                <% }); %>
+            <% } else { %>
+                <div class="col-md-4 reveal delay-100">
+                    <div class="notice-card">
+                        <span class="notice-date-badge"><i class="fas fa-calendar-alt" style="margin-right:5px"></i>June 2025</span>
+                        <h4>Admissions Open for 2025–26</h4>
+                        <p>New session admissions are now open for Primary, Secondary, and Higher Secondary classes. Apply today to secure your seat.</p>
+                        <a href="/admissions" class="notice-read-more">Apply Now <i class="fas fa-arrow-right"></i></a>
+                    </div>
+                </div>
+                <div class="col-md-4 reveal delay-200">
+                    <div class="notice-card">
+                        <span class="notice-date-badge"><i class="fas fa-calendar-alt" style="margin-right:5px"></i>May 2025</span>
+                        <h4>Annual Sports Week Announced</h4>
+                        <p>Get ready for the biggest event of the year! Annual sports week will be held in the first week of July. Registration opens soon.</p>
+                        <a href="#" class="notice-read-more">Learn More <i class="fas fa-arrow-right"></i></a>
+                    </div>
+                </div>
+                <div class="col-md-4 reveal delay-300">
+                    <div class="notice-card">
+                        <span class="notice-date-badge"><i class="fas fa-calendar-alt" style="margin-right:5px"></i>May 2025</span>
+                        <h4>Parent–Teacher Meeting</h4>
+                        <p>A mandatory parent–teacher meeting has been scheduled for Saturday. All parents are requested to attend and review student progress.</p>
+                        <a href="#" class="notice-read-more">Details <i class="fas fa-arrow-right"></i></a>
+                    </div>
+                </div>
+            <% } %>
+        </div>
+    </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════
+     CONTACT SECTION — Split Layout
+═══════════════════════════════════════════════ -->
+<section class="contact-section" id="contact">
+    <div class="container">
+        <div class="text-center reveal" style="margin-bottom:56px;">
+            <span class="overline">Get In Touch</span>
+            <h2 class="section-heading">Contact <span style="color:var(--gold)">Us</span></h2>
+            <span class="gold-line center"></span>
+        </div>
+        <div class="row g-4">
+
+            <!-- Left: Contact Info + Map -->
+            <div class="col-lg-5 reveal-left">
+                <div class="contact-card">
+                    <h3>We'd Love to Hear From You</h3>
+                    <p>Visit us, call us, or drop a message. Our team is always ready to help parents and prospective students.</p>
+
+                    <div class="contact-info-item">
+                        <div class="contact-info-icon"><i class="fas fa-map-marker-alt"></i></div>
+                        <div class="contact-info-text">
+                            <strong>Address</strong>
+                            <span><%= (typeof settings !=='undefined' && settings.school_address) ? settings.school_address : "Main Road, Khairpur Mir's, Sindh, Pakistan" %></span>
+                        </div>
+                    </div>
+                    <div class="contact-info-item">
+                        <div class="contact-info-icon"><i class="fas fa-phone-alt"></i></div>
+                        <div class="contact-info-text">
+                            <strong>Phone</strong>
+                            <span><%= (typeof settings !=='undefined' && settings.school_phone) ? settings.school_phone : "+92 243 714 5600" %></span>
+                        </div>
+                    </div>
+                    <div class="contact-info-item">
+                        <div class="contact-info-icon"><i class="fas fa-envelope"></i></div>
+                        <div class="contact-info-text">
+                            <strong>Email</strong>
+                            <span><%= (typeof settings !=='undefined' && settings.school_email) ? settings.school_email : "info@wphss.edu.pk" %></span>
+                        </div>
+                    </div>
+                    <div class="contact-info-item">
+                        <div class="contact-info-icon"><i class="fas fa-clock"></i></div>
+                        <div class="contact-info-text">
+                            <strong>Office Hours</strong>
+                            <span>Monday – Saturday &nbsp;|&nbsp; 7:30 AM – 2:00 PM</span>
+                        </div>
+                    </div>
+
+                    <!-- Map -->
+                    <div class="map-container" style="margin-top:28px;height:220px;">
+                        <iframe
+                            src="https://maps.google.com/maps?q=Khairpur+Mirs+Sindh+Pakistan&t=&z=13&ie=UTF8&iwloc=&output=embed"
+                            loading="lazy"
+                            allowfullscreen
+                            title="School Location Map">
+                        </iframe>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Right: Contact Form -->
+            <div class="col-lg-7 reveal-right">
+                <div class="contact-form-wrap">
+                    <h3>Send a Message</h3>
+                    <p class="sub">Have a question about admissions, fees, or anything else? We'll get back to you within 24 hours.</p>
+
+                    <div class="row g-3">
+                        <div class="col-md-6">
+                            <div class="form-field">
+                                <label for="contact-name">Full Name</label>
+                                <input type="text" id="contact-name" placeholder="Your full name" required>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-field">
+                                <label for="contact-email">Email Address</label>
+                                <input type="email" id="contact-email" placeholder="your@email.com" required>
+                            </div>
+                        </div>
+                        <div class="col-12">
+                            <div class="form-field">
+                                <label for="contact-subject">Subject</label>
+                                <select id="contact-subject">
+                                    <option value="">Select a subject...</option>
+                                    <option>Admission Inquiry</option>
+                                    <option>Fee Structure</option>
+                                    <option>Academic Query</option>
+                                    <option>General Information</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-12">
+                            <div class="form-field">
+                                <label for="contact-message">Message</label>
+                                <textarea id="contact-message" placeholder="Write your message here..." rows="5" required></textarea>
+                            </div>
+                        </div>
+                        <div class="col-12">
+                            <button type="button" class="btn-primary-wphss" style="width:100%;justify-content:center;padding:16px;">
+                                <i class="fas fa-paper-plane"></i> Send Message
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════
+     CTA BANNER
+═══════════════════════════════════════════════ -->
+<section class="cta-section">
+    <div class="container">
+        <div class="cta-content reveal">
+            <span class="overline" style="color:var(--gold);">Ready to Begin?</span>
+            <h2>Join WPHSS — Shape Your Future Today</h2>
+            <p>Applications for 2025–26 session are now open. Limited seats available. Don't miss your chance to be part of a legacy of excellence.</p>
+            <div style="display:flex;gap:16px;justify-content:center;flex-wrap:wrap;">
+                <a href="/admissions" class="btn-gold" style="padding:16px 44px;font-size:1rem;">
+                    <i class="fas fa-graduation-cap"></i> Apply Online Now
+                </a>
+                <a href="/contact" class="btn-outline-white" style="padding:15px 36px;font-size:1rem;">
+                    <i class="fas fa-phone"></i> Call Us
+                </a>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════
+     LIGHTBOX (Gallery)
+═══════════════════════════════════════════════ -->
+<div class="lightbox" id="lightbox" role="dialog" aria-modal="true" aria-label="Image lightbox">
+    <button class="lightbox-close" onclick="closeLightbox()" aria-label="Close">&times;</button>
+    <div id="lightboxContent" style="text-align:center;color:white;">
+        <i class="fas fa-images" style="font-size:5rem;color:var(--gold);margin-bottom:20px;display:block;"></i>
+        <p id="lightboxCaption" style="font-size:1.2rem;font-weight:700;"></p>
+    </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════
+     PAGE SCRIPTS
+═══════════════════════════════════════════════ -->
+<script>
+// Animated counter
+(function() {
+    const counters = document.querySelectorAll('.counter');
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (!entry.isIntersecting) return;
+            const el = entry.target;
+            const target = +el.dataset.target;
+            let count = 0;
+            const step = target / 60;
+            const timer = setInterval(() => {
+                count = Math.min(count + step, target);
+                el.textContent = Math.ceil(count).toLocaleString();
+                if (count >= target) clearInterval(timer);
+            }, 25);
+            observer.unobserve(el);
+        });
+    }, { threshold: 0.3 });
+    counters.forEach(c => observer.observe(c));
+})();
+
+// Lightbox
+function openLightbox(src, caption) {
+    const lb = document.getElementById('lightbox');
+    const content = document.getElementById('lightboxContent');
+    document.getElementById('lightboxCaption').textContent = caption;
+    lb.classList.add('active');
+    document.body.style.overflow = 'hidden';
+}
+function closeLightbox() {
+    document.getElementById('lightbox').classList.remove('active');
+    document.body.style.overflow = '';
+}
+document.getElementById('lightbox').addEventListener('click', function(e) {
+    if (e.target === this) closeLightbox();
+});
+document.addEventListener('keydown', e => { if (e.key === 'Escape') closeLightbox(); });
+</script>
+
+<%- include('partials/frontend_footer') %>

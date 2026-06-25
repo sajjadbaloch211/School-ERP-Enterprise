@@ -1,0 +1,135 @@
+<%- include('../partials/header') %>
+
+    <div class="admin-layout animate-fade-in" style="margin-top: 80px;">
+        <!-- Sidebar -->
+        <aside class="sidebar glass" style="margin: 20px; border-radius: 24px;">
+            <div style="margin-bottom: 3rem; text-align: center;">
+                <div
+                    style="width: 80px; height: 80px; background: #fef3c7; border-radius: 20px; display: flex; align-items: center; justify-content: center; margin: 0 auto 1rem; border: 3px solid var(--warning);">
+                    <i class="fas fa-chalkboard-teacher" style="font-size: 2rem; color: #d97706;"></i>
+                </div>
+                <h3 style="color: var(--primary); font-weight: 800;">Teacher Portal</h3>
+                <p style="font-size: 0.8rem; color: var(--text-muted);">
+                    <%= teacherData ? teacherData.subject : 'Faculty' %> Instructor
+                </p>
+            </div>
+            <ul class="sidebar-nav">
+                <li><a href="/teacher/dashboard"><i class="fas fa-home"></i> Home</a></li>
+                <li><a href="/teacher/attendance"><i class="fas fa-tasks"></i> Mark Attendance</a></li>
+                <li><a href="/teacher/exams" class="active"><i class="fas fa-clipboard-list"></i> Exam Results</a></li>
+                <li><a href="/teacher/timetable"><i class="fas fa-calendar-alt"></i> My Timetable</a></li>
+                <li><a href="/library"><i class="fas fa-book-reader"></i> Digital Library</a></li>
+                <li style="margin-top: 2rem;"><a href="/logout" style="color: var(--danger);"><i
+                            class="fas fa-sign-out-alt"></i> Logout</a></li>
+            </ul>
+        </aside>
+
+        <main class="main-content">
+            <header style="margin-bottom: 2rem;">
+                <h2 style="font-size: 2rem; font-weight: 800; color: var(--primary);">Exam Results Entry</h2>
+                <p style="color: var(--text-muted);">Upload and manage student marks</p>
+            </header>
+
+            <!-- Filters -->
+            <div class="card" style="margin-bottom: 2rem; padding: 1.5rem;">
+                <form method="GET" action="/teacher/exams"
+                    style="display: flex; gap: 1rem; align-items: center; flex-wrap: wrap;">
+                    <div style="flex: 1; min-width: 150px;">
+                        <label style="font-weight: 600; display: block; margin-bottom: 5px;">Select Exam</label>
+                        <select name="exam_id" required class="form-control"
+                            style="width: 100%; padding: 10px; border-radius: 10px;">
+                            <option value="">-- Choose Exam --</option>
+                            <% exams.forEach(ex=> { %>
+                                <option value="<%= ex.id %>" <%=selectedExam==ex.id ? 'selected' : '' %>><%=
+                                        ex.exam_name %>
+                                </option>
+                                <% }); %>
+                        </select>
+                    </div>
+                    <div style="flex: 1; min-width: 150px;">
+                        <label style="font-weight: 600; display: block; margin-bottom: 5px;">Class</label>
+                        <select name="class_id" required class="form-control"
+                            style="width: 100%; padding: 10px; border-radius: 10px;">
+                            <option value="">-- Select Class --</option>
+                            <% classes.forEach(cls=> { %>
+                                <option value="<%= cls.id %>" <%=selectedClass==cls.id ? 'selected' : '' %>><%=
+                                        cls.class_name %> - <%= cls.section %>
+                                </option>
+                                <% }); %>
+                        </select>
+                    </div>
+                    <div style="align-self: flex-end;">
+                        <button type="submit" class="btn-primary" style="padding: 11px 25px; border-radius: 10px;">Open
+                            Sheet</button>
+                    </div>
+                </form>
+            </div>
+
+            <% if (selectedExam && selectedClass && students.length> 0) { %>
+                <div class="card animate-slide-up">
+                    <form action="/teacher/exams/save" method="POST">
+                        <input type="hidden" name="_csrf"
+                            value="<%= typeof csrfToken !== 'undefined' ? csrfToken : '' %>">
+                        <input type="hidden" name="exam_id" value="<%= selectedExam %>">
+                        <input type="hidden" name="class_id" value="<%= selectedClass %>">
+
+                        <div
+                            style="margin-bottom: 1.5rem; display: flex; gap: 2rem; background: #f8fafc; padding: 1.5rem; border-radius: 15px; border: 1px dashed #cbd5e1;">
+                            <div>
+                                <label
+                                    style="display: block; font-weight: 700; color: var(--primary); margin-bottom: 8px;">Subject
+                                    Name</label>
+                                <input type="text" name="subject" value="<%= teacherData.subject %>" required
+                                    class="form-control"
+                                    style="padding: 10px; border-radius: 10px; border: 1px solid #ddd; width: 250px;">
+                            </div>
+                            <div>
+                                <label
+                                    style="display: block; font-weight: 700; color: var(--primary); margin-bottom: 8px;">Total
+                                    Marks</label>
+                                <input type="number" name="total_marks" value="100" required class="form-control"
+                                    style="padding: 10px; border-radius: 10px; border: 1px solid #ddd; width: 120px;">
+                            </div>
+                        </div>
+
+                        <table class="data-table" style="width: 100%; border-collapse: collapse;">
+                            <thead>
+                                <tr style="background: var(--bg-light); text-align: left;">
+                                    <th style="padding: 1rem;">Roll No</th>
+                                    <th style="padding: 1rem;">Name</th>
+                                    <th style="padding: 1rem;">Marks Obtained</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <% students.forEach((std, index)=> { %>
+                                    <tr style="border-bottom: 1px solid #f1f5f9;">
+                                        <td style="padding: 1rem; font-family: monospace; font-weight: 600;">
+                                            <%= std.roll_no %>
+                                        </td>
+                                        <td style="padding: 1rem; font-weight: 700;">
+                                            <%= std.full_name %>
+                                        </td>
+                                        <td style="padding: 1rem;">
+                                            <input type="hidden" name="student_ids[]" value="<%= std.id %>">
+                                            <input type="number" name="marks[]" value="<%= std.marks_obtained %>"
+                                                step="0.5" placeholder="Enter Marks" class="form-control"
+                                                style="width: 150px; padding: 8px 15px; border-radius: 8px; border: 1px solid #e2e8f0;">
+                                        </td>
+                                    </tr>
+                                    <% }); %>
+                            </tbody>
+                        </table>
+
+                        <div style="margin-top: 2rem; text-align: right;">
+                            <button type="submit" class="btn-primary"
+                                style="padding: 12px 40px; border-radius: 12px; font-weight: 800; box-shadow: var(--card-shadow);">
+                                Submit Results <i class="fas fa-check-double" style="margin-left: 10px;"></i>
+                            </button>
+                        </div>
+                    </form>
+                </div>
+                <% } %>
+        </main>
+    </div>
+
+    <%- include('../partials/footer') %>

@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Verify Identity | Waqar School</title>
+    <link rel="stylesheet" href="/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+        body {
+            background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .wrap {
+            width: 100%;
+            max-width: 450px;
+            padding: 20px;
+        }
+
+        .card {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(15px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 3rem;
+            border-radius: 24px;
+            color: white;
+            text-align: center;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+        }
+
+        .icon-box {
+            width: 80px;
+            height: 80px;
+            background: rgba(16, 185, 129, 0.1);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 20px;
+            font-size: 2rem;
+            color: #34d399;
+            border: 1px solid rgba(16, 185, 129, 0.3);
+        }
+
+        .otp-input {
+            width: 100%;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            padding: 15px;
+            border-radius: 12px;
+            color: white;
+            text-align: center;
+            font-size: 1.5rem;
+            letter-spacing: 10px;
+            margin-bottom: 20px;
+            transition: all 0.3s;
+        }
+
+        .otp-input:focus {
+            outline: none;
+            border-color: #34d399;
+            box-shadow: 0 0 0 4px rgba(52, 211, 153, 0.1);
+            background: rgba(255, 255, 255, 0.15);
+        }
+
+        .btn {
+            width: 100%;
+            padding: 15px;
+            background: #34d399;
+            color: #064e3b;
+            border: none;
+            border-radius: 12px;
+            font-weight: 700;
+            font-size: 1.1rem;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 15px -3px rgba(52, 211, 153, 0.3);
+        }
+    </style>
+</head>
+
+<body>
+    <div class="wrap animate-slide-up">
+        <div class="card">
+            <div class="icon-box">
+                <i class="fas fa-shield-alt"></i>
+            </div>
+            <h2 style="margin-bottom: 10px; font-weight: 800;">Verify it's You</h2>
+            <p style="color: rgba(255,255,255,0.6); margin-bottom: 30px;">
+                We've sent a 6-digit code to your Email and Registered Phone Number.
+            </p>
+
+            <% if (typeof error !=='undefined' && error) { %>
+                <div
+                    style="background: rgba(239,68,68,0.2); color:#fca5a5; padding:10px; border-radius:8px; margin-bottom:20px;">
+                    <%= error %>
+                </div>
+                <% } %>
+
+                    <form action="/auth/verify-otp" method="POST">
+                        <input type="hidden" name="user_id" value="<%= userId %>">
+                        <!-- 📍 Location Capture (Hidden) -->
+                        <input type="hidden" name="latitude" id="lat">
+                        <input type="hidden" name="longitude" id="lng">
+
+                        <input type="text" name="otp" class="otp-input" placeholder="000000" maxlength="6"
+                            pattern="\d{6}" required autocomplete="off">
+                        <button type="submit" class="btn">Verify Code</button>
+                    </form>
+
+                    <script>
+                        // 📍 Capture Location Automatically
+                        document.addEventListener('DOMContentLoaded', () => {
+                            if (navigator.geolocation) {
+                                navigator.geolocation.getCurrentPosition(
+                                    (position) => {
+                                        const latField = document.getElementById('lat');
+                                        const lngField = document.getElementById('lng');
+                                        if (latField) latField.value = position.coords.latitude;
+                                        if (lngField) lngField.value = position.coords.longitude;
+                                    },
+                                    (error) => console.log("Location access denied:", error.message),
+                                    { enableHighAccuracy: true }
+                                );
+                            }
+                        });
+                    </script>
+
+                    <br>
+                    <p style="color: rgba(255,255,255,0.4); font-size: 0.9rem;">
+                        Didn't receive code? <a href="/forgot-password"
+                            style="color: #34d399; text-decoration: none;">Resend</a>
+                    </p>
+        </div>
+    </div>
+</body>
+
+</html>
