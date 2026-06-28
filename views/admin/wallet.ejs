@@ -1,0 +1,249 @@
+<%- include('../partials/header') %>
+
+<div class="adm-layout">
+  <%- include('../partials/sidebar', { active: 'wallet' }) %>
+
+  <main class="adm-main" role="main" aria-label="Student Wallet Management">
+
+    <!-- Page Header -->
+    <div class="adm-page-header">
+      <div>
+        <h1 class="adm-page-title">
+          <i class="fas fa-wallet" style="color: var(--adm-indigo); margin-right: 0.5rem;"></i>
+          Student Wallet Management
+        </h1>
+        <p class="adm-page-subtitle">Manage digital wallets, manual top-ups, concessions, and auto fee-settlement.</p>
+      </div>
+    </div>
+
+    <!-- Success / Error Alerts -->
+    <% if (query.success) { %>
+      <div class="adm-alert adm-alert-success" style="display:flex;align-items:center;gap:0.75rem;margin-bottom:1.5rem;padding:1rem 1.25rem;background:rgba(16,185,129,0.08);border:1px solid rgba(16,185,129,0.25);border-radius:12px;color:#10b981;font-weight:600;">
+        <i class="fas fa-check-circle"></i>
+        <span><%= query.success === 'topup' ? 'Wallet top-up successful!' : query.success === 'settled' ? 'Dues settled from wallet!' : query.success === 'concession' ? 'Concession applied successfully!' : 'Operation successful.' %></span>
+      </div>
+    <% } %>
+    <% if (query.error) { %>
+      <div class="adm-alert adm-alert-error" style="display:flex;align-items:center;gap:0.75rem;margin-bottom:1.5rem;padding:1rem 1.25rem;background:rgba(239,68,68,0.08);border:1px solid rgba(239,68,68,0.25);border-radius:12px;color:#ef4444;font-weight:600;">
+        <i class="fas fa-exclamation-triangle"></i>
+        <span>Error: <%= decodeURIComponent(query.error) %></span>
+      </div>
+    <% } %>
+
+    <!-- Student Selector -->
+    <div class="adm-card" style="margin-bottom:1.5rem;padding:1.5rem;">
+      <h2 style="font-size:1rem;font-weight:700;margin-bottom:1rem;color:var(--adm-text-primary);">
+        <i class="fas fa-search" style="color:var(--adm-indigo);margin-right:0.5rem;"></i>
+        Select Student
+      </h2>
+      <form method="GET" action="/admin/wallet" style="display:flex;gap:1rem;flex-wrap:wrap;">
+        <select name="student_id" class="adm-input" style="max-width:340px;" onchange="this.form.submit()">
+          <option value="">-- Choose a Student --</option>
+          <% students.forEach(s => { %>
+            <option value="<%= s.id %>" <%= selectedStudentId == s.id ? 'selected' : '' %>>
+              <%= s.full_name %> — <%= s.class_name %> <%= s.section %><%= isSuperAdmin ? ` (${s.campus_name || 'Campus'})` : '' %>
+            </option>
+          <% }); %>
+        </select>
+      </form>
+    </div>
+
+    <% if (walletData) { %>
+
+      <!-- KPI Cards -->
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:1.25rem;margin-bottom:1.5rem;">
+
+        <!-- Wallet Balance -->
+        <article class="adm-kpi-card" style="border-left-color: #6366f1;">
+          <div class="adm-kpi-icon" style="background:rgba(99,102,241,0.1);color:#6366f1;">
+            <i class="fas fa-wallet"></i>
+          </div>
+          <div class="adm-kpi-content">
+            <h3 class="adm-kpi-title">Wallet Balance</h3>
+            <div class="adm-kpi-value" style="font-family:'JetBrains Mono',monospace;color:#6366f1;">
+              Rs. <%= Number(walletData.wallet.balance || 0).toLocaleString() %>
+            </div>
+          </div>
+        </article>
+
+        <!-- Outstanding Dues -->
+        <article class="adm-kpi-card" style="border-left-color: #ef4444;">
+          <div class="adm-kpi-icon" style="background:rgba(239,68,68,0.1);color:#ef4444;">
+            <i class="fas fa-exclamation-circle"></i>
+          </div>
+          <div class="adm-kpi-content">
+            <h3 class="adm-kpi-title">Outstanding Dues</h3>
+            <div class="adm-kpi-value" style="font-family:'JetBrains Mono',monospace;color:#ef4444;">
+              Rs. <%= Number(walletData.currentDues || 0).toLocaleString() %>
+            </div>
+          </div>
+        </article>
+
+        <!-- Active Concessions -->
+        <article class="adm-kpi-card" style="border-left-color: #10b981;">
+          <div class="adm-kpi-icon" style="background:rgba(16,185,129,0.1);color:#10b981;">
+            <i class="fas fa-tag"></i>
+          </div>
+          <div class="adm-kpi-content">
+            <h3 class="adm-kpi-title">Active Concessions</h3>
+            <div class="adm-kpi-value" style="font-family:'JetBrains Mono',monospace;color:#10b981;">
+              <%= walletData.concessions.length %>
+            </div>
+          </div>
+        </article>
+
+      </div>
+
+      <!-- Actions Row -->
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:1.25rem;margin-bottom:1.5rem;">
+
+        <!-- Top-Up Form -->
+        <div class="adm-card" style="padding:1.5rem;">
+          <h3 style="font-size:1rem;font-weight:700;margin-bottom:1rem;color:var(--adm-text-primary);">
+            <i class="fas fa-plus-circle" style="color:#6366f1;margin-right:0.5rem;"></i>
+            Manual Top-Up
+          </h3>
+          <form action="/admin/wallet/topup" method="POST">
+            <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+            <input type="hidden" name="student_id" value="<%= walletData.student.id %>">
+            <div class="adm-form-group" style="margin-bottom:1rem;">
+              <label class="adm-label">Amount (Rs.)</label>
+              <input type="number" name="amount" class="adm-input" placeholder="e.g. 5000" min="1" step="1" required>
+            </div>
+            <div class="adm-form-group" style="margin-bottom:1.25rem;">
+              <label class="adm-label">Description</label>
+              <input type="text" name="description" class="adm-input" placeholder="Cash received at counter" required>
+            </div>
+            <button type="submit" class="adm-btn adm-btn-primary" style="width:100%;">
+              <i class="fas fa-arrow-up"></i> Top-Up Wallet
+            </button>
+          </form>
+        </div>
+
+        <!-- Auto-Settle Dues -->
+        <div class="adm-card" style="padding:1.5rem;">
+          <h3 style="font-size:1rem;font-weight:700;margin-bottom:1rem;color:var(--adm-text-primary);">
+            <i class="fas fa-sync-alt" style="color:#10b981;margin-right:0.5rem;"></i>
+            Auto-Settle Dues from Wallet
+          </h3>
+          <p style="font-size:0.875rem;color:var(--adm-text-muted);line-height:1.6;margin-bottom:1.5rem;">
+            Automatically deduct outstanding fee dues from the student's wallet balance.
+            Wallet: <strong style="color:var(--adm-text-primary);">Rs. <%= Number(walletData.wallet.balance||0).toLocaleString() %></strong> ·
+            Dues: <strong style="color:#ef4444;">Rs. <%= Number(walletData.currentDues||0).toLocaleString() %></strong>
+          </p>
+          <% if (walletData.wallet.balance > 0 && walletData.currentDues > 0) { %>
+            <form action="/admin/wallet/settle" method="POST">
+              <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+              <input type="hidden" name="student_id" value="<%= walletData.student.id %>">
+              <button type="submit" class="adm-btn adm-btn-primary" style="width:100%;background:linear-gradient(135deg,#10b981,#059669);">
+                <i class="fas fa-check-double"></i>
+                Settle Rs. <%= Math.min(walletData.wallet.balance, walletData.currentDues).toLocaleString() %> Now
+              </button>
+            </form>
+          <% } else { %>
+            <p style="font-size:0.85rem;color:var(--adm-text-muted);text-align:center;padding:1rem;background:var(--adm-bg-surface);border-radius:8px;">
+              <i class="fas fa-info-circle"></i>
+              <%= walletData.currentDues <= 0 ? 'No outstanding dues.' : 'Wallet balance is empty.' %>
+            </p>
+          <% } %>
+
+          <!-- Concession Form -->
+          <hr style="border:none;border-top:1px solid var(--adm-border);margin:1.5rem 0;">
+          <h3 style="font-size:1rem;font-weight:700;margin-bottom:1rem;color:var(--adm-text-primary);">
+            <i class="fas fa-tag" style="color:#f59e0b;margin-right:0.5rem;"></i>
+            Apply Concession / Scholarship
+          </h3>
+          <form action="/admin/wallet/concession" method="POST">
+            <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+            <input type="hidden" name="student_id" value="<%= walletData.student.id %>">
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.75rem;margin-bottom:0.75rem;">
+              <div class="adm-form-group">
+                <label class="adm-label">Type</label>
+                <select name="type" class="adm-input">
+                  <option value="scholarship">Scholarship</option>
+                  <option value="discount">Discount</option>
+                  <option value="sibling_discount">Sibling Discount</option>
+                </select>
+              </div>
+              <div class="adm-form-group">
+                <label class="adm-label">Value Type</label>
+                <select name="value_type" class="adm-input">
+                  <option value="percentage">Percentage (%)</option>
+                  <option value="flat">Flat (Rs.)</option>
+                </select>
+              </div>
+            </div>
+            <div class="adm-form-group" style="margin-bottom:0.75rem;">
+              <label class="adm-label">Value</label>
+              <input type="number" name="value" class="adm-input" placeholder="e.g. 25 or 2500" min="0" step="0.01" required>
+            </div>
+            <div class="adm-form-group" style="margin-bottom:1rem;">
+              <label class="adm-label">Reason</label>
+              <input type="text" name="reason" class="adm-input" placeholder="Merit-based scholarship">
+            </div>
+            <button type="submit" class="adm-btn adm-btn-ghost" style="width:100%;">
+              <i class="fas fa-tag"></i> Apply Concession
+            </button>
+          </form>
+        </div>
+
+      </div>
+
+      <!-- Transaction History Table -->
+      <div class="adm-card" style="padding:0;overflow:hidden;">
+        <div style="padding:1.25rem 1.5rem;border-bottom:1px solid var(--adm-border);">
+          <h3 style="font-size:1rem;font-weight:700;color:var(--adm-text-primary);margin:0;">
+            <i class="fas fa-history" style="color:var(--adm-indigo);margin-right:0.5rem;"></i>
+            Wallet Transaction History
+          </h3>
+        </div>
+        <% if (walletData.txHistory.length === 0) { %>
+          <div class="adm-empty-state" style="padding:3rem;">
+            <i class="fas fa-inbox adm-empty-icon"></i>
+            <h3>No transactions yet</h3>
+            <p>This student's wallet has no recorded transactions.</p>
+          </div>
+        <% } else { %>
+          <div style="overflow-x:auto;">
+            <table class="adm-table">
+              <thead>
+                <tr>
+                  <th>Date & Time</th>
+                  <th>Type</th>
+                  <th>Description</th>
+                  <th style="text-align:right;">Amount</th>
+                </tr>
+              </thead>
+              <tbody>
+                <% walletData.txHistory.forEach(tx => { %>
+                  <tr>
+                    <td style="font-size:0.85rem;color:var(--adm-text-muted);">
+                      <%= new Date(tx.created_at).toLocaleDateString() %>
+                      <span style="margin-left:0.35rem;font-family:'JetBrains Mono',monospace;font-size:0.78rem;">
+                        <%= new Date(tx.created_at).toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'}) %>
+                      </span>
+                    </td>
+                    <td>
+                      <span class="adm-badge <%= tx.type === 'credit' ? 'adm-badge-green' : 'adm-badge-red' %>">
+                        <i class="fas <%= tx.type === 'credit' ? 'fa-arrow-up' : 'fa-arrow-down' %>"></i>
+                        <%= tx.type.toUpperCase() %>
+                      </span>
+                    </td>
+                    <td><%= tx.description %></td>
+                    <td style="text-align:right;font-family:'JetBrains Mono',monospace;font-weight:700;color:<%= tx.type==='credit'?'#10b981':'#ef4444' %>;">
+                      <%= tx.type === 'credit' ? '+' : '-' %> Rs. <%= Number(tx.amount).toLocaleString() %>
+                    </td>
+                  </tr>
+                <% }); %>
+              </tbody>
+            </table>
+          </div>
+        <% } %>
+      </div>
+
+    <% } %>
+
+  </main>
+</div>
+
+<%- include('../partials/footer') %>

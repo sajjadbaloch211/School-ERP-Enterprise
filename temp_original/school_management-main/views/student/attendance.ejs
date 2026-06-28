@@ -1,0 +1,128 @@
+<%- include('../partials/header') %>
+
+    <div class="admin-layout animate-fade-in" style="margin-top: 80px;">
+        <!-- Sidebar -->
+        <aside class="sidebar glass"
+            style="margin: 20px; border-radius: 24px; border: 1px solid rgba(0,0,0,0.05); box-shadow: var(--card-shadow);">
+            <div style="margin-bottom: 3rem; text-align: center;">
+                <div
+                    style="width: 80px; height: 80px; background: #eff6ff; border-radius: 24px; display: flex; align-items: center; justify-content: center; margin: 0 auto 1rem; border: 3px solid var(--accent);">
+                    <i class="fas fa-user-graduate" style="font-size: 2rem; color: var(--accent);"></i>
+                </div>
+                <h3 style="color: var(--primary); font-weight: 800;">Student Portal</h3>
+            </div>
+            <ul class="sidebar-nav">
+                <li><a href="/student/dashboard"><i class="fas fa-th-large"></i> Overview</a></li>
+                <li><a href="/student/attendance" class="active"><i class="fas fa-calendar-check"></i> Attendance</a>
+                </li>
+                <li><a href="/student/timetable"><i class="fas fa-calendar-alt"></i> Timetable</a></li>
+                <li><a href="/student/results"><i class="fas fa-poll"></i> Exam Results</a></li>
+                <li><a href="/student/fees"><i class="fas fa-file-invoice-dollar"></i> Fee History</a></li>
+                <li><a href="/library"><i class="fas fa-book-reader"></i> E-Library</a></li>
+                <li style="margin-top: 2rem;"><a href="/logout" style="color: var(--danger);"><i
+                            class="fas fa-sign-out-alt"></i> Sign Out</a></li>
+            </ul>
+        </aside>
+
+        <main class="main-content">
+            <header style="margin-bottom: 3rem;">
+                <h2 style="font-size: 2.2rem; font-weight: 900; color: var(--primary);">Attendance Log</h2>
+                <p style="color: var(--text-muted); font-weight: 500;">Monitor your daily presence and attendance
+                    statistics.</p>
+            </header>
+
+            <!-- Stats Overview -->
+            <div
+                style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1.5rem; margin-bottom: 2rem;">
+                <div class="card" style="text-align: center; border-bottom: 4px solid #10b981;">
+                    <div style="font-size: 2.5rem; font-weight: 900; color: #10b981;">
+                        <%= stats.present %>
+                    </div>
+                    <div style="font-size: 0.8rem; font-weight: 800; color: #64748b; text-transform: uppercase;">Days
+                        Present</div>
+                </div>
+                <div class="card" style="text-align: center; border-bottom: 4px solid #ef4444;">
+                    <div style="font-size: 2.5rem; font-weight: 900; color: #ef4444;">
+                        <%= stats.absent %>
+                    </div>
+                    <div style="font-size: 0.8rem; font-weight: 800; color: #64748b; text-transform: uppercase;">Days
+                        Absent</div>
+                </div>
+                <div class="card" style="text-align: center; border-bottom: 4px solid #f59e0b;">
+                    <div style="font-size: 2.5rem; font-weight: 900; color: #f59e0b;">
+                        <%= stats.late %>
+                    </div>
+                    <div style="font-size: 0.8rem; font-weight: 800; color: #64748b; text-transform: uppercase;">Late
+                        Arrivals</div>
+                </div>
+                <div class="card" style="text-align: center; border-bottom: 4px solid #6366f1;">
+                    <div style="font-size: 2.5rem; font-weight: 900; color: #6366f1;">
+                        <%= stats.leave %>
+                    </div>
+                    <div style="font-size: 0.8rem; font-weight: 800; color: #64748b; text-transform: uppercase;">On
+                        Leave</div>
+                </div>
+            </div>
+
+            <div class="card animate-slide-up" style="padding: 0; overflow: hidden; border-radius: 20px;">
+                <table style="width: 100%; border-collapse: collapse;">
+                    <thead>
+                        <tr style="background: #f8fafc; text-align: left; border-bottom: 2px solid #f1f5f9;">
+                            <th
+                                style="padding: 1.2rem 2rem; color: #64748b; font-weight: 800; text-transform: uppercase; font-size: 0.8rem;">
+                                Date</th>
+                            <th
+                                style="padding: 1.2rem 2rem; color: #64748b; font-weight: 800; text-transform: uppercase; font-size: 0.8rem;">
+                                Day</th>
+                            <th
+                                style="padding: 1.2rem 2rem; color: #64748b; font-weight: 800; text-transform: uppercase; font-size: 0.8rem; text-align: right;">
+                                Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <% if(attendanceLog.length===0) { %>
+                            <tr>
+                                <td colspan="3" style="padding: 5rem; text-align: center; color: var(--text-muted);">
+                                    <i class="fas fa-calendar-times"
+                                        style="font-size: 3rem; opacity: 0.1; display: block; margin-bottom: 1rem;"></i>
+                                    No attendance records found yet.
+                                </td>
+                            </tr>
+                            <% } %>
+                                <% attendanceLog.forEach(entry=> {
+                                    let bg = '#f1f5f9'; let dot = '#64748b'; let text = '#64748b';
+                                    if(entry.status === 'present') { bg = 'rgba(16, 185, 129, 0.1)'; dot = '#10b981';
+                                    text = '#065f46'; }
+                                    else if(entry.status === 'absent') { bg = 'rgba(239, 68, 68, 0.1)'; dot = '#ef4444';
+                                    text = '#991b1b'; }
+                                    else if(entry.status === 'late') { bg = 'rgba(245, 158, 11, 0.1)'; dot = '#f59e0b';
+                                    text = '#92400e'; }
+                                    else if(entry.status === 'leave') { bg = 'rgba(99, 102, 241, 0.1)'; dot = '#6366f1';
+                                    text = '#3730a3'; }
+
+                                    const dateObj = new Date(entry.date);
+                                    %>
+                                    <tr style="border-bottom: 1px solid #f8fafc;">
+                                        <td style="padding: 1.5rem 2rem; font-weight: 700; color: var(--primary);">
+                                            <%= dateObj.toLocaleDateString() %>
+                                        </td>
+                                        <td style="padding: 1.5rem 2rem; color: var(--text-muted); font-weight: 600;">
+                                            <%= dateObj.toLocaleString('en-us', {weekday: 'long' }) %>
+                                        </td>
+                                        <td style="padding: 1.5rem 2rem; text-align: right;">
+                                            <span
+                                                style="background: <%= bg %>; color: <%= text %>; padding: 6px 15px; border-radius: 12px; font-weight: 900; font-size: 0.75rem; display: inline-flex; align-items: center; gap: 8px; text-transform: uppercase;">
+                                                <span
+                                                    style="width: 8px; height: 8px; background: <%= dot %>; border-radius: 50%;"></span>
+                                                <%= entry.status %>
+                                            </span>
+                                        </td>
+                                    </tr>
+                                    <% }) %>
+                    </tbody>
+                </table>
+            </div>
+        </main>
+    </div>
+
+    <%- include('../partials/footer') %>

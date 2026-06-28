@@ -1,0 +1,81 @@
+<%- include('../partials/header') %>
+
+    <div class="admin-layout animate-fade-in" style="margin-top: 80px;">
+        <!-- Sidebar -->
+        <%- include('../partials/sidebar', { active: 'library' }) %>
+
+            <main class="main-content">
+                <div style="max-width: 600px; margin: 0 auto;">
+                    <div class="card animate-slide-up">
+                        <h2 style="color: var(--primary); font-weight: 800; margin-bottom: 2rem;">Upload New Resource
+                        </h2>
+
+                        <form action="/admin/library/add" method="POST" enctype="multipart/form-data">
+                            <input type="hidden" name="_csrf"
+                                value="<%= typeof csrfToken !== 'undefined' ? csrfToken : '' %>">
+                            <div class="form-group mb-4">
+                                <label style="display: block; font-weight: 700; margin-bottom: 0.5rem;">Resource
+                                    Title</label>
+                                <input type="text" name="title" required
+                                    style="width: 100%; padding: 12px; border-radius: 12px; border: 1px solid #ddd;"
+                                    placeholder="e.g. Mathematics Formula Sheet">
+                            </div>
+
+                            <div class="form-group mb-4">
+                                <label style="display: block; font-weight: 700; margin-bottom: 0.5rem;">For Grade /
+                                    Class</label>
+                                <select name="target_grade" required
+                                    style="width: 100%; padding: 12px; border-radius: 12px; border: 1px solid #ddd; background: white;">
+                                    <option value="General">General / All Classes</option>
+                                    <% classes.forEach(cls=> { %>
+                                        <option value="<%= cls.class_name %> - <%= cls.section %>">
+                                            <%= cls.class_name %> - <%= cls.section %>
+                                        </option>
+                                        <% }) %>
+                                </select>
+                            </div>
+
+                            <div class="form-group mb-4">
+                                <label style="display: block; font-weight: 700; margin-bottom: 0.5rem;">Subject /
+                                    Category</label>
+                                <input type="text" name="subject" required
+                                    style="width: 100%; padding: 12px; border-radius: 12px; border: 1px solid #ddd;"
+                                    placeholder="e.g. Mathematics">
+                            </div>
+
+                            <div class="form-group mb-4">
+                                <label style="display: block; font-weight: 700; margin-bottom: 0.5rem;">Visibility (Who
+                                    can
+                                    see this?)</label>
+                                <select name="visibility" required
+                                    style="width: 100%; padding: 12px; border-radius: 12px; border: 1px solid #ddd; background: white;">
+                                    <option value="both">Both (Students & Teachers)</option>
+                                    <option value="student">Students Only</option>
+                                    <option value="teacher">Teachers Only</option>
+                                </select>
+                            </div>
+
+                            <div class="form-group mb-4">
+                                <label style="display: block; font-weight: 700; margin-bottom: 0.5rem;">Select
+                                    File</label>
+                                <div
+                                    style="border: 2px dashed #cbd5e1; padding: 2rem; text-align: center; border-radius: 12px; background: #f8fafc;">
+                                    <input type="file" name="book_file" required
+                                        accept=".pdf,.doc,.docx,.jpg,.jpeg,.png" style="width: 100%;">
+                                    <p style="color: var(--text-muted); margin-top: 10px; font-size: 0.9rem;">
+                                        Supported Formats: PDF, Word, JPEG, PNG
+                                    </p>
+                                </div>
+                            </div>
+
+                            <button type="submit" class="btn-primary"
+                                style="width: 100%; padding: 15px; font-size: 1.1rem;">
+                                <i class="fas fa-cloud-upload-alt"></i> Upload Now
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </main>
+    </div>
+
+    <%- include('../partials/footer') %>

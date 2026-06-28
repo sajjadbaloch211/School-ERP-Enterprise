@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Notifications | ERP Admin</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <style>
+        :root {
+            --bg: #0f0f13;
+            --surface: #18181f;
+            --surface2: #1e1e28;
+            --border: rgba(255,255,255,0.07);
+            --accent: #6366f1;
+            --accent2: #8b5cf6;
+            --success: #10b981;
+            --warning: #f59e0b;
+            --danger: #ef4444;
+            --info: #3b82f6;
+            --text: #e2e8f0;
+            --muted: #94a3b8;
+            --radius: 16px;
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Inter', sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; }
+
+        /* ── Layout ── */
+        .page-wrapper { display: flex; flex-direction: column; gap: 0; }
+        .topbar {
+            background: var(--surface);
+            border-bottom: 1px solid var(--border);
+            padding: 20px 32px;
+            display: flex; align-items: center; gap: 16px;
+            position: sticky; top: 0; z-index: 100;
+        }
+        .topbar-back {
+            width: 40px; height: 40px; border-radius: 10px;
+            background: var(--surface2); border: 1px solid var(--border);
+            display: flex; align-items: center; justify-content: center;
+            text-decoration: none; color: var(--muted);
+            transition: all .2s;
+        }
+        .topbar-back:hover { background: var(--accent); color: #fff; border-color: var(--accent); }
+        .topbar-title { font-size: 1.25rem; font-weight: 700; flex: 1; }
+        .topbar-subtitle { color: var(--muted); font-size: .8rem; }
+
+        .topbar-actions { display: flex; gap: 8px; }
+        .btn {
+            padding: 9px 18px; border-radius: 10px; border: 1px solid var(--border);
+            font-family: 'Inter', sans-serif; font-size: .85rem; font-weight: 600;
+            cursor: pointer; transition: all .2s; display: flex; align-items: center; gap: 6px;
+        }
+        .btn-primary { background: var(--accent); color: #fff; border-color: var(--accent); }
+        .btn-primary:hover { background: var(--accent2); transform: translateY(-1px); }
+        .btn-ghost { background: transparent; color: var(--muted); }
+        .btn-ghost:hover { background: var(--surface2); color: var(--text); }
+        .btn-danger-outline { background: transparent; color: var(--danger); border-color: rgba(239,68,68,.3); }
+        .btn-danger-outline:hover { background: rgba(239,68,68,.1); }
+
+        /* ── Main Content ── */
+        .main { padding: 32px; max-width: 1100px; margin: 0 auto; width: 100%; }
+
+        /* ── Stats ── */
+        .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 16px; margin-bottom: 28px; }
+        .stat-card {
+            background: var(--surface); border: 1px solid var(--border);
+            border-radius: var(--radius); padding: 20px; display: flex; flex-direction: column; gap: 6px;
+            transition: transform .2s, box-shadow .2s;
+        }
+        .stat-card:hover { transform: translateY(-3px); box-shadow: 0 12px 40px rgba(0,0,0,.3); }
+        .stat-icon { font-size: 1.5rem; margin-bottom: 4px; }
+        .stat-value { font-size: 1.8rem; font-weight: 800; }
+        .stat-label { font-size: .78rem; color: var(--muted); text-transform: uppercase; letter-spacing: .05em; }
+        .stat-card.unread .stat-value { color: var(--accent); }
+        .stat-card.success .stat-value { color: var(--success); }
+        .stat-card.warning .stat-value { color: var(--warning); }
+        .stat-card.danger .stat-value { color: var(--danger); }
+
+        /* ── Filters ── */
+        .filters-row {
+            display: flex; gap: 8px; align-items: center; margin-bottom: 20px; flex-wrap: wrap;
+        }
+        .filter-chip {
+            padding: 6px 14px; border-radius: 50px; border: 1px solid var(--border);
+            background: var(--surface); color: var(--muted); font-size: .8rem; cursor: pointer;
+            transition: all .2s; font-family: 'Inter', sans-serif;
+        }
+        .filter-chip:hover, .filter-chip.active { background: var(--accent); color: #fff; border-color: var(--accent); }
+        .filter-chip.success.active { background: var(--success); border-color: var(--success); }
+        .filter-chip.warning.active { background: var(--warning); border-color: var(--warning); color: #000; }
+        .filter-chip.danger.active { background: var(--danger); border-color: var(--danger); }
+        .filter-chip.info.active { background: var(--info); border-color: var(--info); }
+
+        /* ── Notification Feed ── */
+        .feed { display: flex; flex-direction: column; gap: 10px; }
+        .notification-card {
+            background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius);
+            padding: 18px 20px; display: flex; gap: 16px; align-items: flex-start;
+            transition: all .2s; cursor: pointer; position: relative; overflow: hidden;
+        }
+        .notification-card::before {
+            content: ''; position: absolute; left: 0; top: 0; bottom: 0; width: 3px;
+        }
+        .notification-card.type-success::before { background: var(--success); }
+        .notification-card.type-warning::before { background: var(--warning); }
+        .notification-card.type-error::before { background: var(--danger); }
+        .notification-card.type-info::before { background: var(--info); }
+        .notification-card.unread { background: rgba(99,102,241,.06); border-color: rgba(99,102,241,.2); }
+        .notification-card:hover { transform: translateX(4px); border-color: rgba(255,255,255,.15); }
+
+        .notif-icon {
+            width: 44px; height: 44px; border-radius: 12px; display: flex;
+            align-items: center; justify-content: center; font-size: 1.1rem; flex-shrink: 0;
+        }
+        .notif-icon.success { background: rgba(16,185,129,.15); color: var(--success); }
+        .notif-icon.warning { background: rgba(245,158,11,.15); color: var(--warning); }
+        .notif-icon.error   { background: rgba(239,68,68,.15); color: var(--danger); }
+        .notif-icon.info    { background: rgba(59,130,246,.15); color: var(--info); }
+
+        .notif-body { flex: 1; min-width: 0; }
+        .notif-title { font-weight: 600; font-size: .9rem; margin-bottom: 4px; display: flex; align-items: center; gap: 8px; }
+        .notif-unread-dot { width: 7px; height: 7px; background: var(--accent); border-radius: 50%; display: inline-block; flex-shrink: 0; }
+        .notif-message { color: var(--muted); font-size: .82rem; line-height: 1.5; }
+        .notif-meta { display: flex; gap: 12px; margin-top: 8px; align-items: center; }
+        .notif-time { color: var(--muted); font-size: .75rem; }
+        .notif-link { color: var(--accent); font-size: .75rem; text-decoration: none; }
+        .notif-link:hover { text-decoration: underline; }
+
+        .notif-actions { display: flex; gap: 6px; flex-shrink: 0; }
+        .notif-btn {
+            width: 32px; height: 32px; border-radius: 8px; border: 1px solid var(--border);
+            background: transparent; color: var(--muted); cursor: pointer; font-size: .8rem;
+            display: flex; align-items: center; justify-content: center; transition: all .2s;
+        }
+        .notif-btn:hover { background: var(--surface2); color: var(--text); }
+        .notif-btn.mark-read:hover { background: rgba(16,185,129,.15); color: var(--success); border-color: var(--success); }
+
+        /* ── Empty state ── */
+        .empty-state {
+            text-align: center; padding: 80px 40px; color: var(--muted);
+        }
+        .empty-state i { font-size: 3rem; margin-bottom: 16px; opacity: .3; display: block; }
+        .empty-state h3 { font-size: 1.1rem; margin-bottom: 8px; color: var(--text); }
+        .empty-state p { font-size: .85rem; }
+
+        /* ── Flash alert ── */
+        .flash {
+            padding: 14px 20px; border-radius: 12px; margin-bottom: 20px;
+            display: flex; align-items: center; gap: 10px; font-size: .85rem; font-weight: 500;
+        }
+        .flash-success { background: rgba(16,185,129,.1); border: 1px solid rgba(16,185,129,.3); color: var(--success); }
+
+        /* ── Responsive ── */
+        @media (max-width: 640px) {
+            .main { padding: 16px; }
+            .topbar { padding: 16px; }
+            .stats-grid { grid-template-columns: 1fr 1fr; }
+        }
+    </style>
+</head>
+<body>
+<div class="page-wrapper">
+
+    <!-- Topbar -->
+    <header class="topbar">
+        <a href="/admin/dashboard" class="topbar-back"><i class="fas fa-arrow-left"></i></a>
+        <div>
+            <div class="topbar-title">🔔 Notification Center</div>
+            <div class="topbar-subtitle">Finance & operational alerts</div>
+        </div>
+        <div class="topbar-actions">
+            <form method="POST" action="/admin/notifications/mark-all-read" style="margin:0">
+                <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+                <button type="submit" class="btn btn-ghost"><i class="fas fa-check-double"></i> Mark All Read</button>
+            </form>
+            <form method="POST" action="/admin/notifications/clear-all" style="margin:0">
+                <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+                <button type="submit" class="btn btn-danger-outline" onclick="return confirm('Clear all old notifications?')">
+                    <i class="fas fa-trash-alt"></i> Clear Old
+                </button>
+            </form>
+        </div>
+    </header>
+
+    <div class="main">
+        <!-- Flash -->
+        <% if (success) { %>
+        <div class="flash flash-success"><i class="fas fa-check-circle"></i> <%= success %></div>
+        <% } %>
+
+        <!-- Stats -->
+        <div class="stats-grid">
+            <div class="stat-card unread">
+                <div class="stat-icon">🔔</div>
+                <div class="stat-value"><%= unreadCount %></div>
+                <div class="stat-label">Unread</div>
+            </div>
+            <div class="stat-card success">
+                <div class="stat-icon">✅</div>
+                <div class="stat-value"><%= successCount %></div>
+                <div class="stat-label">Success Alerts</div>
+            </div>
+            <div class="stat-card warning">
+                <div class="stat-icon">⚠️</div>
+                <div class="stat-value"><%= warningCount %></div>
+                <div class="stat-label">Warnings</div>
+            </div>
+            <div class="stat-card danger">
+                <div class="stat-icon">🚨</div>
+                <div class="stat-value"><%= errorCount %></div>
+                <div class="stat-label">Errors</div>
+            </div>
+        </div>
+
+        <!-- Filters -->
+        <div class="filters-row">
+            <button class="filter-chip active" data-filter="all" onclick="filterNotifs(this, 'all')">All (<%= notifications.length %>)</button>
+            <button class="filter-chip" data-filter="unread" onclick="filterNotifs(this, 'unread')">Unread</button>
+            <button class="filter-chip success" data-filter="success" onclick="filterNotifs(this, 'success')">
+                <i class="fas fa-check-circle"></i> Success
+            </button>
+            <button class="filter-chip warning" data-filter="warning" onclick="filterNotifs(this, 'warning')">
+                <i class="fas fa-exclamation-triangle"></i> Warning
+            </button>
+            <button class="filter-chip danger" data-filter="error" onclick="filterNotifs(this, 'error')">
+                <i class="fas fa-times-circle"></i> Error
+            </button>
+            <button class="filter-chip info" data-filter="info" onclick="filterNotifs(this, 'info')">
+                <i class="fas fa-info-circle"></i> Info
+            </button>
+        </div>
+
+        <!-- Notification Feed -->
+        <div class="feed" id="notif-feed">
+            <% if (notifications.length === 0) { %>
+            <div class="empty-state">
+                <i class="fas fa-bell-slash"></i>
+                <h3>All Clear!</h3>
+                <p>No notifications yet. Finance events will appear here.</p>
+            </div>
+            <% } %>
+
+            <% notifications.forEach(n => { %>
+            <%
+                const typeIconMap = {
+                    success: 'fa-check-circle',
+                    warning: 'fa-exclamation-triangle',
+                    error: 'fa-times-circle',
+                    info: 'fa-info-circle'
+                };
+                const icon = typeIconMap[n.type] || 'fa-bell';
+                const ago = timeAgo(n.created_at);
+            %>
+            <div class="notification-card type-<%= n.type %> <%= n.is_read ? '' : 'unread' %>"
+                 data-type="<%= n.type %>" data-read="<%= n.is_read %>"
+                 id="notif-<%= n.id %>">
+
+                <div class="notif-icon <%= n.type %>">
+                    <i class="fas <%= icon %>"></i>
+                </div>
+
+                <div class="notif-body">
+                    <div class="notif-title">
+                        <% if (!n.is_read) { %><span class="notif-unread-dot"></span><% } %>
+                        <%= n.title %>
+                    </div>
+                    <div class="notif-message"><%= n.message %></div>
+                    <div class="notif-meta">
+                        <span class="notif-time"><i class="far fa-clock"></i> <%= ago %></span>
+                        <% if (n.link) { %>
+                        <a href="<%= n.link %>" class="notif-link"><i class="fas fa-external-link-alt"></i> View Details</a>
+                        <% } %>
+                        <% if (n.user_name) { %>
+                        <span class="notif-time"><i class="fas fa-user"></i> <%= n.user_name %></span>
+                        <% } %>
+                    </div>
+                </div>
+
+                <div class="notif-actions">
+                    <% if (!n.is_read) { %>
+                    <form method="POST" action="/admin/notifications/<%= n.id %>/mark-read" style="margin:0">
+                        <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+                        <button type="submit" class="notif-btn mark-read" title="Mark as read">
+                            <i class="fas fa-check"></i>
+                        </button>
+                    </form>
+                    <% } %>
+                </div>
+            </div>
+            <% }); %>
+        </div>
+    </div>
+</div>
+
+<script>
+    function filterNotifs(btn, filter) {
+        // Toggle active chip
+        document.querySelectorAll('.filter-chip').forEach(c => c.classList.remove('active'));
+        btn.classList.add('active');
+
+        // Filter cards
+        document.querySelectorAll('.notification-card').forEach(card => {
+            const type = card.dataset.type;
+            const isUnread = card.dataset.read === '0';
+
+            let show = false;
+            if (filter === 'all') show = true;
+            else if (filter === 'unread') show = isUnread;
+            else show = type === filter;
+
+            card.style.display = show ? 'flex' : 'none';
+        });
+    }
+</script>
+</body>
+</html>

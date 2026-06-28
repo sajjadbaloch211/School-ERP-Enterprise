@@ -1,151 +1,244 @@
-<aside class="sidebar glass" id="adminSidebar"
-    style="margin: 20px; border-radius: 24px; border: 1px solid rgba(0,0,0,0.05); box-shadow: var(--card-shadow);">
+<aside class="adm-sidebar" id="admSidebar" role="navigation" aria-label="Admin navigation" aria-hidden="false">
+  
+  <button class="adm-sidebar-close" id="admSidebarClose" aria-label="Close navigation" type="button">
+    <i class="fas fa-times" aria-hidden="true"></i>
+  </button>
 
-    <!-- Mobile Close Button -->
-    <button class="sidebar-close-btn" id="sidebarCloseBtn" aria-label="Close sidebar">
-        <i class="fas fa-times"></i>
-    </button>
-
-    <div style="margin-bottom: 3rem; text-align: center;">
-        <div
-            style="width: 80px; height: 80px; background: white; border-radius: 20px; display: flex; align-items: center; justify-content: center; margin: 0 auto 1.5rem; border: 2px solid #eee; overflow: hidden; padding: 5px;">
-            <img src="/images/waqar.png" alt="Logo" style="width: 100%; height: 100%; object-fit: contain;">
-        </div>
-        <h3 style="color: var(--primary); font-weight: 800;">
-            <%= typeof campus !=='undefined' && campus ? campus.campus_name : 'Admin Panel' %>
-        </h3>
-        <% if(typeof campus !=='undefined' && campus) { %>
-            <small style="color: var(--text-muted); display: block; margin-top: -5px; font-weight: 600;">
-                <%= campus.campus_code %>
-            </small>
-            <% } %>
+  <!-- ── 1. HEADER (BRAND) — Fixed ── -->
+  <div class="adm-sidebar-brand" role="banner">
+    <div class="adm-sidebar-logo">
+      <img src="<%= (typeof settings !== 'undefined' && settings && settings.site_logo) ? settings.site_logo : '/images/waqar.png' %>" alt="School Logo">
     </div>
-    <ul class="sidebar-nav">
-        <li><a href="/admin/dashboard"
-                class="<%= typeof active !== 'undefined' && active === 'dashboard' ? 'active' : '' %>"><i
-                    class="fas fa-th-large"></i> Dashboard</a></li>
-        <li><a href="/admin/students"
-                class="<%= typeof active !== 'undefined' && active === 'students' ? 'active' : '' %>"><i
-                    class="fas fa-user-graduate"></i> Students</a></li>
-        <li><a href="/admin/teachers"
-                class="<%= typeof active !== 'undefined' && active === 'teachers' ? 'active' : '' %>"><i
-                    class="fas fa-chalkboard-teacher"></i> Teachers</a></li>
-        <li><a href="/admin/classes"
-                class="<%= typeof active !== 'undefined' && active === 'classes' ? 'active' : '' %>"><i
-                    class="fas fa-school"></i> Classes</a></li>
-        <li><a href="/admin/fees" class="<%= typeof active !== 'undefined' && active === 'fees' ? 'active' : '' %>"><i
-                    class="fas fa-file-invoice-dollar"></i> Fees</a></li>
-        <li><a href="/admin/payroll"
-                class="<%= typeof active !== 'undefined' && active === 'payroll' ? 'active' : '' %>"><i
-                    class="fas fa-money-bill-wave"></i> Staff Payroll</a></li>
-        <li><a href="/admin/timetable"
-                class="<%= typeof active !== 'undefined' && active === 'timetable' ? 'active' : '' %>"><i
-                    class="fas fa-calendar-alt"></i> Timetable</a></li>
-        <li><a href="/admin/attendance"
-                class="<%= typeof active !== 'undefined' && active === 'attendance' ? 'active' : '' %>"><i
-                    class="fas fa-calendar-check"></i> Attendance</a></li>
-        <li><a href="/admin/exams" class="<%= typeof active !== 'undefined' && active === 'exams' ? 'active' : '' %>"><i
-                    class="fas fa-clipboard-list"></i> Exams</a></li>
-        <li><a href="/admin/notices"
-                class="<%= typeof active !== 'undefined' && active === 'notices' ? 'active' : '' %>"><i
-                    class="fas fa-bullhorn"></i> Notices</a></li>
-        <li><a href="/admin/email" class="<%= typeof active !== 'undefined' && active === 'email' ? 'active' : '' %>"><i
-                    class="fas fa-envelope"></i> Email</a></li>
-        <li><a href="/admin/library"
-                class="<%= typeof active !== 'undefined' && active === 'library' ? 'active' : '' %>"><i
-                    class="fas fa-book-reader"></i> E-Library</a></li>
+    <div class="adm-sidebar-school">
+      <div class="adm-sidebar-school-name">
+        <%= (typeof campus !== 'undefined' && campus && campus.campus_name) ? campus.campus_name : ((typeof settings !== 'undefined' && settings && settings.site_name) ? settings.site_name : 'Admin Panel') %>
+      </div>
+    </div>
+  </div>
 
+  <!-- ── 2. USER PROFILE — Fixed ── -->
+  <div class="adm-sidebar-profile">
+    <div class="adm-avatar" aria-hidden="true">
+      <%= typeof user !== 'undefined' && user && user.full_name ? user.full_name.trim().split(' ').map(n => n[0]).join('').slice(0,2).toUpperCase() : 'AD' %>
+    </div>
+    <div class="adm-sidebar-profile-info">
+      <div class="adm-sidebar-profile-name">
+        <%= typeof user !== 'undefined' && user && user.full_name ? user.full_name : 'Admin User' %>
+      </div>
+      <div class="adm-sidebar-profile-role">
+        <%= typeof user !== 'undefined' && user && user.role ? user.role : 'Administrator' %>
+      </div>
+    </div>
+  </div>
 
+  <!-- ── 3. NAVIGATION — Scrollable ── -->
+  <div class="adm-sidebar-nav" role="navigation" aria-label="Main menu">
+    
+    <div class="adm-nav-section">
+      <a href="/admin/dashboard" class="adm-nav-item <%= (typeof active !== 'undefined' && active === 'dashboard') ? 'active' : '' %>">
+        <div class="adm-nav-group-header-left">
+            <i class="fas fa-home adm-nav-icon" aria-hidden="true"></i>
+            <span>Dashboard</span>
+        </div>
+      </a>
+      
+      <a href="/admin/students" class="adm-nav-item <%= (typeof active !== 'undefined' && active === 'students') ? 'active' : '' %>">
+        <div class="adm-nav-group-header-left">
+            <i class="fas fa-user-graduate adm-nav-icon" aria-hidden="true"></i>
+            <span>Students</span>
+        </div>
+      </a>
 
-        <!-- Website Management (Restored) -->
-        <li class="sidebar-header"
-            style="margin-top: 15px; padding-left: 20px; font-size: 0.75rem; color: #aaa; text-transform: uppercase; letter-spacing: 1px; font-weight: 700;">
-            Website Control</li>
-        <li><a href="/admin/cms/settings"
-                class="<%= typeof active !== 'undefined' && active === 'cms_settings' ? 'active' : '' %>"><i
-                    class="fas fa-cogs"></i> General Settings</a></li>
-        <li><a href="/admin/cms/theme"
-                class="<%= typeof active !== 'undefined' && active === 'cms_theme' ? 'active' : '' %>"><i
-                    class="fas fa-palette"></i> Theme & Colors</a></li>
-        <li><a href="/admin/cms/pages"
-                class="<%= typeof active !== 'undefined' && active === 'cms_pages' ? 'active' : '' %>"><i
-                    class="fas fa-columns"></i> Page Builder</a></li>
-        <li><a href="/admin/cms/menus"
-                class="<%= typeof active !== 'undefined' && active === 'cms_menus' ? 'active' : '' %>"><i
-                    class="fas fa-compass"></i> Menu Manager</a></li>
+      <a href="/admin/teachers" class="adm-nav-item <%= (typeof active !== 'undefined' && active === 'teachers') ? 'active' : '' %>">
+        <div class="adm-nav-group-header-left">
+            <i class="fas fa-chalkboard-teacher adm-nav-icon" aria-hidden="true"></i>
+            <span>Teachers</span>
+        </div>
+      </a>
 
-        <li><a href="/admin/audit-logs"
-                class="<%= typeof active !== 'undefined' && active === 'audit-logs' ? 'active' : '' %>"
-                style="<%= typeof active !== 'undefined' && active === 'audit-logs' ? '' : 'color: #f59e0b;' %>"><i
-                    class="fas fa-shield-alt"></i> Security & Audits</a></li>
-        <% if (user && user.role==='admin' ) { %>
-            <li><a href="/admin/mfa-setup"
-                    class="<%= typeof active !== 'undefined' && active === 'mfa' ? 'active' : '' %>"
-                    style="<%= typeof active !== 'undefined' && active === 'mfa' ? '' : 'color: #10b981;' %>"><i
-                        class="fas fa-fingerprint"></i> 2FA Security <%= user.mfa_enabled ? '✅' : '🔒' %></a>
-            </li>
-            <% } %>
-                <li><a href="/admin/campuses"
-                        class="<%= typeof active !== 'undefined' && active === 'campuses' ? 'active' : '' %>"
-                        style="<%= typeof active !== 'undefined' && active === 'campuses' ? '' : 'color: #6366f1;' %>"><i
-                            class="fas fa-university"></i> Campuses</a></li>
-                <li style="margin-top: 2rem;"><a href="/logout" style="color: var(--danger);"><i
-                            class="fas fa-sign-out-alt"></i> Logout System</a></li>
-    </ul>
+      <a href="/admin/classes" class="adm-nav-item <%= (typeof active !== 'undefined' && active === 'classes') ? 'active' : '' %>">
+        <div class="adm-nav-group-header-left">
+            <i class="fas fa-school adm-nav-icon" aria-hidden="true"></i>
+            <span>Classes</span>
+        </div>
+      </a>
+
+      <a href="/admin/attendance" class="adm-nav-item <%= (typeof active !== 'undefined' && active === 'attendance') ? 'active' : '' %>">
+        <div class="adm-nav-group-header-left">
+            <i class="fas fa-calendar-check adm-nav-icon" aria-hidden="true"></i>
+            <span>Attendance</span>
+        </div>
+      </a>
+
+      <a href="/admin/timetable" class="adm-nav-item <%= (typeof active !== 'undefined' && active === 'timetable') ? 'active' : '' %>">
+        <div class="adm-nav-group-header-left">
+            <i class="fas fa-clock adm-nav-icon" aria-hidden="true"></i>
+            <span>Timetable</span>
+        </div>
+      </a>
+
+      <a href="/admin/exams" class="adm-nav-item <%= (typeof active !== 'undefined' && active === 'exams') ? 'active' : '' %>">
+        <div class="adm-nav-group-header-left">
+            <i class="fas fa-pen-alt adm-nav-icon" aria-hidden="true"></i>
+            <span>Exams</span>
+        </div>
+      </a>
+
+      <a href="/admin/fees" class="adm-nav-item <%= (typeof active !== 'undefined' && active === 'fees') ? 'active' : '' %>">
+        <div class="adm-nav-group-header-left">
+            <i class="fas fa-coins adm-nav-icon" aria-hidden="true"></i>
+            <span>Fees</span>
+        </div>
+      </a>
+
+      <a href="/admin/payroll" class="adm-nav-item <%= (typeof active !== 'undefined' && active === 'payroll') ? 'active' : '' %>">
+        <div class="adm-nav-group-header-left">
+            <i class="fas fa-money-check-alt adm-nav-icon" aria-hidden="true"></i>
+            <span>Payroll</span>
+        </div>
+      </a>
+
+      <a href="/admin/finance" class="adm-nav-item <%= (typeof active !== 'undefined' && active === 'finance') ? 'active' : '' %>">
+        <div class="adm-nav-group-header-left">
+            <i class="fas fa-chart-line adm-nav-icon" aria-hidden="true"></i>
+            <span>Finance Ledger</span>
+        </div>
+      </a>
+
+      <a href="/admin/wallet" class="adm-nav-item <%= (typeof active !== 'undefined' && active === 'wallet') ? 'active' : '' %>">
+        <div class="adm-nav-group-header-left">
+            <i class="fas fa-wallet adm-nav-icon" aria-hidden="true"></i>
+            <span>Student Wallet</span>
+        </div>
+      </a>
+
+      <a href="/admin/notifications" class="adm-nav-item <%= (typeof active !== 'undefined' && active === 'notifications') ? 'active' : '' %>" id="notif-nav-link">
+        <div class="adm-nav-group-header-left">
+            <i class="fas fa-bell adm-nav-icon" aria-hidden="true"></i>
+            <span>Notifications <span id="sidebar-notif-badge" style="display:none;background:var(--adm-red,#ef4444);color:#fff;font-size:.65rem;font-weight:700;padding:1px 6px;border-radius:50px;margin-left:4px;"></span></span>
+        </div>
+      </a>
+
+      <a href="/admin/campuses" class="adm-nav-item <%= (typeof active !== 'undefined' && active === 'campuses') ? 'active' : '' %>">
+
+        <div class="adm-nav-group-header-left">
+            <i class="fas fa-university adm-nav-icon" aria-hidden="true"></i>
+            <span>Campuses</span>
+        </div>
+      </a>
+
+      <a href="/admin/library" class="adm-nav-item <%= (typeof active !== 'undefined' && active === 'library') ? 'active' : '' %>">
+        <div class="adm-nav-group-header-left">
+            <i class="fas fa-book adm-nav-icon" aria-hidden="true"></i>
+            <span>Library</span>
+        </div>
+      </a>
+
+      <a href="/admin/notices" class="adm-nav-item <%= (typeof active !== 'undefined' && active === 'notices') ? 'active' : '' %>">
+        <div class="adm-nav-group-header-left">
+            <i class="fas fa-bullhorn adm-nav-icon" aria-hidden="true"></i>
+            <span>Notices</span>
+        </div>
+      </a>
+
+      <a href="/admin/email" class="adm-nav-item <%= (typeof active !== 'undefined' && active === 'email') ? 'active' : '' %>">
+        <div class="adm-nav-group-header-left">
+            <i class="fas fa-envelope adm-nav-icon" aria-hidden="true"></i>
+            <span>Email</span>
+        </div>
+      </a>
+
+      <!-- Administration / System Options -->
+      <a href="/admin/cms/pages" class="adm-nav-item <%= (typeof active !== 'undefined' && (active === 'cms_pages' || active === 'cms')) ? 'active' : '' %>">
+        <div class="adm-nav-group-header-left">
+            <i class="fas fa-columns adm-nav-icon" aria-hidden="true"></i>
+            <span>Website Builder</span>
+        </div>
+      </a>
+
+      <a href="/admin/cms/menus" class="adm-nav-item <%= (typeof active !== 'undefined' && active === 'cms_menus') ? 'active' : '' %>">
+        <div class="adm-nav-group-header-left">
+            <i class="fas fa-list adm-nav-icon" aria-hidden="true"></i>
+            <span>CMS Menus</span>
+        </div>
+      </a>
+
+      <a href="/admin/cms/theme" class="adm-nav-item <%= (typeof active !== 'undefined' && active === 'cms_theme') ? 'active' : '' %>">
+        <div class="adm-nav-group-header-left">
+            <i class="fas fa-paint-brush adm-nav-icon" aria-hidden="true"></i>
+            <span>Theme Management</span>
+        </div>
+      </a>
+
+      <a href="/admin/cms/settings" class="adm-nav-item <%= (typeof active !== 'undefined' && active === 'cms_settings') ? 'active' : '' %>">
+        <div class="adm-nav-group-header-left">
+            <i class="fas fa-cog adm-nav-icon" aria-hidden="true"></i>
+            <span>CMS Settings</span>
+        </div>
+      </a>
+
+      <a href="/admin/audit-logs" class="adm-nav-item <%= (typeof active !== 'undefined' && active === 'audit-logs') ? 'active' : '' %>">
+        <div class="adm-nav-group-header-left">
+            <i class="fas fa-history adm-nav-icon" aria-hidden="true"></i>
+            <span>Audit Logs</span>
+        </div>
+      </a>
+
+      <% if (typeof user !== 'undefined' && user && user.role === 'admin') { %>
+        <a href="/admin/mfa-setup" class="adm-nav-item <%= (typeof active !== 'undefined' && active === 'mfa') ? 'active' : '' %>">
+          <div class="adm-nav-group-header-left">
+              <i class="fas fa-shield-alt adm-nav-icon" aria-hidden="true"></i>
+              <span>Security Logs & MFA</span>
+          </div>
+        </a>
+      <% } %>
+
+    </div>
+
+    <!-- Spacer to ensure bottom items aren't cut off -->
+    <div style="height: 1.5rem;"></div>
+  </div>
+
+  <!-- ── 4. FOOTER (ACTIONS) — Fixed ── -->
+  <div class="adm-sidebar-footer" role="contentinfo">
+    <a href="/admin/notifications" class="adm-btn adm-btn-ghost adm-btn-icon" aria-label="Notifications" style="position:relative" id="notif-footer-btn">
+      <i class="fas fa-bell" aria-hidden="true"></i>
+      <span id="notif-footer-badge" style="display:none;position:absolute;top:4px;right:4px;width:8px;height:8px;background:var(--adm-red,#ef4444);border-radius:50%;"></span>
+    </a>
+    <a href="/admin/profile" class="adm-btn adm-btn-ghost adm-btn-icon" aria-label="Profile Settings">
+      <i class="fas fa-cog" aria-hidden="true"></i>
+    </a>
+    <button type="button" class="adm-btn adm-btn-ghost adm-btn-icon" aria-label="Toggle Theme" onclick="toggleTheme()">
+      <i class="fas fa-moon" id="themeIcon" aria-hidden="true"></i>
+    </button>
+    <a href="/logout" class="adm-btn adm-btn-ghost adm-btn-icon" aria-label="Log Out" style="color: var(--adm-red);">
+      <i class="fas fa-sign-out-alt" aria-hidden="true"></i>
+    </a>
+  </div>
+
 </aside>
 
-<!-- Mobile Sidebar Toggle Script -->
+<!-- Mobile Overlay Backdrop -->
+<div class="adm-sidebar-backdrop" id="admSidebarBackdrop" aria-hidden="true"></div>
+
+<!-- 🔔 Live Notification Badge Updater -->
 <script>
-    (function () {
-        const sidebar = document.getElementById('adminSidebar');
-        const overlay = document.getElementById('sidebarOverlay');
-        const toggleBtn = document.getElementById('sidebarToggle');
-        const closeBtn = document.getElementById('sidebarCloseBtn');
-
-        function openSidebar() {
-            if (sidebar && overlay) {
-                sidebar.classList.add('active');
-                overlay.classList.add('active');
-                document.body.style.overflow = 'hidden'; // Prevent body scroll
+(function updateNotifBadge() {
+    fetch('/api/notifications/count')
+        .then(r => r.json())
+        .then(data => {
+            const count = data.count || 0;
+            const sideBadge = document.getElementById('sidebar-notif-badge');
+            const footBadge = document.getElementById('notif-footer-badge');
+            if (sideBadge) {
+                sideBadge.textContent = count > 99 ? '99+' : count;
+                sideBadge.style.display = count > 0 ? 'inline' : 'none';
             }
-        }
-
-        function closeSidebar() {
-            if (sidebar && overlay) {
-                sidebar.classList.remove('active');
-                overlay.classList.remove('active');
-                document.body.style.overflow = ''; // Restore body scroll
+            if (footBadge) {
+                footBadge.style.display = count > 0 ? 'block' : 'none';
             }
-        }
-
-        // Toggle button click
-        if (toggleBtn) {
-            toggleBtn.addEventListener('click', openSidebar);
-        }
-
-        // Close button click
-        if (closeBtn) {
-            closeBtn.addEventListener('click', closeSidebar);
-        }
-
-        // Overlay click
-        if (overlay) {
-            overlay.addEventListener('click', closeSidebar);
-        }
-
-        // Keyboard support (ESC key)
-        document.addEventListener('keydown', function (e) {
-            if (e.key === 'Escape' && sidebar && sidebar.classList.contains('active')) {
-                closeSidebar();
-            }
-        });
-
-        // Close sidebar when clicking any link (mobile only)
-        if (sidebar && window.innerWidth <= 768) {
-            const sidebarLinks = sidebar.querySelectorAll('a');
-            sidebarLinks.forEach(link => {
-                link.addEventListener('click', closeSidebar);
-            });
-        }
-    })();
+        })
+        .catch(() => {});
+    setTimeout(updateNotifBadge, 30000); // re-poll every 30s
+})();
 </script>

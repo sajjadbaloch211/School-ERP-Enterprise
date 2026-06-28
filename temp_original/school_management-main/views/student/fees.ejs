@@ -1,0 +1,154 @@
+<%- include('../partials/header') %>
+
+    <div class="admin-layout animate-fade-in" style="margin-top: 80px;">
+        <!-- Sidebar -->
+        <aside class="sidebar glass" style="margin: 20px; border-radius: 24px;">
+            <div style="margin-bottom: 3rem; text-align: center;">
+                <div
+                    style="width: 80px; height: 80px; background: #eff6ff; border-radius: 24px; display: flex; align-items: center; justify-content: center; margin: 0 auto 1rem; border: 3px solid var(--accent);">
+                    <i class="fas fa-user-graduate" style="font-size: 2rem; color: var(--accent);"></i>
+                </div>
+                <h3 style="color: var(--primary); font-weight: 800;">Student Portal</h3>
+            </div>
+            <ul class="sidebar-nav">
+                <li><a href="/student/dashboard"><i class="fas fa-th-large"></i> Overview</a></li>
+                <li><a href="/student/attendance"><i class="fas fa-calendar-check"></i> Attendance</a></li>
+                <li><a href="/student/timetable"><i class="fas fa-calendar-alt"></i> Timetable</a></li>
+                <li><a href="/student/results"><i class="fas fa-poll"></i> Exam Results</a></li>
+                <li><a href="/student/fees" class="active"><i class="fas fa-file-invoice-dollar"></i> Fee Ledger</a>
+                </li>
+                <li><a href="/library"><i class="fas fa-book-reader"></i> E-Library</a></li>
+                <li style="margin-top: 2rem;"><a href="/logout" style="color: var(--danger);"><i
+                            class="fas fa-sign-out-alt"></i> Sign Out</a></li>
+            </ul>
+        </aside>
+
+        <main class="main-content">
+            <header style="margin-bottom: 3rem;">
+                <h2 style="font-size: 2.2rem; font-weight: 900; color: var(--primary);">Annual Fee Ledger</h2>
+                <p style="color: var(--text-muted); font-weight: 500;">Transparent financial records following the
+                    school's Master Voucher policy.</p>
+            </header>
+
+            <% vouchers.forEach(v=> { %>
+                <div class="card animate-slide-up"
+                    style="padding: 0; overflow: hidden; border-radius: 24px; margin-bottom: 3rem; border: 1px solid #edf2f7; box-shadow: 0 15px 35px rgba(0,0,0,0.05);">
+                    <div
+                        style="padding: 2rem; background: #f8fafc; border-bottom: 2px solid #edf2f7; display: flex; justify-content: space-between; align-items: center;">
+                        <div>
+                            <span
+                                style="background: var(--primary); color: white; padding: 4px 12px; border-radius: 6px; font-size: 0.65rem; font-weight: 900; text-transform: uppercase;">Master
+                                Voucher #<%= v.id %></span>
+                            <h3 style="font-weight: 900; color: var(--primary); margin-top: 10px; font-size: 1.5rem;">
+                                Academic Session <%= v.academic_year %>
+                            </h3>
+                        </div>
+                        <div style="text-align: right;">
+                            <p
+                                style="margin: 0; font-size: 0.8rem; color: var(--text-muted); font-weight: 700; text-transform: uppercase;">
+                                Current Balance Due</p>
+                            <h2
+                                style="margin: 0; font-size: 2.2rem; font-weight: 900; color: <%= v.remaining_balance > 0 ? '#ef4444' : '#10b981' %>;">
+                                RS <%= v.remaining_balance.toLocaleString() %>
+                            </h2>
+                        </div>
+                    </div>
+
+                    <div
+                        style="display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; padding: 2rem; border-bottom: 1px dashed #edf2f7;">
+                        <div
+                            style="background: rgba(16, 185, 129, 0.05); padding: 1.5rem; border-radius: 15px; border-left: 5px solid #10b981;">
+                            <p
+                                style="color: #059669; font-weight: 800; font-size: 0.8rem; text-transform: uppercase; margin-bottom: 5px;">
+                                Total Paid to Date</p>
+                            <h3 style="font-weight: 900; color: #065f46; font-size: 1.8rem;">RS <%=
+                                    v.total_paid.toLocaleString() %>
+                            </h3>
+                        </div>
+                        <div
+                            style="background: rgba(59, 130, 246, 0.05); padding: 1.5rem; border-radius: 15px; border-left: 5px solid var(--primary);">
+                            <p
+                                style="color: var(--primary); font-weight: 800; font-size: 0.8rem; text-transform: uppercase; margin-bottom: 5px;">
+                                Annual Charges</p>
+                            <h3 style="font-weight: 900; color: #1e3a8a; font-size: 1.8rem;">RS <%=
+                                    v.total_charged.toLocaleString() %>
+                            </h3>
+                        </div>
+                    </div>
+
+                    <div style="padding: 2rem;">
+                        <h4
+                            style="margin-bottom: 1.5rem; font-weight: 800; color: var(--text-main); font-size: 1.1rem; display: flex; align-items: center; gap: 10px;">
+                            <i class="fas fa-list-ol" style="color: var(--primary);"></i> Monthly Breakdown
+                        </h4>
+                        <div style="overflow-x: auto;">
+                            <table style="width: 100%; border-collapse: collapse;">
+                                <thead>
+                                    <tr style="text-align: left; border-bottom: 2px solid #f1f5f9;">
+                                        <th
+                                            style="padding: 1rem 0; color: var(--text-muted); font-size: 0.75rem; text-transform: uppercase; font-weight: 800;">
+                                            Billing Month</th>
+                                        <th
+                                            style="padding: 1rem 0; color: var(--text-muted); font-size: 0.75rem; text-transform: uppercase; font-weight: 800;">
+                                            Base Fee</th>
+                                        <th
+                                            style="padding: 1rem 0; color: var(--text-muted); font-size: 0.75rem; text-transform: uppercase; font-weight: 800;">
+                                            Carried Due</th>
+                                        <th
+                                            style="padding: 1rem 0; color: var(--text-muted); font-size: 0.75rem; text-transform: uppercase; font-weight: 800;">
+                                            Line Total</th>
+                                        <th
+                                            style="padding: 1rem 0; color: var(--text-muted); font-size: 0.75rem; text-transform: uppercase; font-weight: 800; text-align: right;">
+                                            Status</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <% items.filter(item=> item.voucher_id === v.id).forEach(item => { %>
+                                        <tr style="border-bottom: 1px solid #f8fafc;">
+                                            <td style="padding: 1.2rem 0; font-weight: 800; color: var(--primary);">
+                                                <%= item.month %>
+                                                    <%= item.year %>
+                                            </td>
+                                            <td style="padding: 1.2rem 0; font-weight: 700;">RS <%=
+                                                    item.amount.toLocaleString() %>
+                                            </td>
+                                            <td style="padding: 1.2rem 0; font-weight: 600; color: #64748b;">RS <%=
+                                                    (item.carried_due || 0).toLocaleString() %>
+                                            </td>
+                                            <td style="padding: 1.2rem 0; font-weight: 800; color: var(--primary);">RS
+                                                <%= (item.line_total || 0).toLocaleString() %>
+                                            </td>
+                                            <td style="padding: 1.2rem 0; text-align: right;">
+                                                <span
+                                                    style="background: #f1f5f9; color: #64748b; padding: 4px 12px; border-radius: 6px; font-size: 0.65rem; font-weight: 900; text-transform: uppercase;">Logged</span>
+                                            </td>
+                                        </tr>
+                                        <% }) %>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <div
+                        style="padding: 1.5rem 2rem; background: #fcfdfe; border-top: 1px solid #edf2f7; text-align: center;">
+                        <a href="/receipt/<%= v.id %>" class="btn"
+                            style="color: var(--primary); font-weight: 800; text-decoration: none; font-size: 0.9rem;">
+                            <i class="fas fa-print"></i> Download Master Voucher Statement
+                        </a>
+                    </div>
+                </div>
+                <% }) %>
+
+                    <% if(vouchers.length===0) { %>
+                        <div class="card" style="text-align: center; padding: 5rem; border-radius: 20px;">
+                            <i class="fas fa-file-invoice-dollar"
+                                style="font-size: 4rem; color: #f1f5f9; margin-bottom: 1.5rem;"></i>
+                            <h3 style="font-weight: 800; color: var(--primary);">No Ledger Records Found</h3>
+                            <p style="color: var(--text-muted);">When your fees are synced by the admin, they will
+                                appear here as a master ledger.</p>
+                        </div>
+                        <% } %>
+        </main>
+    </div>
+
+    <%- include('../partials/footer') %>

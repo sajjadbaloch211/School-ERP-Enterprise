@@ -1,153 +1,373 @@
 <%- include('../partials/header') %>
 
-    <div class="admin-layout animate-fade-in" style="margin-top: 80px;">
-        <!-- Sidebar -->
-        <!-- Sidebar -->
-        <%- include('../partials/sidebar', { active: 'payroll' }) %>
+<div class="adm-layout">
+  <%- include('../partials/sidebar', { active: 'payroll' }) %>
 
-            <main class="main-content">
-                <header
-                    style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
-                    <div>
-                        <h2 style="font-size: 2rem; font-weight: 800; color: var(--primary);">Staff Payroll</h2>
-                        <p style="color: var(--text-muted);">Manage and track teacher salaries</p>
-                    </div>
+  <main class="adm-main" role="main" aria-label="Staff Payroll Management">
 
-                    <div style="display: flex; gap: 15px; align-items: center;">
-                        <!-- Search Bar -->
-                        <div style="position: relative; width: 250px;">
-                            <i class="fas fa-search"
-                                style="position: absolute; left: 15px; top: 50%; transform: translateY(-50%); color: var(--text-muted);"></i>
-                            <input type="text" id="teacherSearch" placeholder="Search staff..."
-                                style="width: 100%; padding: 10px 15px 10px 40px; border-radius: 12px; border: 1px solid #e2e8f0; background: white; font-size: 0.9rem;"
-                                onkeyup="filterTable('teacherSearch', 'payrollTableBody')">
-                        </div>
+    <!-- Page Header -->
+    <div class="adm-page-header">
+      <div>
+        <h1 class="adm-page-title">
+          <i class="fas fa-money-check-alt" style="color: var(--adm-indigo); margin-right: 0.5rem;"></i>
+          Staff Payroll & Salary Ledger
+        </h1>
+        <p class="adm-page-subtitle">Draft monthly salaries, view leaf deductions, issue payslips, and download bank transfer files.</p>
+      </div>
 
-                        <form action="/admin/payroll" method="GET"
-                            style="display: flex; gap: 10px; align-items: center;" id="payrollForm">
-                            <div style="position: relative;">
-                                <i class="fas fa-calendar-alt"
-                                    style="position: absolute; left: 12px; top: 50%; transform: translateY(-50%); color: var(--text-muted); pointer-events: none; z-index: 1;"></i>
-                                <input type="month" id="monthYearPicker"
-                                    value="<%= selectedYear %>-<%= String(months.indexOf(selectedMonth) + 1).padStart(2, '0') %>"
-                                    style="padding: 10px 15px 10px 40px; border-radius: 12px; border: 1px solid #ddd; background: white; font-size: 0.9rem; min-width: 180px; cursor: pointer;"
-                                    onchange="updateMonthYear()">
-                            </div>
-                            <input type="hidden" name="month" id="monthInput" value="<%= selectedMonth %>">
-                            <input type="hidden" name="year" id="yearInput" value="<%= selectedYear %>">
-                            <button type="submit" class="btn-primary"
-                                style="padding: 10px 20px; display: flex; align-items: center; gap: 8px;">
-                                <i class="fas fa-sync-alt"></i> Load
-                            </button>
-                        </form>
-                    </div>
-                </header>
+      <div style="display:flex;gap:0.75rem;align-items:center;flex-wrap:wrap;">
+        
+        <!-- Month Picker -->
+        <form action="/admin/payroll" method="GET" style="display:flex;gap:0.5rem;align-items:center;">
+          <input type="month" name="monthYear" class="adm-input" style="width:160px;cursor:pointer;" 
+                 value="<%= selectedYear %>-<%= String(months.indexOf(selectedMonth) + 1).padStart(2, '0') %>"
+                 onchange="this.form.submit()">
+        </form>
 
-                <div class="card animate-slide-up" style="overflow-x: auto;">
-                    <table class="data-table" style="width: 100%; border-collapse: collapse;">
-                        <thead>
-                            <tr style="background: var(--bg-light); text-align: left;">
-                                <th style="padding: 1.2rem; border-radius: 12px 0 0 12px;">Teacher Name</th>
-                                <th style="padding: 1.2rem;">Basic Salary</th>
-                                <th style="padding: 1.2rem;">Month / Year</th>
-                                <th style="padding: 1.2rem;">Status</th>
-                                <th style="padding: 1.2rem; border-radius: 0 12px 12px 0;">Action</th>
-                            </tr>
-                        </thead>
-                        <tbody id="payrollTableBody">
-                            <% results.forEach(row=> { %>
-                                <tr style="border-bottom: 1px solid #f1f5f9;">
-                                    <td style="padding: 1.2rem; font-weight: 700; color: var(--primary);">
-                                        <%= row.full_name %>
-                                    </td>
-                                    <td style="padding: 1.2rem; font-weight: 600;">Rs. <%= row.salary || 0 %>
-                                    </td>
-                                    <td style="padding: 1.2rem; color: var(--text-muted);">
-                                        <%= selectedMonth %>
-                                            <%= selectedYear %>
-                                    </td>
-                                    <td style="padding: 1.2rem;">
-                                        <% if(row.status==='paid' ) { %>
-                                            <span
-                                                style="background: #ecfdf5; color: #10b981; padding: 5px 12px; border-radius: 20px; font-weight: 700; font-size: 0.8rem;">
-                                                <i class="fas fa-check-circle"></i> PAID
-                                            </span>
-                                            <div style="font-size: 0.7rem; color: var(--text-muted); margin-top: 5px;">
-                                                On:
-                                                <%= new Date(row.paid_date).toLocaleDateString() %>
-                                            </div>
-                                            <% } else { %>
-                                                <span
-                                                    style="background: #fffbeb; color: #f59e0b; padding: 5px 12px; border-radius: 20px; font-weight: 700; font-size: 0.8rem;">
-                                                    <i class="fas fa-clock"></i> PENDING
-                                                </span>
-                                                <% } %>
-                                    </td>
-                                    <td style="padding: 1.2rem;">
-                                        <% if(row.status !=='paid' ) { %>
-                                            <form action="/admin/payroll/pay" method="POST">
-                                                <input type="hidden" name="_csrf"
-                                                    value="<%= typeof csrfToken !== 'undefined' ? csrfToken : '' %>">
-                                                <input type="hidden" name="teacher_id" value="<%= row.teacher_id %>">
-                                                <input type="hidden" name="amount" value="<%= row.salary %>">
-                                                <input type="hidden" name="month" value="<%= selectedMonth %>">
-                                                <input type="hidden" name="year" value="<%= selectedYear %>">
-                                                <button type="submit" class="btn-primary"
-                                                    style="padding: 8px 15px; font-size: 0.85rem; border-radius: 8px;">
-                                                    Mark Paid
-                                                </button>
-                                            </form>
-                                            <% } else { %>
-                                                <button disabled
-                                                    style="background: #f1f5f9; color: #94a3b8; padding: 8px 15px; border-radius: 8px; border: none; cursor: not-allowed;">
-                                                    Completed
-                                                </button>
-                                                <% } %>
-                                    </td>
-                                </tr>
-                                <% }); %>
-                        </tbody>
-                    </table>
-                </div>
-            </main>
+        <button class="adm-btn adm-btn-ghost" onclick="window.openModal('salaryConfigModal')">
+          <i class="fas fa-cog"></i> Configure Salary
+        </button>
+
+        <% if (!run) { %>
+          <form action="/admin/payroll/generate" method="POST" style="display:inline;">
+            <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+            <input type="hidden" name="month" value="<%= selectedMonth %>">
+            <input type="hidden" name="year" value="<%= selectedYear %>">
+            <button type="submit" class="adm-btn adm-btn-primary">
+              <i class="fas fa-plus"></i> Initialize Run
+            </button>
+          </form>
+        <% } else if (run.status === 'draft') { %>
+          <form action="/admin/payroll/approve" method="POST" style="display:inline;">
+            <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+            <input type="hidden" name="runId" value="<%= run.id %>">
+            <button type="submit" class="adm-btn adm-btn-primary" style="background:#10b981;">
+              <i class="fas fa-check-circle"></i> Approve Payroll Run
+            </button>
+          </form>
+        <% } else if (run.status === 'approved') { %>
+          <form action="/admin/payroll/disburse" method="POST" style="display:inline;">
+            <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+            <input type="hidden" name="runId" value="<%= run.id %>">
+            <button type="submit" class="adm-btn adm-btn-primary" style="background:linear-gradient(135deg,#6366f1,#4f46e5);box-shadow:0 8px 24px rgba(99,102,241,0.3);">
+              <i class="fas fa-paper-plane"></i> Disburse Payments & Post GL
+            </button>
+          </form>
+        <% } %>
+
+        <% if (run && run.status !== 'draft') { %>
+          <a href="/admin/payroll/export-bank?runId=<%= run.id %>" class="adm-btn adm-btn-ghost">
+            <i class="fas fa-download"></i> Bank Transfer File
+          </a>
+        <% } %>
+
+      </div>
     </div>
 
-    <script>
-        function filterTable(inputId, tableId) {
-            const input = document.getElementById(inputId);
-            const filter = input.value.toLowerCase();
-            const tbody = document.getElementById(tableId);
-            const rows = tbody.getElementsByTagName('tr');
+    <!-- Alert Blocks -->
+    <% if (query.success) { %>
+      <div class="adm-alert adm-alert-success" style="display:flex;align-items:center;gap:0.75rem;margin-bottom:1.5rem;padding:1rem 1.25rem;background:rgba(16,185,129,0.08);border:1px solid rgba(16,185,129,0.25);border-radius:12px;color:#10b981;font-weight:600;">
+        <i class="fas fa-check-circle"></i>
+        <span><%= query.success === 'generated' ? 'Monthly payroll initialized successfully!' : query.success === 'approved' ? 'Payroll run has been approved!' : query.success === 'disbursed' ? 'Payroll disbursed and double-entry posts logged to General Ledger!' : 'Operation successful.' %></span>
+      </div>
+    <% } %>
+    <% if (query.error) { %>
+      <div class="adm-alert adm-alert-error" style="display:flex;align-items:center;gap:0.75rem;margin-bottom:1.5rem;padding:1rem 1.25rem;background:rgba(239,68,68,0.08);border:1px solid rgba(239,68,68,0.25);border-radius:12px;color:#ef4444;font-weight:600;">
+        <i class="fas fa-exclamation-triangle"></i>
+        <span>Error: <%= decodeURIComponent(query.error) %></span>
+      </div>
+    <% } %>
 
-            for (let i = 0; i < rows.length; i++) {
-                const row = rows[i];
-                const text = row.textContent.toLowerCase();
-                if (text.includes(filter)) {
-                    row.style.display = "";
-                } else {
-                    row.style.display = "none";
-                }
-            }
-        }
-
-        // Convert month picker to month name and year
-        function updateMonthYear() {
-            const picker = document.getElementById('monthYearPicker');
-            const value = picker.value; // Format: "YYYY-MM"
-
-            if (value) {
-                const [year, month] = value.split('-');
-                const monthNames = ["January", "February", "March", "April", "May", "June",
-                    "July", "August", "September", "October", "November", "December"];
-
-                document.getElementById('monthInput').value = monthNames[parseInt(month) - 1];
-                document.getElementById('yearInput').value = year;
-            }
-        }
-
-        // Initialize on page load
-        document.addEventListener('DOMContentLoaded', function () {
-            updateMonthYear();
+    <!-- KPI Summary Row -->
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:1.25rem;margin-bottom:1.5rem;">
+      <% 
+        let totalNet = 0; 
+        let totalLeavesDeduct = 0; 
+        let totalTax = 0;
+        items.forEach(i => {
+          totalNet += Number(i.net_payable);
+          totalLeavesDeduct += Number(i.deductions_leaves);
+          totalTax += Number(i.tax_deduction);
         });
-    </script>
-    <%- include('../partials/footer') %>
+      %>
+      <article class="adm-kpi-card" style="border-left-color: var(--adm-indigo);">
+        <div class="adm-kpi-icon" style="background:var(--adm-indigo-bg);color:var(--adm-indigo);"><i class="fas fa-file-invoice-dollar"></i></div>
+        <div class="adm-kpi-content">
+          <h3 class="adm-kpi-title">Total Payroll Cost</h3>
+          <div class="adm-kpi-value" style="font-family:'JetBrains Mono',monospace;">Rs. <%= totalNet.toLocaleString() %></div>
+        </div>
+      </article>
+
+      <article class="adm-kpi-card" style="border-left-color: #f59e0b;">
+        <div class="adm-kpi-icon" style="background:rgba(245,158,11,0.1);color:#f59e0b;"><i class="fas fa-user-minus"></i></div>
+        <div class="adm-kpi-content">
+          <h3 class="adm-kpi-title">Unpaid Leave Deductions</h3>
+          <div class="adm-kpi-value" style="font-family:'JetBrains Mono',monospace;">Rs. <%= totalLeavesDeduct.toLocaleString() %></div>
+        </div>
+      </article>
+
+      <article class="adm-kpi-card" style="border-left-color: #10b981;">
+        <div class="adm-kpi-icon" style="background:rgba(16,185,129,0.1);color:#10b981;"><i class="fas fa-percentage"></i></div>
+        <div class="adm-kpi-content">
+          <h3 class="adm-kpi-title">Withholding Income Tax</h3>
+          <div class="adm-kpi-value" style="font-family:'JetBrains Mono',monospace;">Rs. <%= totalTax.toLocaleString() %></div>
+        </div>
+      </article>
+
+      <article class="adm-kpi-card" style="border-left-color: #64748b;">
+        <div class="adm-kpi-icon" style="background:var(--adm-bg-surface);color:#64748b;"><i class="fas fa-info-circle"></i></div>
+        <div class="adm-kpi-content">
+          <h3 class="adm-kpi-title">Run Status</h3>
+          <div class="adm-kpi-value" style="font-size:1.15rem;font-weight:800;color:var(--adm-text-primary);">
+            <%= run ? run.status.toUpperCase() : 'NOT CREATED' %>
+          </div>
+        </div>
+      </article>
+    </div>
+
+    <!-- Staff Salary Grid Table -->
+    <div class="adm-card" style="padding:0;overflow:hidden;">
+      <div style="padding:1.25rem 1.5rem;border-bottom:1px solid var(--adm-border);background:var(--adm-bg-surface);display:flex;justify-content:space-between;align-items:center;">
+        <h3 style="font-size:1rem;font-weight:700;margin:0;color:var(--adm-text-primary);">
+          <i class="fas fa-list" style="color:var(--adm-indigo);margin-right:0.5rem;"></i>
+          Staff Disbursement Details
+        </h3>
+        <span style="font-size:0.85rem;color:var(--adm-text-muted);font-weight:600;"><%= selectedMonth %> <%= selectedYear %></span>
+      </div>
+
+      <div style="overflow-x:auto;">
+        <table class="adm-table">
+          <thead>
+            <tr>
+              <th>Staff Name</th>
+              <th>Department</th>
+              <th style="text-align:right;">Base Salary</th>
+              <th style="text-align:right;">Allowances</th>
+              <th style="text-align:right;">Leave Deductions</th>
+              <th style="text-align:right;">Tax Deducted</th>
+              <th style="text-align:right;">Net Payable</th>
+              <th>Status</th>
+              <th style="text-align:right;">Payslip</th>
+            </tr>
+          </thead>
+          <tbody>
+            <% if (items.length === 0) { %>
+              <tr>
+                <td colspan="9" style="text-align:center;padding:4rem 1rem;">
+                  <div class="adm-empty-state">
+                    <i class="fas fa-receipt adm-empty-icon"></i>
+                    <h3>No Records</h3>
+                    <p>Initialize the run for this month to calculate salary disbursement.</p>
+                  </div>
+                </td>
+              </tr>
+            <% } else { %>
+              <% items.forEach(item => { %>
+                <tr>
+                  <td>
+                    <div style="font-weight:700;color:var(--adm-text-primary);"><%= item.full_name %></div>
+                    <div style="font-size:0.75rem;color:var(--adm-text-muted);">Staff Ref: <%= item.teacher_id %></div>
+                  </td>
+                  <td><span class="adm-badge adm-badge-indigo" style="font-size:0.72rem;"><%= item.department_name %></span></td>
+                  <td style="text-align:right;font-family:'JetBrains Mono',monospace;">Rs. <%= Number(item.base_salary).toLocaleString() %></td>
+                  <td style="text-align:right;font-family:'JetBrains Mono',monospace;color:#10b981;">+Rs. <%= Number(item.allowances).toLocaleString() %></td>
+                  <td style="text-align:right;font-family:'JetBrains Mono',monospace;color:#ef4444;">
+                    -Rs. <%= Number(item.deductions_leaves).toLocaleString() %>
+                    <% if (item.absences) { %>
+                      <div style="font-size:0.65rem;color:var(--adm-text-muted);font-weight:600;"><%= item.absences %> absences</div>
+                    <% } %>
+                  </td>
+                  <td style="text-align:right;font-family:'JetBrains Mono',monospace;color:#ef4444;">-Rs. <%= Number(item.tax_deduction).toLocaleString() %></td>
+                  <td style="text-align:right;font-family:'JetBrains Mono',monospace;font-weight:800;color:var(--adm-text-primary);font-size:1rem;">Rs. <%= Number(item.net_payable).toLocaleString() %></td>
+                  <td>
+                    <span class="adm-badge <%= item.status === 'paid' ? 'adm-badge-green' : item.status === 'approved' ? 'adm-badge-blue' : 'adm-badge-amber' %>" style="font-size:0.72rem;font-weight:800;">
+                      <%= item.status.toUpperCase() %>
+                    </span>
+                  </td>
+                  <td style="text-align:right;">
+                    <% if (run && run.status !== 'draft') { %>
+                      <button class="adm-btn adm-btn-ghost" style="padding:0.4rem 0.8rem;font-size:0.8rem;" onclick="openPayslipModal('<%= JSON.stringify(item) %>', '<%= selectedMonth %>', '<%= selectedYear %>')">
+                        <i class="fas fa-print"></i> View Slip
+                      </button>
+                    <% } else { %>
+                      <span style="font-size:0.8rem;color:var(--adm-text-muted);">Locked</span>
+                    <% } %>
+                  </td>
+                </tr>
+              <% }); %>
+            <% } %>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+  </main>
+</div>
+
+<!-- Modal: Configure Teacher Salary -->
+<div id="salaryConfigModal" class="adm-modal" role="dialog" aria-hidden="true">
+  <div class="adm-modal-content" style="max-width:440px;">
+    <div class="adm-modal-header">
+      <h2 class="adm-modal-title">Configure Salary Contract</h2>
+      <button class="adm-modal-close" onclick="window.closeModal('salaryConfigModal')"><i class="fas fa-times"></i></button>
+    </div>
+    <form action="/admin/payroll/config" method="POST">
+      <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+      <div class="adm-modal-body">
+        
+        <div class="adm-form-group" style="margin-bottom:1rem;">
+          <label class="adm-label">Select Staff Member</label>
+          <select name="teacher_id" class="adm-input" required>
+            <% activeTeachers.forEach(t => { %>
+              <option value="<%= t.id %>"><%= t.full_name %></option>
+            <% }); %>
+          </select>
+        </div>
+
+        <div class="adm-form-group" style="margin-bottom:1rem;">
+          <label class="adm-label">Monthly Base Salary (Rs.)</label>
+          <input type="number" name="base_salary" class="adm-input" placeholder="e.g. 60000" min="0" required>
+        </div>
+
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.75rem;margin-bottom:1rem;">
+          <div class="adm-form-group">
+            <label class="adm-label">Allowances (Rs.)</label>
+            <input type="number" name="allowances" class="adm-input" placeholder="e.g. 5000" min="0" value="0">
+          </div>
+          <div class="adm-form-group">
+            <label class="adm-label">Tax Rate (%)</label>
+            <input type="number" name="tax_rate_percent" class="adm-input" placeholder="e.g. 5" min="0" max="100" step="0.1" value="0">
+          </div>
+        </div>
+
+      </div>
+      <div class="adm-modal-footer">
+        <button type="button" class="adm-btn adm-btn-ghost" onclick="window.closeModal('salaryConfigModal')">Cancel</button>
+        <button type="submit" class="adm-btn adm-btn-primary">Save Configuration</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- Modal: Printable Payslip -->
+<div id="payslipModal" class="adm-modal" role="dialog" aria-hidden="true">
+  <div class="adm-modal-content" style="max-width:520px;padding:2rem;">
+    <div style="text-align:right;margin-bottom:1rem;display:flex;justify-content:space-between;align-items:center;">
+      <h2 style="font-size:1.15rem;font-weight:800;color:var(--adm-text-primary);margin:0;">Staff Salary Slip</h2>
+      <button class="adm-modal-close" onclick="window.closeModal('payslipModal')"><i class="fas fa-times"></i></button>
+    </div>
+
+    <!-- Printable Slip Wrapper -->
+    <div id="payslipPrintArea" style="border:1px dashed var(--adm-border);padding:1.5rem;border-radius:12px;background:#fff;color:#0f172a;font-family:'Inter',sans-serif;">
+      <!-- Brand Header -->
+      <div style="display:flex;justify-content:space-between;border-bottom:2px solid #0f172a;padding-bottom:0.75rem;margin-bottom:1rem;">
+        <div>
+          <h3 style="margin:0;font-size:1.2rem;font-weight:800;color:#0f172a;">WAQAR PUBLIC SCHOOL</h3>
+          <p style="margin:2px 0 0;font-size:0.75rem;color:#64748b;">Disbursement Cycle Salary Receipt</p>
+        </div>
+        <div style="text-align:right;">
+          <strong id="slipCycle" style="font-size:0.9rem;">January 2026</strong>
+        </div>
+      </div>
+
+      <!-- Employee info -->
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.5rem;font-size:0.85rem;margin-bottom:1.5rem;">
+        <div>Employee: <strong id="slipName" style="color:#0f172a;">Junaid Iqbal</strong></div>
+        <div style="text-align:right;">Staff Ref ID: <strong id="slipTeacherId" style="color:#0f172a;">102</strong></div>
+        <div>Department: <strong id="slipDept" style="color:#0f172a;">Senior Branch</strong></div>
+        <div style="text-align:right;">Payment: <strong style="color:#10b981;">Bank Transfer</strong></div>
+      </div>
+
+      <!-- Earnings vs Deductions Table -->
+      <table style="width:100%;font-size:0.85rem;border-collapse:collapse;margin-bottom:1.5rem;">
+        <thead>
+          <tr style="border-bottom:1px solid #e2e8f0;text-align:left;font-weight:800;color:#64748b;">
+            <th style="padding:0.5rem 0;">Description</th>
+            <th style="padding:0.5rem 0;text-align:right;">Earnings</th>
+            <th style="padding:0.5rem 0;text-align:right;">Deductions</th>
+          </tr>
+        </thead>
+        <tbody style="color:#334155;">
+          <tr style="border-bottom:1px solid #f1f5f9;">
+            <td style="padding:0.5rem 0;">Base Salary</td>
+            <td style="padding:0.5rem 0;text-align:right;" id="slipBase">Rs. 0</td>
+            <td style="padding:0.5rem 0;text-align:right;">—</td>
+          </tr>
+          <tr style="border-bottom:1px solid #f1f5f9;">
+            <td style="padding:0.5rem 0;">Contractual Allowances</td>
+            <td style="padding:0.5rem 0;text-align:right;" id="slipAllow">Rs. 0</td>
+            <td style="padding:0.5rem 0;text-align:right;">—</td>
+          </tr>
+          <tr style="border-bottom:1px solid #f1f5f9;">
+            <td style="padding:0.5rem 0;">Unpaid Leave Penalty</td>
+            <td style="padding:0.5rem 0;text-align:right;">—</td>
+            <td style="padding:0.5rem 0;text-align:right;color:#ef4444;" id="slipLeaves">-Rs. 0</td>
+          </tr>
+          <tr style="border-bottom:1px solid #f1f5f9;">
+            <td style="padding:0.5rem 0;">Withholding Income Tax</td>
+            <td style="padding:0.5rem 0;text-align:right;">—</td>
+            <td style="padding:0.5rem 0;text-align:right;color:#ef4444;" id="slipTax">-Rs. 0</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <!-- Grand Total -->
+      <div style="display:flex;justify-content:space-between;align-items:center;background:#f8fafc;padding:0.75rem 1rem;border-radius:8px;border:1px solid #e2e8f0;margin-bottom:1.5rem;">
+        <strong style="color:#0f172a;font-size:0.95rem;">Net Disbursed Amount:</strong>
+        <strong style="color:#0f172a;font-size:1.2rem;font-family:'JetBrains Mono',monospace;" id="slipNet">Rs. 0</strong>
+      </div>
+
+      <!-- Signatures -->
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:2rem;font-size:0.75rem;color:#64748b;margin-top:2rem;text-align:center;">
+        <div style="border-top:1px solid #cbd5e1;padding-top:0.5rem;">Prepared By (Finance Office)</div>
+        <div style="border-top:1px solid #cbd5e1;padding-top:0.5rem;">Employee Signature</div>
+      </div>
+    </div>
+
+    <!-- Print control -->
+    <div style="margin-top:1.5rem;text-align:right;display:flex;justify-content:flex-end;gap:0.75rem;">
+      <button class="adm-btn adm-btn-ghost" onclick="window.closeModal('payslipModal')">Close</button>
+      <button class="adm-btn adm-btn-primary" onclick="printPayslip()">
+        <i class="fas fa-print"></i> Print Payslip
+      </button>
+    </div>
+  </div>
+</div>
+
+<script>
+  function openPayslipModal(itemJson, month, year) {
+    const item = JSON.parse(itemJson);
+    document.getElementById('slipCycle').innerText = `${month} ${year}`;
+    document.getElementById('slipName').innerText = item.full_name;
+    document.getElementById('slipTeacherId').innerText = item.teacher_id;
+    document.getElementById('slipDept').innerText = item.department_name;
+    
+    document.getElementById('slipBase').innerText = `Rs. ${Number(item.base_salary).toLocaleString()}`;
+    document.getElementById('slipAllow').innerText = `Rs. ${Number(item.allowances).toLocaleString()}`;
+    document.getElementById('slipLeaves').innerText = `-Rs. ${Number(item.deductions_leaves).toLocaleString()}`;
+    document.getElementById('slipTax').innerText = `-Rs. ${Number(item.tax_deduction).toLocaleString()}`;
+    document.getElementById('slipNet').innerText = `Rs. ${Number(item.net_payable).toLocaleString()}`;
+
+    window.openModal('payslipModal');
+  }
+
+  function printPayslip() {
+    const printContent = document.getElementById('payslipPrintArea').innerHTML;
+    const originalContent = document.body.innerHTML;
+
+    // Direct target print window
+    const popup = window.open('', '_blank', 'width=600,height=600');
+    popup.document.open();
+    popup.document.write(`
+      <html>
+        <head><title>Print Salary Slip</title></head>
+        <body onload="window.print();window.close();">
+          ${printContent}
+        </body>
+      </html>
+    `);
+    popup.document.close();
+  }
+</script>
+
+<%- include('../partials/footer') %>

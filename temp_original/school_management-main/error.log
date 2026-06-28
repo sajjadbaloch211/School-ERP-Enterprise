@@ -1,0 +1,749 @@
+[2026-02-02T10:19:58.109Z] SyntaxError: C:\Users\Sajjad Baloch\Desktop\fully updated\school_management-main\school_management-main\views\admin\website.ejs:410
+    408|     </script>
+    409| 
+ >> 410|     <%- include('../partials/footer') %>
+
+Invalid or unexpected token in C:\Users\Sajjad Baloch\Desktop\fully updated\school_management-main\school_management-main\views\partials\footer.ejs while compiling ejs
+
+If the above error is not helpful, you may want to try EJS-Lint:
+https://github.com/RyanZim/EJS-Lint
+Or, if you meant to create an async function, pass `async: true` as an option.
+    at new Function (<anonymous>)
+    at Template.compile (C:\Users\Sajjad Baloch\Desktop\fully updated\school_management-main\school_management-main\node_modules\ejs\lib\ejs.js:673:12)
+    at Object.compile (C:\Users\Sajjad Baloch\Desktop\fully updated\school_management-main\school_management-main\node_modules\ejs\lib\ejs.js:398:16)
+    at handleCache (C:\Users\Sajjad Baloch\Desktop\fully updated\school_management-main\school_management-main\node_modules\ejs\lib\ejs.js:235:18)
+    at includeFile (C:\Users\Sajjad Baloch\Desktop\fully updated\school_management-main\school_management-main\node_modules\ejs\lib\ejs.js:323:10)
+    at include (C:\Users\Sajjad Baloch\Desktop\fully updated\school_management-main\school_management-main\node_modules\ejs\lib\ejs.js:701:16)
+    at eval (eval at compile (C:\Users\Sajjad Baloch\Desktop\fully updated\school_management-main\school_management-main\node_modules\ejs\lib\ejs.js:673:12), <anonymous>:142:17)
+    at website (C:\Users\Sajjad Baloch\Desktop\fully updated\school_management-main\school_management-main\node_modules\ejs\lib\ejs.js:703:17)
+    at tryHandleCache (C:\Users\Sajjad Baloch\Desktop\fully updated\school_management-main\school_management-main\node_modules\ejs\lib\ejs.js:274:36)
+    at exports.renderFile [as engine] (C:\Users\Sajjad Baloch\Desktop\fully updated\school_management-main\school_management-main\node_modules\ejs\lib\ejs.js:491:10)
+    at View.render (C:\Users\Sajjad Baloch\Desktop\fully updated\school_management-main\school_management-main\node_modules\express\lib\view.js:135:8)
+    at tryRender (C:\Users\Sajjad Baloch\Desktop\fully updated\school_management-main\school_management-main\node_modules\express\lib\application.js:657:10)
+    at app.render (C:\Users\Sajjad Baloch\Desktop\fully updated\school_management-main\school_management-main\node_modules\express\lib\application.js:609:3)
+    at ServerResponse.render (C:\Users\Sajjad Baloch\Desktop\fully updated\school_management-main\school_management-main\node_modules\express\lib\response.js:1049:7)
+    at Query.onResult (C:\Users\Sajjad Baloch\Desktop\fully updated\school_management-main\school_management-main\server.js:4424:17)
+    at C:\Users\Sajjad Baloch\Desktop\fully updated\school_management-main\school_management-main\node_modules\mysql2\lib\commands\query.js:87:16
+
+[2026-02-02T10:41:20.163Z] SyntaxError: C:\Users\Sajjad Baloch\Desktop\fully updated\school_management-main\school_management-main\views\admin\website.ejs:410
+    408|     </script>
+    409| 
+ >> 410|     <%- include('../partials/footer') %>
+
+Invalid or unexpected token in C:\Users\Sajjad Baloch\Desktop\fully updated\school_management-main\school_management-main\views\partials\footer.ejs while compiling ejs
+
+If the above error is not helpful, you may want to try EJS-Lint:
+https://github.com/RyanZim/EJS-Lint
+Or, if you meant to create an async function, pass `async: true` as an option.
+    at new Function (<anonymous>)
+    at Template.compile (C:\Users\Sajjad Baloch\Desktop\fully updated\school_management-main\school_management-main\node_modules\ejs\lib\ejs.js:673:12)
+    at Object.compile (C:\Users\Sajjad Baloch\Desktop\fully updated\school_management-main\school_management-main\node_modules\ejs\lib\ejs.js:398:16)
+    at handleCache (C:\Users\Sajjad Baloch\Desktop\fully updated\school_management-main\school_management-main\node_modules\ejs\lib\ejs.js:235:18)
+    at includeFile (C:\Users\Sajjad Baloch\Desktop\fully updated\school_management-main\school_management-main\node_modules\ejs\lib\ejs.js:323:10)
+    at include (C:\Users\Sajjad Baloch\Desktop\fully updated\school_management-main\school_management-main\node_modules\ejs\lib\ejs.js:701:16)
+    at eval (eval at compile (C:\Users\Sajjad Baloch\Desktop\fully updated\school_management-main\school_management-main\node_modules\ejs\lib\ejs.js:673:12), <anonymous>:142:17)
+    at website (C:\Users\Sajjad Baloch\Desktop\fully updated\school_management-main\school_management-main\node_modules\ejs\lib\ejs.js:703:17)
+    at tryHandleCache (C:\Users\Sajjad Baloch\Desktop\fully updated\school_management-main\school_management-main\node_modules\ejs\lib\ejs.js:274:36)
+    at exports.renderFile [as engine] (C:\Users\Sajjad Baloch\Desktop\fully updated\school_management-main\school_management-main\node_modules\ejs\lib\ejs.js:491:10)
+    at View.render (C:\Users\Sajjad Baloch\Desktop\fully updated\school_management-main\school_management-main\node_modules\express\lib\view.js:135:8)
+    at tryRender (C:\Users\Sajjad Baloch\Desktop\fully updated\school_management-main\school_management-main\node_modules\express\lib\application.js:657:10)
+    at app.render (C:\Users\Sajjad Baloch\Desktop\fully updated\school_management-main\school_management-main\node_modules\express\lib\application.js:609:3)
+    at ServerResponse.render (C:\Users\Sajjad Baloch\Desktop\fully updated\school_management-main\school_management-main\node_modules\express\lib\response.js:1049:7)
+    at Query.onResult (C:\Users\Sajjad Baloch\Desktop\fully updated\school_management-main\school_management-main\server.js:4424:17)
+    at C:\Users\Sajjad Baloch\Desktop\fully updated\school_management-main\school_management-main\node_modules\mysql2\lib\commands\query.js:87:16
+
+[2026-02-02T10:42:18.433Z] SyntaxError: C:\Users\Sajjad Baloch\Desktop\fully updated\school_management-main\school_management-main\views\admin\fees.ejs:431
+    429|         }
+    430|     </script>
+ >> 431|     <%- include('../partials/footer') %>
+
+Invalid or unexpected token in C:\Users\Sajjad Baloch\Desktop\fully updated\school_management-main\school_management-main\views\partials\footer.ejs while compiling ejs
+
+If the above error is not helpful, you may want to try EJS-Lint:
+https://github.com/RyanZim/EJS-Lint
+Or, if you meant to create an async function, pass `async: true` as an option.
+    at new Function (<anonymous>)
+    at Template.compile (C:\Users\Sajjad Baloch\Desktop\fully updated\school_management-main\school_management-main\node_modules\ejs\lib\ejs.js:673:12)
+    at Object.compile (C:\Users\Sajjad Baloch\Desktop\fully updated\school_management-main\school_management-main\node_modules\ejs\lib\ejs.js:398:16)
+    at handleCache (C:\Users\Sajjad Baloch\Desktop\fully updated\school_management-main\school_management-main\node_modules\ejs\lib\ejs.js:235:18)
+    at includeFile (C:\Users\Sajjad Baloch\Desktop\fully updated\school_management-main\school_management-main\node_modules\ejs\lib\ejs.js:323:10)
+    at include (C:\Users\Sajjad Baloch\Desktop\fully updated\school_management-main\school_management-main\node_modules\ejs\lib\ejs.js:701:16)
+    at eval (eval at compile (C:\Users\Sajjad Baloch\Desktop\fully updated\school_management-main\school_management-main\node_modules\ejs\lib\ejs.js:673:12), <anonymous>:210:17)
+    at fees (C:\Users\Sajjad Baloch\Desktop\fully updated\school_management-main\school_management-main\node_modules\ejs\lib\ejs.js:703:17)
+    at tryHandleCache (C:\Users\Sajjad Baloch\Desktop\fully updated\school_management-main\school_management-main\node_modules\ejs\lib\ejs.js:274:36)
+    at exports.renderFile [as engine] (C:\Users\Sajjad Baloch\Desktop\fully updated\school_management-main\school_management-main\node_modules\ejs\lib\ejs.js:491:10)
+    at View.render (C:\Users\Sajjad Baloch\Desktop\fully updated\school_management-main\school_management-main\node_modules\express\lib\view.js:135:8)
+    at tryRender (C:\Users\Sajjad Baloch\Desktop\fully updated\school_management-main\school_management-main\node_modules\express\lib\application.js:657:10)
+    at app.render (C:\Users\Sajjad Baloch\Desktop\fully updated\school_management-main\school_management-main\node_modules\express\lib\application.js:609:3)
+    at ServerResponse.render (C:\Users\Sajjad Baloch\Desktop\fully updated\school_management-main\school_management-main\node_modules\express\lib\response.js:1049:7)
+    at Query.onResult (C:\Users\Sajjad Baloch\Desktop\fully updated\school_management-main\school_management-main\server.js:2128:17)
+    at C:\Users\Sajjad Baloch\Desktop\fully updated\school_management-main\school_management-main\node_modules\mysql2\lib\commands\query.js:87:16
+
+[2026-02-02T10:42:32.458Z] SyntaxError: C:\Users\Sajjad Baloch\Desktop\fully updated\school_management-main\school_management-main\views\admin\payroll.ejs:153
+    151|         });
+    152|     </script>
+ >> 153|     <%- include('../partials/footer') %>
+
+Invalid or unexpected token in C:\Users\Sajjad Baloch\Desktop\fully updated\school_management-main\school_management-main\views\partials\footer.ejs while compiling ejs
+
+If the above error is not helpful, you may want to try EJS-Lint:
+https://github.com/RyanZim/EJS-Lint
+Or, if you meant to create an async function, pass `async: true` as an option.
+    at new Function (<anonymous>)
+    at Template.compile (C:\Users\Sajjad Baloch\Desktop\fully updated\school_management-main\school_management-main\node_modules\ejs\lib\ejs.js:673:12)
+    at Object.compile (C:\Users\Sajjad Baloch\Desktop\fully updated\school_management-main\school_management-main\node_modules\ejs\lib\ejs.js:398:16)
+    at handleCache (C:\Users\Sajjad Baloch\Desktop\fully updated\school_management-main\school_management-main\node_modules\ejs\lib\ejs.js:235:18)
+    at includeFile (C:\Users\Sajjad Baloch\Desktop\fully updated\school_management-main\school_management-main\node_modules\ejs\lib\ejs.js:323:10)
+    at include (C:\Users\Sajjad Baloch\Desktop\fully updated\school_management-main\school_management-main\node_modules\ejs\lib\ejs.js:701:16)
+    at eval (eval at compile (C:\Users\Sajjad Baloch\Desktop\fully updated\school_management-main\school_management-main\node_modules\ejs\lib\ejs.js:673:12), <anonymous>:81:17)
+    at payroll (C:\Users\Sajjad Baloch\Desktop\fully updated\school_management-main\school_management-main\node_modules\ejs\lib\ejs.js:703:17)
+    at tryHandleCache (C:\Users\Sajjad Baloch\Desktop\fully updated\school_management-main\school_management-main\node_modules\ejs\lib\ejs.js:274:36)
+    at exports.renderFile [as engine] (C:\Users\Sajjad Baloch\Desktop\fully updated\school_management-main\school_management-main\node_modules\ejs\lib\ejs.js:491:10)
+    at View.render (C:\Users\Sajjad Baloch\Desktop\fully updated\school_management-main\school_management-main\node_modules\express\lib\view.js:135:8)
+    at tryRender (C:\Users\Sajjad Baloch\Desktop\fully updated\school_management-main\school_management-main\node_modules\express\lib\application.js:657:10)
+    at app.render (C:\Users\Sajjad Baloch\Desktop\fully updated\school_management-main\school_management-main\node_modules\express\lib\application.js:609:3)
+    at ServerResponse.render (C:\Users\Sajjad Baloch\Desktop\fully updated\school_management-main\school_management-main\node_modules\express\lib\response.js:1049:7)
+    at Query.onResult (C:\Users\Sajjad Baloch\Desktop\fully updated\school_management-main\school_management-main\server.js:3595:13)
+    at C:\Users\Sajjad Baloch\Desktop\fully updated\school_management-main\school_management-main\node_modules\mysql2\lib\commands\query.js:87:16
+
+[2026-02-02T10:42:37.090Z] SyntaxError: C:\Users\Sajjad Baloch\Desktop\fully updated\school_management-main\school_management-main\views\admin\fees.ejs:431
+    429|         }
+    430|     </script>
+ >> 431|     <%- include('../partials/footer') %>
+
+Invalid or unexpected token in C:\Users\Sajjad Baloch\Desktop\fully updated\school_management-main\school_management-main\views\partials\footer.ejs while compiling ejs
+
+If the above error is not helpful, you may want to try EJS-Lint:
+https://github.com/RyanZim/EJS-Lint
+Or, if you meant to create an async function, pass `async: true` as an option.
+    at new Function (<anonymous>)
+    at Template.compile (C:\Users\Sajjad Baloch\Desktop\fully updated\school_management-main\school_management-main\node_modules\ejs\lib\ejs.js:673:12)
+    at Object.compile (C:\Users\Sajjad Baloch\Desktop\fully updated\school_management-main\school_management-main\node_modules\ejs\lib\ejs.js:398:16)
+    at handleCache (C:\Users\Sajjad Baloch\Desktop\fully updated\school_management-main\school_management-main\node_modules\ejs\lib\ejs.js:235:18)
+    at includeFile (C:\Users\Sajjad Baloch\Desktop\fully updated\school_management-main\school_management-main\node_modules\ejs\lib\ejs.js:323:10)
+    at include (C:\Users\Sajjad Baloch\Desktop\fully updated\school_management-main\school_management-main\node_modules\ejs\lib\ejs.js:701:16)
+    at eval (eval at compile (C:\Users\Sajjad Baloch\Desktop\fully updated\school_management-main\school_management-main\node_modules\ejs\lib\ejs.js:673:12), <anonymous>:210:17)
+    at fees (C:\Users\Sajjad Baloch\Desktop\fully updated\school_management-main\school_management-main\node_modules\ejs\lib\ejs.js:703:17)
+    at tryHandleCache (C:\Users\Sajjad Baloch\Desktop\fully updated\school_management-main\school_management-main\node_modules\ejs\lib\ejs.js:274:36)
+    at exports.renderFile [as engine] (C:\Users\Sajjad Baloch\Desktop\fully updated\school_management-main\school_management-main\node_modules\ejs\lib\ejs.js:491:10)
+    at View.render (C:\Users\Sajjad Baloch\Desktop\fully updated\school_management-main\school_management-main\node_modules\express\lib\view.js:135:8)
+    at tryRender (C:\Users\Sajjad Baloch\Desktop\fully updated\school_management-main\school_management-main\node_modules\express\lib\application.js:657:10)
+    at app.render (C:\Users\Sajjad Baloch\Desktop\fully updated\school_management-main\school_management-main\node_modules\express\lib\application.js:609:3)
+    at ServerResponse.render (C:\Users\Sajjad Baloch\Desktop\fully updated\school_management-main\school_management-main\node_modules\express\lib\response.js:1049:7)
+    at Query.onResult (C:\Users\Sajjad Baloch\Desktop\fully updated\school_management-main\school_management-main\server.js:2128:17)
+    at C:\Users\Sajjad Baloch\Desktop\fully updated\school_management-main\school_management-main\node_modules\mysql2\lib\commands\query.js:87:16
+
+[2026-02-02T10:42:39.947Z] SyntaxError: C:\Users\Sajjad Baloch\Desktop\fully updated\school_management-main\school_management-main\views\admin\timetable.ejs:179
+    177|     </div>
+    178| 
+ >> 179|     <%- include('../partials/footer') %>
+
+Invalid or unexpected token in C:\Users\Sajjad Baloch\Desktop\fully updated\school_management-main\school_management-main\views\partials\footer.ejs while compiling ejs
+
+If the above error is not helpful, you may want to try EJS-Lint:
+https://github.com/RyanZim/EJS-Lint
+Or, if you meant to create an async function, pass `async: true` as an option.
+    at new Function (<anonymous>)
+    at Template.compile (C:\Users\Sajjad Baloch\Desktop\fully updated\school_management-main\school_management-main\node_modules\ejs\lib\ejs.js:673:12)
+    at Object.compile (C:\Users\Sajjad Baloch\Desktop\fully updated\school_management-main\school_management-main\node_modules\ejs\lib\ejs.js:398:16)
+    at handleCache (C:\Users\Sajjad Baloch\Desktop\fully updated\school_management-main\school_management-main\node_modules\ejs\lib\ejs.js:235:18)
+    at includeFile (C:\Users\Sajjad Baloch\Desktop\fully updated\school_management-main\school_management-main\node_modules\ejs\lib\ejs.js:323:10)
+    at include (C:\Users\Sajjad Baloch\Desktop\fully updated\school_management-main\school_management-main\node_modules\ejs\lib\ejs.js:701:16)
+    at eval (eval at compile (C:\Users\Sajjad Baloch\Desktop\fully updated\school_management-main\school_management-main\node_modules\ejs\lib\ejs.js:673:12), <anonymous>:100:17)
+    at timetable (C:\Users\Sajjad Baloch\Desktop\fully updated\school_management-main\school_management-main\node_modules\ejs\lib\ejs.js:703:17)
+    at tryHandleCache (C:\Users\Sajjad Baloch\Desktop\fully updated\school_management-main\school_management-main\node_modules\ejs\lib\ejs.js:274:36)
+    at exports.renderFile [as engine] (C:\Users\Sajjad Baloch\Desktop\fully updated\school_management-main\school_management-main\node_modules\ejs\lib\ejs.js:491:10)
+    at View.render (C:\Users\Sajjad Baloch\Desktop\fully updated\school_management-main\school_management-main\node_modules\express\lib\view.js:135:8)
+    at tryRender (C:\Users\Sajjad Baloch\Desktop\fully updated\school_management-main\school_management-main\node_modules\express\lib\application.js:657:10)
+    at app.render (C:\Users\Sajjad Baloch\Desktop\fully updated\school_management-main\school_management-main\node_modules\express\lib\application.js:609:3)
+    at ServerResponse.render (C:\Users\Sajjad Baloch\Desktop\fully updated\school_management-main\school_management-main\node_modules\express\lib\response.js:1049:7)
+    at Query.onResult (C:\Users\Sajjad Baloch\Desktop\fully updated\school_management-main\school_management-main\server.js:3402:21)
+    at C:\Users\Sajjad Baloch\Desktop\fully updated\school_management-main\school_management-main\node_modules\mysql2\lib\commands\query.js:87:16
+
+[2026-02-02T10:42:42.691Z] SyntaxError: C:\Users\Sajjad Baloch\Desktop\fully updated\school_management-main\school_management-main\views\admin\exams.ejs:116
+    114|     </div>
+    115| 
+ >> 116|     <%- include('../partials/footer') %>
+
+Invalid or unexpected token in C:\Users\Sajjad Baloch\Desktop\fully updated\school_management-main\school_management-main\views\partials\footer.ejs while compiling ejs
+
+If the above error is not helpful, you may want to try EJS-Lint:
+https://github.com/RyanZim/EJS-Lint
+Or, if you meant to create an async function, pass `async: true` as an option.
+    at new Function (<anonymous>)
+    at Template.compile (C:\Users\Sajjad Baloch\Desktop\fully updated\school_management-main\school_management-main\node_modules\ejs\lib\ejs.js:673:12)
+    at Object.compile (C:\Users\Sajjad Baloch\Desktop\fully updated\school_management-main\school_management-main\node_modules\ejs\lib\ejs.js:398:16)
+    at handleCache (C:\Users\Sajjad Baloch\Desktop\fully updated\school_management-main\school_management-main\node_modules\ejs\lib\ejs.js:235:18)
+    at includeFile (C:\Users\Sajjad Baloch\Desktop\fully updated\school_management-main\school_management-main\node_modules\ejs\lib\ejs.js:323:10)
+    at include (C:\Users\Sajjad Baloch\Desktop\fully updated\school_management-main\school_management-main\node_modules\ejs\lib\ejs.js:701:16)
+    at eval (eval at compile (C:\Users\Sajjad Baloch\Desktop\fully updated\school_management-main\school_management-main\node_modules\ejs\lib\ejs.js:673:12), <anonymous>:57:17)
+    at exams (C:\Users\Sajjad Baloch\Desktop\fully updated\school_management-main\school_management-main\node_modules\ejs\lib\ejs.js:703:17)
+    at tryHandleCache (C:\Users\Sajjad Baloch\Desktop\fully updated\school_management-main\school_management-main\node_modules\ejs\lib\ejs.js:274:36)
+    at exports.renderFile [as engine] (C:\Users\Sajjad Baloch\Desktop\fully updated\school_management-main\school_management-main\node_modules\ejs\lib\ejs.js:491:10)
+    at View.render (C:\Users\Sajjad Baloch\Desktop\fully updated\school_management-main\school_management-main\node_modules\express\lib\view.js:135:8)
+    at tryRender (C:\Users\Sajjad Baloch\Desktop\fully updated\school_management-main\school_management-main\node_modules\express\lib\application.js:657:10)
+    at app.render (C:\Users\Sajjad Baloch\Desktop\fully updated\school_management-main\school_management-main\node_modules\express\lib\application.js:609:3)
+    at ServerResponse.render (C:\Users\Sajjad Baloch\Desktop\fully updated\school_management-main\school_management-main\node_modules\express\lib\response.js:1049:7)
+    at Query.onResult (C:\Users\Sajjad Baloch\Desktop\fully updated\school_management-main\school_management-main\server.js:2750:13)
+    at C:\Users\Sajjad Baloch\Desktop\fully updated\school_management-main\school_management-main\node_modules\mysql2\lib\commands\query.js:87:16
+
+[2026-02-02T10:42:52.379Z] SyntaxError: C:\Users\Sajjad Baloch\Desktop\fully updated\school_management-main\school_management-main\views\admin\library.ejs:118
+    116|     <!-- No Modal Needed Anymore -->
+    117| 
+ >> 118|     <%- include('../partials/footer') %>
+
+Invalid or unexpected token in C:\Users\Sajjad Baloch\Desktop\fully updated\school_management-main\school_management-main\views\partials\footer.ejs while compiling ejs
+
+If the above error is not helpful, you may want to try EJS-Lint:
+https://github.com/RyanZim/EJS-Lint
+Or, if you meant to create an async function, pass `async: true` as an option.
+    at new Function (<anonymous>)
+    at Template.compile (C:\Users\Sajjad Baloch\Desktop\fully updated\school_management-main\school_management-main\node_modules\ejs\lib\ejs.js:673:12)
+    at Object.compile (C:\Users\Sajjad Baloch\Desktop\fully updated\school_management-main\school_management-main\node_modules\ejs\lib\ejs.js:398:16)
+    at handleCache (C:\Users\Sajjad Baloch\Desktop\fully updated\school_management-main\school_management-main\node_modules\ejs\lib\ejs.js:235:18)
+    at includeFile (C:\Users\Sajjad Baloch\Desktop\fully updated\school_management-main\school_management-main\node_modules\ejs\lib\ejs.js:323:10)
+    at include (C:\Users\Sajjad Baloch\Desktop\fully updated\school_management-main\school_management-main\node_modules\ejs\lib\ejs.js:701:16)
+    at eval (eval at compile (C:\Users\Sajjad Baloch\Desktop\fully updated\school_management-main\school_management-main\node_modules\ejs\lib\ejs.js:673:12), <anonymous>:82:17)
+    at library (C:\Users\Sajjad Baloch\Desktop\fully updated\school_management-main\school_management-main\node_modules\ejs\lib\ejs.js:703:17)
+    at tryHandleCache (C:\Users\Sajjad Baloch\Desktop\fully updated\school_management-main\school_management-main\node_modules\ejs\lib\ejs.js:274:36)
+    at exports.renderFile [as engine] (C:\Users\Sajjad Baloch\Desktop\fully updated\school_management-main\school_management-main\node_modules\ejs\lib\ejs.js:491:10)
+    at View.render (C:\Users\Sajjad Baloch\Desktop\fully updated\school_management-main\school_management-main\node_modules\express\lib\view.js:135:8)
+    at tryRender (C:\Users\Sajjad Baloch\Desktop\fully updated\school_management-main\school_management-main\node_modules\express\lib\application.js:657:10)
+    at app.render (C:\Users\Sajjad Baloch\Desktop\fully updated\school_management-main\school_management-main\node_modules\express\lib\application.js:609:3)
+    at ServerResponse.render (C:\Users\Sajjad Baloch\Desktop\fully updated\school_management-main\school_management-main\node_modules\express\lib\response.js:1049:7)
+    at Query.onResult (C:\Users\Sajjad Baloch\Desktop\fully updated\school_management-main\school_management-main\server.js:3277:13)
+    at Query.execute (C:\Users\Sajjad Baloch\Desktop\fully updated\school_management-main\school_management-main\node_modules\mysql2\lib\commands\command.js:36:14)
+
+[2026-02-02T10:42:55.165Z] SyntaxError: C:\Users\Sajjad Baloch\Desktop\fully updated\school_management-main\school_management-main\views\admin\website.ejs:410
+    408|     </script>
+    409| 
+ >> 410|     <%- include('../partials/footer') %>
+
+Invalid or unexpected token in C:\Users\Sajjad Baloch\Desktop\fully updated\school_management-main\school_management-main\views\partials\footer.ejs while compiling ejs
+
+If the above error is not helpful, you may want to try EJS-Lint:
+https://github.com/RyanZim/EJS-Lint
+Or, if you meant to create an async function, pass `async: true` as an option.
+    at new Function (<anonymous>)
+    at Template.compile (C:\Users\Sajjad Baloch\Desktop\fully updated\school_management-main\school_management-main\node_modules\ejs\lib\ejs.js:673:12)
+    at Object.compile (C:\Users\Sajjad Baloch\Desktop\fully updated\school_management-main\school_management-main\node_modules\ejs\lib\ejs.js:398:16)
+    at handleCache (C:\Users\Sajjad Baloch\Desktop\fully updated\school_management-main\school_management-main\node_modules\ejs\lib\ejs.js:235:18)
+    at includeFile (C:\Users\Sajjad Baloch\Desktop\fully updated\school_management-main\school_management-main\node_modules\ejs\lib\ejs.js:323:10)
+    at include (C:\Users\Sajjad Baloch\Desktop\fully updated\school_management-main\school_management-main\node_modules\ejs\lib\ejs.js:701:16)
+    at eval (eval at compile (C:\Users\Sajjad Baloch\Desktop\fully updated\school_management-main\school_management-main\node_modules\ejs\lib\ejs.js:673:12), <anonymous>:142:17)
+    at website (C:\Users\Sajjad Baloch\Desktop\fully updated\school_management-main\school_management-main\node_modules\ejs\lib\ejs.js:703:17)
+    at tryHandleCache (C:\Users\Sajjad Baloch\Desktop\fully updated\school_management-main\school_management-main\node_modules\ejs\lib\ejs.js:274:36)
+    at exports.renderFile [as engine] (C:\Users\Sajjad Baloch\Desktop\fully updated\school_management-main\school_management-main\node_modules\ejs\lib\ejs.js:491:10)
+    at View.render (C:\Users\Sajjad Baloch\Desktop\fully updated\school_management-main\school_management-main\node_modules\express\lib\view.js:135:8)
+    at tryRender (C:\Users\Sajjad Baloch\Desktop\fully updated\school_management-main\school_management-main\node_modules\express\lib\application.js:657:10)
+    at app.render (C:\Users\Sajjad Baloch\Desktop\fully updated\school_management-main\school_management-main\node_modules\express\lib\application.js:609:3)
+    at ServerResponse.render (C:\Users\Sajjad Baloch\Desktop\fully updated\school_management-main\school_management-main\node_modules\express\lib\response.js:1049:7)
+    at Query.onResult (C:\Users\Sajjad Baloch\Desktop\fully updated\school_management-main\school_management-main\server.js:4424:17)
+    at C:\Users\Sajjad Baloch\Desktop\fully updated\school_management-main\school_management-main\node_modules\mysql2\lib\commands\query.js:87:16
+
+[2026-02-02T10:43:01.966Z] SyntaxError: C:\Users\Sajjad Baloch\Desktop\fully updated\school_management-main\school_management-main\views\admin\mfa_setup.ejs:90
+    88|     </div>
+    89| 
+ >> 90|     <%- include('../partials/footer') %>
+
+Invalid or unexpected token in C:\Users\Sajjad Baloch\Desktop\fully updated\school_management-main\school_management-main\views\partials\footer.ejs while compiling ejs
+
+If the above error is not helpful, you may want to try EJS-Lint:
+https://github.com/RyanZim/EJS-Lint
+Or, if you meant to create an async function, pass `async: true` as an option.
+    at new Function (<anonymous>)
+    at Template.compile (C:\Users\Sajjad Baloch\Desktop\fully updated\school_management-main\school_management-main\node_modules\ejs\lib\ejs.js:673:12)
+    at Object.compile (C:\Users\Sajjad Baloch\Desktop\fully updated\school_management-main\school_management-main\node_modules\ejs\lib\ejs.js:398:16)
+    at handleCache (C:\Users\Sajjad Baloch\Desktop\fully updated\school_management-main\school_management-main\node_modules\ejs\lib\ejs.js:235:18)
+    at includeFile (C:\Users\Sajjad Baloch\Desktop\fully updated\school_management-main\school_management-main\node_modules\ejs\lib\ejs.js:323:10)
+    at include (C:\Users\Sajjad Baloch\Desktop\fully updated\school_management-main\school_management-main\node_modules\ejs\lib\ejs.js:701:16)
+    at eval (eval at compile (C:\Users\Sajjad Baloch\Desktop\fully updated\school_management-main\school_management-main\node_modules\ejs\lib\ejs.js:673:12), <anonymous>:46:17)
+    at mfa_setup (C:\Users\Sajjad Baloch\Desktop\fully updated\school_management-main\school_management-main\node_modules\ejs\lib\ejs.js:703:17)
+    at tryHandleCache (C:\Users\Sajjad Baloch\Desktop\fully updated\school_management-main\school_management-main\node_modules\ejs\lib\ejs.js:274:36)
+    at exports.renderFile [as engine] (C:\Users\Sajjad Baloch\Desktop\fully updated\school_management-main\school_management-main\node_modules\ejs\lib\ejs.js:491:10)
+    at View.render (C:\Users\Sajjad Baloch\Desktop\fully updated\school_management-main\school_management-main\node_modules\express\lib\view.js:135:8)
+    at tryRender (C:\Users\Sajjad Baloch\Desktop\fully updated\school_management-main\school_management-main\node_modules\express\lib\application.js:657:10)
+    at app.render (C:\Users\Sajjad Baloch\Desktop\fully updated\school_management-main\school_management-main\node_modules\express\lib\application.js:609:3)
+    at ServerResponse.render (C:\Users\Sajjad Baloch\Desktop\fully updated\school_management-main\school_management-main\node_modules\express\lib\response.js:1049:7)
+    at C:\Users\Sajjad Baloch\Desktop\fully updated\school_management-main\school_management-main\server.js:983:13
+    at C:\Users\Sajjad Baloch\Desktop\fully updated\school_management-main\school_management-main\node_modules\qrcode\lib\renderer\png.js:29:5
+
+[2026-02-02T11:02:46.988Z] SyntaxError: Invalid or unexpected token in C:\Users\Sajjad Baloch\Desktop\fully updated\school_management-main\school_management-main\views\index.ejs while compiling ejs
+
+If the above error is not helpful, you may want to try EJS-Lint:
+https://github.com/RyanZim/EJS-Lint
+Or, if you meant to create an async function, pass `async: true` as an option.
+    at new Function (<anonymous>)
+    at Template.compile (C:\Users\Sajjad Baloch\Desktop\fully updated\school_management-main\school_management-main\node_modules\ejs\lib\ejs.js:673:12)
+    at Object.compile (C:\Users\Sajjad Baloch\Desktop\fully updated\school_management-main\school_management-main\node_modules\ejs\lib\ejs.js:398:16)
+    at handleCache (C:\Users\Sajjad Baloch\Desktop\fully updated\school_management-main\school_management-main\node_modules\ejs\lib\ejs.js:235:18)
+    at tryHandleCache (C:\Users\Sajjad Baloch\Desktop\fully updated\school_management-main\school_management-main\node_modules\ejs\lib\ejs.js:274:16)
+    at exports.renderFile [as engine] (C:\Users\Sajjad Baloch\Desktop\fully updated\school_management-main\school_management-main\node_modules\ejs\lib\ejs.js:491:10)
+    at View.render (C:\Users\Sajjad Baloch\Desktop\fully updated\school_management-main\school_management-main\node_modules\express\lib\view.js:135:8)
+    at tryRender (C:\Users\Sajjad Baloch\Desktop\fully updated\school_management-main\school_management-main\node_modules\express\lib\application.js:657:10)
+    at app.render (C:\Users\Sajjad Baloch\Desktop\fully updated\school_management-main\school_management-main\node_modules\express\lib\application.js:609:3)
+    at ServerResponse.render (C:\Users\Sajjad Baloch\Desktop\fully updated\school_management-main\school_management-main\node_modules\express\lib\response.js:1049:7)
+    at Query.onResult (C:\Users\Sajjad Baloch\Desktop\fully updated\school_management-main\school_management-main\server.js:689:13)
+    at C:\Users\Sajjad Baloch\Desktop\fully updated\school_management-main\school_management-main\node_modules\mysql2\lib\commands\query.js:87:16
+    at process.processTicksAndRejections (node:internal/process/task_queues:84:11)
+
+[2026-02-02T11:02:51.080Z] SyntaxError: Invalid or unexpected token in C:\Users\Sajjad Baloch\Desktop\fully updated\school_management-main\school_management-main\views\index.ejs while compiling ejs
+
+If the above error is not helpful, you may want to try EJS-Lint:
+https://github.com/RyanZim/EJS-Lint
+Or, if you meant to create an async function, pass `async: true` as an option.
+    at new Function (<anonymous>)
+    at Template.compile (C:\Users\Sajjad Baloch\Desktop\fully updated\school_management-main\school_management-main\node_modules\ejs\lib\ejs.js:673:12)
+    at Object.compile (C:\Users\Sajjad Baloch\Desktop\fully updated\school_management-main\school_management-main\node_modules\ejs\lib\ejs.js:398:16)
+    at handleCache (C:\Users\Sajjad Baloch\Desktop\fully updated\school_management-main\school_management-main\node_modules\ejs\lib\ejs.js:235:18)
+    at tryHandleCache (C:\Users\Sajjad Baloch\Desktop\fully updated\school_management-main\school_management-main\node_modules\ejs\lib\ejs.js:274:16)
+    at exports.renderFile [as engine] (C:\Users\Sajjad Baloch\Desktop\fully updated\school_management-main\school_management-main\node_modules\ejs\lib\ejs.js:491:10)
+    at View.render (C:\Users\Sajjad Baloch\Desktop\fully updated\school_management-main\school_management-main\node_modules\express\lib\view.js:135:8)
+    at tryRender (C:\Users\Sajjad Baloch\Desktop\fully updated\school_management-main\school_management-main\node_modules\express\lib\application.js:657:10)
+    at app.render (C:\Users\Sajjad Baloch\Desktop\fully updated\school_management-main\school_management-main\node_modules\express\lib\application.js:609:3)
+    at ServerResponse.render (C:\Users\Sajjad Baloch\Desktop\fully updated\school_management-main\school_management-main\node_modules\express\lib\response.js:1049:7)
+    at Query.onResult (C:\Users\Sajjad Baloch\Desktop\fully updated\school_management-main\school_management-main\server.js:689:13)
+    at C:\Users\Sajjad Baloch\Desktop\fully updated\school_management-main\school_management-main\node_modules\mysql2\lib\commands\query.js:87:16
+    at process.processTicksAndRejections (node:internal/process/task_queues:84:11)
+
+[2026-02-02T11:02:56.590Z] SyntaxError: Invalid or unexpected token in C:\Users\Sajjad Baloch\Desktop\fully updated\school_management-main\school_management-main\views\index.ejs while compiling ejs
+
+If the above error is not helpful, you may want to try EJS-Lint:
+https://github.com/RyanZim/EJS-Lint
+Or, if you meant to create an async function, pass `async: true` as an option.
+    at new Function (<anonymous>)
+    at Template.compile (C:\Users\Sajjad Baloch\Desktop\fully updated\school_management-main\school_management-main\node_modules\ejs\lib\ejs.js:673:12)
+    at Object.compile (C:\Users\Sajjad Baloch\Desktop\fully updated\school_management-main\school_management-main\node_modules\ejs\lib\ejs.js:398:16)
+    at handleCache (C:\Users\Sajjad Baloch\Desktop\fully updated\school_management-main\school_management-main\node_modules\ejs\lib\ejs.js:235:18)
+    at tryHandleCache (C:\Users\Sajjad Baloch\Desktop\fully updated\school_management-main\school_management-main\node_modules\ejs\lib\ejs.js:274:16)
+    at exports.renderFile [as engine] (C:\Users\Sajjad Baloch\Desktop\fully updated\school_management-main\school_management-main\node_modules\ejs\lib\ejs.js:491:10)
+    at View.render (C:\Users\Sajjad Baloch\Desktop\fully updated\school_management-main\school_management-main\node_modules\express\lib\view.js:135:8)
+    at tryRender (C:\Users\Sajjad Baloch\Desktop\fully updated\school_management-main\school_management-main\node_modules\express\lib\application.js:657:10)
+    at app.render (C:\Users\Sajjad Baloch\Desktop\fully updated\school_management-main\school_management-main\node_modules\express\lib\application.js:609:3)
+    at ServerResponse.render (C:\Users\Sajjad Baloch\Desktop\fully updated\school_management-main\school_management-main\node_modules\express\lib\response.js:1049:7)
+    at Query.onResult (C:\Users\Sajjad Baloch\Desktop\fully updated\school_management-main\school_management-main\server.js:689:13)
+    at C:\Users\Sajjad Baloch\Desktop\fully updated\school_management-main\school_management-main\node_modules\mysql2\lib\commands\query.js:87:16
+    at process.processTicksAndRejections (node:internal/process/task_queues:84:11)
+
+[2026-02-02T11:29:37.764Z] SyntaxError: Invalid or unexpected token in C:\Users\Sajjad Baloch\Desktop\fully updated\school_management-main\school_management-main\views\index.ejs while compiling ejs
+
+If the above error is not helpful, you may want to try EJS-Lint:
+https://github.com/RyanZim/EJS-Lint
+Or, if you meant to create an async function, pass `async: true` as an option.
+    at new Function (<anonymous>)
+    at Template.compile (C:\Users\Sajjad Baloch\Desktop\fully updated\school_management-main\school_management-main\node_modules\ejs\lib\ejs.js:673:12)
+    at Object.compile (C:\Users\Sajjad Baloch\Desktop\fully updated\school_management-main\school_management-main\node_modules\ejs\lib\ejs.js:398:16)
+    at handleCache (C:\Users\Sajjad Baloch\Desktop\fully updated\school_management-main\school_management-main\node_modules\ejs\lib\ejs.js:235:18)
+    at tryHandleCache (C:\Users\Sajjad Baloch\Desktop\fully updated\school_management-main\school_management-main\node_modules\ejs\lib\ejs.js:274:16)
+    at exports.renderFile [as engine] (C:\Users\Sajjad Baloch\Desktop\fully updated\school_management-main\school_management-main\node_modules\ejs\lib\ejs.js:491:10)
+    at View.render (C:\Users\Sajjad Baloch\Desktop\fully updated\school_management-main\school_management-main\node_modules\express\lib\view.js:135:8)
+    at tryRender (C:\Users\Sajjad Baloch\Desktop\fully updated\school_management-main\school_management-main\node_modules\express\lib\application.js:657:10)
+    at app.render (C:\Users\Sajjad Baloch\Desktop\fully updated\school_management-main\school_management-main\node_modules\express\lib\application.js:609:3)
+    at ServerResponse.render (C:\Users\Sajjad Baloch\Desktop\fully updated\school_management-main\school_management-main\node_modules\express\lib\response.js:1049:7)
+    at Query.onResult (C:\Users\Sajjad Baloch\Desktop\fully updated\school_management-main\school_management-main\server.js:689:13)
+    at C:\Users\Sajjad Baloch\Desktop\fully updated\school_management-main\school_management-main\node_modules\mysql2\lib\commands\query.js:87:16
+    at process.processTicksAndRejections (node:internal/process/task_queues:84:11)
+
+[2026-02-02T11:29:41.650Z] SyntaxError: Invalid or unexpected token in C:\Users\Sajjad Baloch\Desktop\fully updated\school_management-main\school_management-main\views\index.ejs while compiling ejs
+
+If the above error is not helpful, you may want to try EJS-Lint:
+https://github.com/RyanZim/EJS-Lint
+Or, if you meant to create an async function, pass `async: true` as an option.
+    at new Function (<anonymous>)
+    at Template.compile (C:\Users\Sajjad Baloch\Desktop\fully updated\school_management-main\school_management-main\node_modules\ejs\lib\ejs.js:673:12)
+    at Object.compile (C:\Users\Sajjad Baloch\Desktop\fully updated\school_management-main\school_management-main\node_modules\ejs\lib\ejs.js:398:16)
+    at handleCache (C:\Users\Sajjad Baloch\Desktop\fully updated\school_management-main\school_management-main\node_modules\ejs\lib\ejs.js:235:18)
+    at tryHandleCache (C:\Users\Sajjad Baloch\Desktop\fully updated\school_management-main\school_management-main\node_modules\ejs\lib\ejs.js:274:16)
+    at exports.renderFile [as engine] (C:\Users\Sajjad Baloch\Desktop\fully updated\school_management-main\school_management-main\node_modules\ejs\lib\ejs.js:491:10)
+    at View.render (C:\Users\Sajjad Baloch\Desktop\fully updated\school_management-main\school_management-main\node_modules\express\lib\view.js:135:8)
+    at tryRender (C:\Users\Sajjad Baloch\Desktop\fully updated\school_management-main\school_management-main\node_modules\express\lib\application.js:657:10)
+    at app.render (C:\Users\Sajjad Baloch\Desktop\fully updated\school_management-main\school_management-main\node_modules\express\lib\application.js:609:3)
+    at ServerResponse.render (C:\Users\Sajjad Baloch\Desktop\fully updated\school_management-main\school_management-main\node_modules\express\lib\response.js:1049:7)
+    at Query.onResult (C:\Users\Sajjad Baloch\Desktop\fully updated\school_management-main\school_management-main\server.js:689:13)
+    at C:\Users\Sajjad Baloch\Desktop\fully updated\school_management-main\school_management-main\node_modules\mysql2\lib\commands\query.js:87:16
+    at process.processTicksAndRejections (node:internal/process/task_queues:84:11)
+
+[2026-02-02T11:29:48.783Z] SyntaxError: Invalid or unexpected token in C:\Users\Sajjad Baloch\Desktop\fully updated\school_management-main\school_management-main\views\index.ejs while compiling ejs
+
+If the above error is not helpful, you may want to try EJS-Lint:
+https://github.com/RyanZim/EJS-Lint
+Or, if you meant to create an async function, pass `async: true` as an option.
+    at new Function (<anonymous>)
+    at Template.compile (C:\Users\Sajjad Baloch\Desktop\fully updated\school_management-main\school_management-main\node_modules\ejs\lib\ejs.js:673:12)
+    at Object.compile (C:\Users\Sajjad Baloch\Desktop\fully updated\school_management-main\school_management-main\node_modules\ejs\lib\ejs.js:398:16)
+    at handleCache (C:\Users\Sajjad Baloch\Desktop\fully updated\school_management-main\school_management-main\node_modules\ejs\lib\ejs.js:235:18)
+    at tryHandleCache (C:\Users\Sajjad Baloch\Desktop\fully updated\school_management-main\school_management-main\node_modules\ejs\lib\ejs.js:274:16)
+    at exports.renderFile [as engine] (C:\Users\Sajjad Baloch\Desktop\fully updated\school_management-main\school_management-main\node_modules\ejs\lib\ejs.js:491:10)
+    at View.render (C:\Users\Sajjad Baloch\Desktop\fully updated\school_management-main\school_management-main\node_modules\express\lib\view.js:135:8)
+    at tryRender (C:\Users\Sajjad Baloch\Desktop\fully updated\school_management-main\school_management-main\node_modules\express\lib\application.js:657:10)
+    at app.render (C:\Users\Sajjad Baloch\Desktop\fully updated\school_management-main\school_management-main\node_modules\express\lib\application.js:609:3)
+    at ServerResponse.render (C:\Users\Sajjad Baloch\Desktop\fully updated\school_management-main\school_management-main\node_modules\express\lib\response.js:1049:7)
+    at Query.onResult (C:\Users\Sajjad Baloch\Desktop\fully updated\school_management-main\school_management-main\server.js:689:13)
+    at C:\Users\Sajjad Baloch\Desktop\fully updated\school_management-main\school_management-main\node_modules\mysql2\lib\commands\query.js:87:16
+    at process.processTicksAndRejections (node:internal/process/task_queues:84:11)
+
+[2026-02-02T11:31:59.776Z] SyntaxError: Invalid or unexpected token in C:\Users\Sajjad Baloch\Desktop\fully updated\school_management-main\school_management-main\views\index.ejs while compiling ejs
+
+If the above error is not helpful, you may want to try EJS-Lint:
+https://github.com/RyanZim/EJS-Lint
+Or, if you meant to create an async function, pass `async: true` as an option.
+    at new Function (<anonymous>)
+    at Template.compile (C:\Users\Sajjad Baloch\Desktop\fully updated\school_management-main\school_management-main\node_modules\ejs\lib\ejs.js:673:12)
+    at Object.compile (C:\Users\Sajjad Baloch\Desktop\fully updated\school_management-main\school_management-main\node_modules\ejs\lib\ejs.js:398:16)
+    at handleCache (C:\Users\Sajjad Baloch\Desktop\fully updated\school_management-main\school_management-main\node_modules\ejs\lib\ejs.js:235:18)
+    at tryHandleCache (C:\Users\Sajjad Baloch\Desktop\fully updated\school_management-main\school_management-main\node_modules\ejs\lib\ejs.js:274:16)
+    at exports.renderFile [as engine] (C:\Users\Sajjad Baloch\Desktop\fully updated\school_management-main\school_management-main\node_modules\ejs\lib\ejs.js:491:10)
+    at View.render (C:\Users\Sajjad Baloch\Desktop\fully updated\school_management-main\school_management-main\node_modules\express\lib\view.js:135:8)
+    at tryRender (C:\Users\Sajjad Baloch\Desktop\fully updated\school_management-main\school_management-main\node_modules\express\lib\application.js:657:10)
+    at app.render (C:\Users\Sajjad Baloch\Desktop\fully updated\school_management-main\school_management-main\node_modules\express\lib\application.js:609:3)
+    at ServerResponse.render (C:\Users\Sajjad Baloch\Desktop\fully updated\school_management-main\school_management-main\node_modules\express\lib\response.js:1049:7)
+    at Query.onResult (C:\Users\Sajjad Baloch\Desktop\fully updated\school_management-main\school_management-main\server.js:689:13)
+    at C:\Users\Sajjad Baloch\Desktop\fully updated\school_management-main\school_management-main\node_modules\mysql2\lib\commands\query.js:87:16
+    at process.processTicksAndRejections (node:internal/process/task_queues:84:11)
+
+[2026-02-02T11:33:25.687Z] SyntaxError: Invalid or unexpected token in C:\Users\Sajjad Baloch\Desktop\fully updated\school_management-main\school_management-main\views\index.ejs while compiling ejs
+
+If the above error is not helpful, you may want to try EJS-Lint:
+https://github.com/RyanZim/EJS-Lint
+Or, if you meant to create an async function, pass `async: true` as an option.
+    at new Function (<anonymous>)
+    at Template.compile (C:\Users\Sajjad Baloch\Desktop\fully updated\school_management-main\school_management-main\node_modules\ejs\lib\ejs.js:673:12)
+    at Object.compile (C:\Users\Sajjad Baloch\Desktop\fully updated\school_management-main\school_management-main\node_modules\ejs\lib\ejs.js:398:16)
+    at handleCache (C:\Users\Sajjad Baloch\Desktop\fully updated\school_management-main\school_management-main\node_modules\ejs\lib\ejs.js:235:18)
+    at tryHandleCache (C:\Users\Sajjad Baloch\Desktop\fully updated\school_management-main\school_management-main\node_modules\ejs\lib\ejs.js:274:16)
+    at exports.renderFile [as engine] (C:\Users\Sajjad Baloch\Desktop\fully updated\school_management-main\school_management-main\node_modules\ejs\lib\ejs.js:491:10)
+    at View.render (C:\Users\Sajjad Baloch\Desktop\fully updated\school_management-main\school_management-main\node_modules\express\lib\view.js:135:8)
+    at tryRender (C:\Users\Sajjad Baloch\Desktop\fully updated\school_management-main\school_management-main\node_modules\express\lib\application.js:657:10)
+    at app.render (C:\Users\Sajjad Baloch\Desktop\fully updated\school_management-main\school_management-main\node_modules\express\lib\application.js:609:3)
+    at ServerResponse.render (C:\Users\Sajjad Baloch\Desktop\fully updated\school_management-main\school_management-main\node_modules\express\lib\response.js:1049:7)
+    at Query.onResult (C:\Users\Sajjad Baloch\Desktop\fully updated\school_management-main\school_management-main\server.js:689:13)
+    at C:\Users\Sajjad Baloch\Desktop\fully updated\school_management-main\school_management-main\node_modules\mysql2\lib\commands\query.js:87:16
+    at process.processTicksAndRejections (node:internal/process/task_queues:84:11)
+
+[2026-02-02T11:35:07.856Z] SyntaxError: Invalid or unexpected token in C:\Users\Sajjad Baloch\Desktop\fully updated\school_management-main\school_management-main\views\index.ejs while compiling ejs
+
+If the above error is not helpful, you may want to try EJS-Lint:
+https://github.com/RyanZim/EJS-Lint
+Or, if you meant to create an async function, pass `async: true` as an option.
+    at new Function (<anonymous>)
+    at Template.compile (C:\Users\Sajjad Baloch\Desktop\fully updated\school_management-main\school_management-main\node_modules\ejs\lib\ejs.js:673:12)
+    at Object.compile (C:\Users\Sajjad Baloch\Desktop\fully updated\school_management-main\school_management-main\node_modules\ejs\lib\ejs.js:398:16)
+    at handleCache (C:\Users\Sajjad Baloch\Desktop\fully updated\school_management-main\school_management-main\node_modules\ejs\lib\ejs.js:235:18)
+    at tryHandleCache (C:\Users\Sajjad Baloch\Desktop\fully updated\school_management-main\school_management-main\node_modules\ejs\lib\ejs.js:274:16)
+    at exports.renderFile [as engine] (C:\Users\Sajjad Baloch\Desktop\fully updated\school_management-main\school_management-main\node_modules\ejs\lib\ejs.js:491:10)
+    at View.render (C:\Users\Sajjad Baloch\Desktop\fully updated\school_management-main\school_management-main\node_modules\express\lib\view.js:135:8)
+    at tryRender (C:\Users\Sajjad Baloch\Desktop\fully updated\school_management-main\school_management-main\node_modules\express\lib\application.js:657:10)
+    at app.render (C:\Users\Sajjad Baloch\Desktop\fully updated\school_management-main\school_management-main\node_modules\express\lib\application.js:609:3)
+    at ServerResponse.render (C:\Users\Sajjad Baloch\Desktop\fully updated\school_management-main\school_management-main\node_modules\express\lib\response.js:1049:7)
+    at Query.onResult (C:\Users\Sajjad Baloch\Desktop\fully updated\school_management-main\school_management-main\server.js:689:13)
+    at C:\Users\Sajjad Baloch\Desktop\fully updated\school_management-main\school_management-main\node_modules\mysql2\lib\commands\query.js:87:16
+    at process.processTicksAndRejections (node:internal/process/task_queues:84:11)
+
+[2026-02-02T11:38:41.003Z] SyntaxError: Invalid or unexpected token in C:\Users\Sajjad Baloch\Desktop\fully updated\school_management-main\school_management-main\views\index.ejs while compiling ejs
+
+If the above error is not helpful, you may want to try EJS-Lint:
+https://github.com/RyanZim/EJS-Lint
+Or, if you meant to create an async function, pass `async: true` as an option.
+    at new Function (<anonymous>)
+    at Template.compile (C:\Users\Sajjad Baloch\Desktop\fully updated\school_management-main\school_management-main\node_modules\ejs\lib\ejs.js:673:12)
+    at Object.compile (C:\Users\Sajjad Baloch\Desktop\fully updated\school_management-main\school_management-main\node_modules\ejs\lib\ejs.js:398:16)
+    at handleCache (C:\Users\Sajjad Baloch\Desktop\fully updated\school_management-main\school_management-main\node_modules\ejs\lib\ejs.js:235:18)
+    at tryHandleCache (C:\Users\Sajjad Baloch\Desktop\fully updated\school_management-main\school_management-main\node_modules\ejs\lib\ejs.js:274:16)
+    at exports.renderFile [as engine] (C:\Users\Sajjad Baloch\Desktop\fully updated\school_management-main\school_management-main\node_modules\ejs\lib\ejs.js:491:10)
+    at View.render (C:\Users\Sajjad Baloch\Desktop\fully updated\school_management-main\school_management-main\node_modules\express\lib\view.js:135:8)
+    at tryRender (C:\Users\Sajjad Baloch\Desktop\fully updated\school_management-main\school_management-main\node_modules\express\lib\application.js:657:10)
+    at app.render (C:\Users\Sajjad Baloch\Desktop\fully updated\school_management-main\school_management-main\node_modules\express\lib\application.js:609:3)
+    at ServerResponse.render (C:\Users\Sajjad Baloch\Desktop\fully updated\school_management-main\school_management-main\node_modules\express\lib\response.js:1049:7)
+    at Query.onResult (C:\Users\Sajjad Baloch\Desktop\fully updated\school_management-main\school_management-main\server.js:689:13)
+    at C:\Users\Sajjad Baloch\Desktop\fully updated\school_management-main\school_management-main\node_modules\mysql2\lib\commands\query.js:87:16
+    at process.processTicksAndRejections (node:internal/process/task_queues:84:11)
+
+[2026-02-02T11:38:42.500Z] SyntaxError: Invalid or unexpected token in C:\Users\Sajjad Baloch\Desktop\fully updated\school_management-main\school_management-main\views\index.ejs while compiling ejs
+
+If the above error is not helpful, you may want to try EJS-Lint:
+https://github.com/RyanZim/EJS-Lint
+Or, if you meant to create an async function, pass `async: true` as an option.
+    at new Function (<anonymous>)
+    at Template.compile (C:\Users\Sajjad Baloch\Desktop\fully updated\school_management-main\school_management-main\node_modules\ejs\lib\ejs.js:673:12)
+    at Object.compile (C:\Users\Sajjad Baloch\Desktop\fully updated\school_management-main\school_management-main\node_modules\ejs\lib\ejs.js:398:16)
+    at handleCache (C:\Users\Sajjad Baloch\Desktop\fully updated\school_management-main\school_management-main\node_modules\ejs\lib\ejs.js:235:18)
+    at tryHandleCache (C:\Users\Sajjad Baloch\Desktop\fully updated\school_management-main\school_management-main\node_modules\ejs\lib\ejs.js:274:16)
+    at exports.renderFile [as engine] (C:\Users\Sajjad Baloch\Desktop\fully updated\school_management-main\school_management-main\node_modules\ejs\lib\ejs.js:491:10)
+    at View.render (C:\Users\Sajjad Baloch\Desktop\fully updated\school_management-main\school_management-main\node_modules\express\lib\view.js:135:8)
+    at tryRender (C:\Users\Sajjad Baloch\Desktop\fully updated\school_management-main\school_management-main\node_modules\express\lib\application.js:657:10)
+    at app.render (C:\Users\Sajjad Baloch\Desktop\fully updated\school_management-main\school_management-main\node_modules\express\lib\application.js:609:3)
+    at ServerResponse.render (C:\Users\Sajjad Baloch\Desktop\fully updated\school_management-main\school_management-main\node_modules\express\lib\response.js:1049:7)
+    at Query.onResult (C:\Users\Sajjad Baloch\Desktop\fully updated\school_management-main\school_management-main\server.js:689:13)
+    at C:\Users\Sajjad Baloch\Desktop\fully updated\school_management-main\school_management-main\node_modules\mysql2\lib\commands\query.js:87:16
+    at process.processTicksAndRejections (node:internal/process/task_queues:84:11)
+
+[2026-02-02T11:38:49.415Z] SyntaxError: Invalid or unexpected token in C:\Users\Sajjad Baloch\Desktop\fully updated\school_management-main\school_management-main\views\index.ejs while compiling ejs
+
+If the above error is not helpful, you may want to try EJS-Lint:
+https://github.com/RyanZim/EJS-Lint
+Or, if you meant to create an async function, pass `async: true` as an option.
+    at new Function (<anonymous>)
+    at Template.compile (C:\Users\Sajjad Baloch\Desktop\fully updated\school_management-main\school_management-main\node_modules\ejs\lib\ejs.js:673:12)
+    at Object.compile (C:\Users\Sajjad Baloch\Desktop\fully updated\school_management-main\school_management-main\node_modules\ejs\lib\ejs.js:398:16)
+    at handleCache (C:\Users\Sajjad Baloch\Desktop\fully updated\school_management-main\school_management-main\node_modules\ejs\lib\ejs.js:235:18)
+    at tryHandleCache (C:\Users\Sajjad Baloch\Desktop\fully updated\school_management-main\school_management-main\node_modules\ejs\lib\ejs.js:274:16)
+    at exports.renderFile [as engine] (C:\Users\Sajjad Baloch\Desktop\fully updated\school_management-main\school_management-main\node_modules\ejs\lib\ejs.js:491:10)
+    at View.render (C:\Users\Sajjad Baloch\Desktop\fully updated\school_management-main\school_management-main\node_modules\express\lib\view.js:135:8)
+    at tryRender (C:\Users\Sajjad Baloch\Desktop\fully updated\school_management-main\school_management-main\node_modules\express\lib\application.js:657:10)
+    at app.render (C:\Users\Sajjad Baloch\Desktop\fully updated\school_management-main\school_management-main\node_modules\express\lib\application.js:609:3)
+    at ServerResponse.render (C:\Users\Sajjad Baloch\Desktop\fully updated\school_management-main\school_management-main\node_modules\express\lib\response.js:1049:7)
+    at Query.onResult (C:\Users\Sajjad Baloch\Desktop\fully updated\school_management-main\school_management-main\server.js:689:13)
+    at C:\Users\Sajjad Baloch\Desktop\fully updated\school_management-main\school_management-main\node_modules\mysql2\lib\commands\query.js:87:16
+    at process.processTicksAndRejections (node:internal/process/task_queues:84:11)
+
+[2026-02-02T11:38:51.290Z] SyntaxError: Invalid or unexpected token in C:\Users\Sajjad Baloch\Desktop\fully updated\school_management-main\school_management-main\views\index.ejs while compiling ejs
+
+If the above error is not helpful, you may want to try EJS-Lint:
+https://github.com/RyanZim/EJS-Lint
+Or, if you meant to create an async function, pass `async: true` as an option.
+    at new Function (<anonymous>)
+    at Template.compile (C:\Users\Sajjad Baloch\Desktop\fully updated\school_management-main\school_management-main\node_modules\ejs\lib\ejs.js:673:12)
+    at Object.compile (C:\Users\Sajjad Baloch\Desktop\fully updated\school_management-main\school_management-main\node_modules\ejs\lib\ejs.js:398:16)
+    at handleCache (C:\Users\Sajjad Baloch\Desktop\fully updated\school_management-main\school_management-main\node_modules\ejs\lib\ejs.js:235:18)
+    at tryHandleCache (C:\Users\Sajjad Baloch\Desktop\fully updated\school_management-main\school_management-main\node_modules\ejs\lib\ejs.js:274:16)
+    at exports.renderFile [as engine] (C:\Users\Sajjad Baloch\Desktop\fully updated\school_management-main\school_management-main\node_modules\ejs\lib\ejs.js:491:10)
+    at View.render (C:\Users\Sajjad Baloch\Desktop\fully updated\school_management-main\school_management-main\node_modules\express\lib\view.js:135:8)
+    at tryRender (C:\Users\Sajjad Baloch\Desktop\fully updated\school_management-main\school_management-main\node_modules\express\lib\application.js:657:10)
+    at app.render (C:\Users\Sajjad Baloch\Desktop\fully updated\school_management-main\school_management-main\node_modules\express\lib\application.js:609:3)
+    at ServerResponse.render (C:\Users\Sajjad Baloch\Desktop\fully updated\school_management-main\school_management-main\node_modules\express\lib\response.js:1049:7)
+    at Query.onResult (C:\Users\Sajjad Baloch\Desktop\fully updated\school_management-main\school_management-main\server.js:689:13)
+    at C:\Users\Sajjad Baloch\Desktop\fully updated\school_management-main\school_management-main\node_modules\mysql2\lib\commands\query.js:87:16
+    at process.processTicksAndRejections (node:internal/process/task_queues:84:11)
+
+[2026-02-02T11:38:52.121Z] SyntaxError: Invalid or unexpected token in C:\Users\Sajjad Baloch\Desktop\fully updated\school_management-main\school_management-main\views\index.ejs while compiling ejs
+
+If the above error is not helpful, you may want to try EJS-Lint:
+https://github.com/RyanZim/EJS-Lint
+Or, if you meant to create an async function, pass `async: true` as an option.
+    at new Function (<anonymous>)
+    at Template.compile (C:\Users\Sajjad Baloch\Desktop\fully updated\school_management-main\school_management-main\node_modules\ejs\lib\ejs.js:673:12)
+    at Object.compile (C:\Users\Sajjad Baloch\Desktop\fully updated\school_management-main\school_management-main\node_modules\ejs\lib\ejs.js:398:16)
+    at handleCache (C:\Users\Sajjad Baloch\Desktop\fully updated\school_management-main\school_management-main\node_modules\ejs\lib\ejs.js:235:18)
+    at tryHandleCache (C:\Users\Sajjad Baloch\Desktop\fully updated\school_management-main\school_management-main\node_modules\ejs\lib\ejs.js:274:16)
+    at exports.renderFile [as engine] (C:\Users\Sajjad Baloch\Desktop\fully updated\school_management-main\school_management-main\node_modules\ejs\lib\ejs.js:491:10)
+    at View.render (C:\Users\Sajjad Baloch\Desktop\fully updated\school_management-main\school_management-main\node_modules\express\lib\view.js:135:8)
+    at tryRender (C:\Users\Sajjad Baloch\Desktop\fully updated\school_management-main\school_management-main\node_modules\express\lib\application.js:657:10)
+    at app.render (C:\Users\Sajjad Baloch\Desktop\fully updated\school_management-main\school_management-main\node_modules\express\lib\application.js:609:3)
+    at ServerResponse.render (C:\Users\Sajjad Baloch\Desktop\fully updated\school_management-main\school_management-main\node_modules\express\lib\response.js:1049:7)
+    at Query.onResult (C:\Users\Sajjad Baloch\Desktop\fully updated\school_management-main\school_management-main\server.js:689:13)
+    at C:\Users\Sajjad Baloch\Desktop\fully updated\school_management-main\school_management-main\node_modules\mysql2\lib\commands\query.js:87:16
+    at process.processTicksAndRejections (node:internal/process/task_queues:84:11)
+
+[2026-02-02T11:38:59.729Z] SyntaxError: Invalid or unexpected token in C:\Users\Sajjad Baloch\Desktop\fully updated\school_management-main\school_management-main\views\index.ejs while compiling ejs
+
+If the above error is not helpful, you may want to try EJS-Lint:
+https://github.com/RyanZim/EJS-Lint
+Or, if you meant to create an async function, pass `async: true` as an option.
+    at new Function (<anonymous>)
+    at Template.compile (C:\Users\Sajjad Baloch\Desktop\fully updated\school_management-main\school_management-main\node_modules\ejs\lib\ejs.js:673:12)
+    at Object.compile (C:\Users\Sajjad Baloch\Desktop\fully updated\school_management-main\school_management-main\node_modules\ejs\lib\ejs.js:398:16)
+    at handleCache (C:\Users\Sajjad Baloch\Desktop\fully updated\school_management-main\school_management-main\node_modules\ejs\lib\ejs.js:235:18)
+    at tryHandleCache (C:\Users\Sajjad Baloch\Desktop\fully updated\school_management-main\school_management-main\node_modules\ejs\lib\ejs.js:274:16)
+    at exports.renderFile [as engine] (C:\Users\Sajjad Baloch\Desktop\fully updated\school_management-main\school_management-main\node_modules\ejs\lib\ejs.js:491:10)
+    at View.render (C:\Users\Sajjad Baloch\Desktop\fully updated\school_management-main\school_management-main\node_modules\express\lib\view.js:135:8)
+    at tryRender (C:\Users\Sajjad Baloch\Desktop\fully updated\school_management-main\school_management-main\node_modules\express\lib\application.js:657:10)
+    at app.render (C:\Users\Sajjad Baloch\Desktop\fully updated\school_management-main\school_management-main\node_modules\express\lib\application.js:609:3)
+    at ServerResponse.render (C:\Users\Sajjad Baloch\Desktop\fully updated\school_management-main\school_management-main\node_modules\express\lib\response.js:1049:7)
+    at Query.onResult (C:\Users\Sajjad Baloch\Desktop\fully updated\school_management-main\school_management-main\server.js:689:13)
+    at C:\Users\Sajjad Baloch\Desktop\fully updated\school_management-main\school_management-main\node_modules\mysql2\lib\commands\query.js:87:16
+    at process.processTicksAndRejections (node:internal/process/task_queues:84:11)
+
+[2026-02-02T11:44:29.241Z] ReferenceError: C:\Users\Sajjad Baloch\Desktop\fully updated\school_management-main\school_management-main\views\index.ejs:3
+    1| <%- include('partials/header') %>
+    2| 
+ >> 3|     <% // Data Protection const home=site.home || {}; const global=site.global || {}; // Title Splitting Logic const
+    4|         fullTitle=home.hero_title || 'Leading the Way in Academic Excellence' ; const parts=fullTitle.split(' ');
+    5|     const last2 = parts.length > 2 ? parts.slice(-2).join(' ') : fullTitle;
+    6|     const first = parts.length > 2 ? parts.slice(0, -2).join(' ') : '';
+
+home is not defined
+    at eval (eval at compile (C:\Users\Sajjad Baloch\Desktop\fully updated\school_management-main\school_management-main\node_modules\ejs\lib\ejs.js:673:12), <anonymous>:14:9)
+    at index (C:\Users\Sajjad Baloch\Desktop\fully updated\school_management-main\school_management-main\node_modules\ejs\lib\ejs.js:703:17)
+    at tryHandleCache (C:\Users\Sajjad Baloch\Desktop\fully updated\school_management-main\school_management-main\node_modules\ejs\lib\ejs.js:274:36)
+    at exports.renderFile [as engine] (C:\Users\Sajjad Baloch\Desktop\fully updated\school_management-main\school_management-main\node_modules\ejs\lib\ejs.js:491:10)
+    at View.render (C:\Users\Sajjad Baloch\Desktop\fully updated\school_management-main\school_management-main\node_modules\express\lib\view.js:135:8)
+    at tryRender (C:\Users\Sajjad Baloch\Desktop\fully updated\school_management-main\school_management-main\node_modules\express\lib\application.js:657:10)
+    at app.render (C:\Users\Sajjad Baloch\Desktop\fully updated\school_management-main\school_management-main\node_modules\express\lib\application.js:609:3)
+    at ServerResponse.render (C:\Users\Sajjad Baloch\Desktop\fully updated\school_management-main\school_management-main\node_modules\express\lib\response.js:1049:7)
+    at Query.onResult (C:\Users\Sajjad Baloch\Desktop\fully updated\school_management-main\school_management-main\server.js:689:13)
+    at C:\Users\Sajjad Baloch\Desktop\fully updated\school_management-main\school_management-main\node_modules\mysql2\lib\commands\query.js:87:16
+    at process.processTicksAndRejections (node:internal/process/task_queues:84:11)
+
+[2026-02-02T11:54:20.503Z] SyntaxError: Invalid or unexpected token in C:\Users\Sajjad Baloch\Desktop\fully updated\school_management-main\school_management-main\views\index.ejs while compiling ejs
+
+If the above error is not helpful, you may want to try EJS-Lint:
+https://github.com/RyanZim/EJS-Lint
+Or, if you meant to create an async function, pass `async: true` as an option.
+    at new Function (<anonymous>)
+    at Template.compile (C:\Users\Sajjad Baloch\Desktop\fully updated\school_management-main\school_management-main\node_modules\ejs\lib\ejs.js:673:12)
+    at Object.compile (C:\Users\Sajjad Baloch\Desktop\fully updated\school_management-main\school_management-main\node_modules\ejs\lib\ejs.js:398:16)
+    at handleCache (C:\Users\Sajjad Baloch\Desktop\fully updated\school_management-main\school_management-main\node_modules\ejs\lib\ejs.js:235:18)
+    at tryHandleCache (C:\Users\Sajjad Baloch\Desktop\fully updated\school_management-main\school_management-main\node_modules\ejs\lib\ejs.js:274:16)
+    at exports.renderFile [as engine] (C:\Users\Sajjad Baloch\Desktop\fully updated\school_management-main\school_management-main\node_modules\ejs\lib\ejs.js:491:10)
+    at View.render (C:\Users\Sajjad Baloch\Desktop\fully updated\school_management-main\school_management-main\node_modules\express\lib\view.js:135:8)
+    at tryRender (C:\Users\Sajjad Baloch\Desktop\fully updated\school_management-main\school_management-main\node_modules\express\lib\application.js:657:10)
+    at app.render (C:\Users\Sajjad Baloch\Desktop\fully updated\school_management-main\school_management-main\node_modules\express\lib\application.js:609:3)
+    at ServerResponse.render (C:\Users\Sajjad Baloch\Desktop\fully updated\school_management-main\school_management-main\node_modules\express\lib\response.js:1049:7)
+    at Query.onResult (C:\Users\Sajjad Baloch\Desktop\fully updated\school_management-main\school_management-main\server.js:689:13)
+    at C:\Users\Sajjad Baloch\Desktop\fully updated\school_management-main\school_management-main\node_modules\mysql2\lib\commands\query.js:87:16
+    at process.processTicksAndRejections (node:internal/process/task_queues:84:11)
+
+[2026-02-02T11:56:23.727Z] SyntaxError: Invalid or unexpected token in C:\Users\Sajjad Baloch\Desktop\fully updated\school_management-main\school_management-main\views\index.ejs while compiling ejs
+
+If the above error is not helpful, you may want to try EJS-Lint:
+https://github.com/RyanZim/EJS-Lint
+Or, if you meant to create an async function, pass `async: true` as an option.
+    at new Function (<anonymous>)
+    at Template.compile (C:\Users\Sajjad Baloch\Desktop\fully updated\school_management-main\school_management-main\node_modules\ejs\lib\ejs.js:673:12)
+    at Object.compile (C:\Users\Sajjad Baloch\Desktop\fully updated\school_management-main\school_management-main\node_modules\ejs\lib\ejs.js:398:16)
+    at handleCache (C:\Users\Sajjad Baloch\Desktop\fully updated\school_management-main\school_management-main\node_modules\ejs\lib\ejs.js:235:18)
+    at tryHandleCache (C:\Users\Sajjad Baloch\Desktop\fully updated\school_management-main\school_management-main\node_modules\ejs\lib\ejs.js:274:16)
+    at exports.renderFile [as engine] (C:\Users\Sajjad Baloch\Desktop\fully updated\school_management-main\school_management-main\node_modules\ejs\lib\ejs.js:491:10)
+    at View.render (C:\Users\Sajjad Baloch\Desktop\fully updated\school_management-main\school_management-main\node_modules\express\lib\view.js:135:8)
+    at tryRender (C:\Users\Sajjad Baloch\Desktop\fully updated\school_management-main\school_management-main\node_modules\express\lib\application.js:657:10)
+    at app.render (C:\Users\Sajjad Baloch\Desktop\fully updated\school_management-main\school_management-main\node_modules\express\lib\application.js:609:3)
+    at ServerResponse.render (C:\Users\Sajjad Baloch\Desktop\fully updated\school_management-main\school_management-main\node_modules\express\lib\response.js:1049:7)
+    at Query.onResult (C:\Users\Sajjad Baloch\Desktop\fully updated\school_management-main\school_management-main\server.js:689:13)
+    at C:\Users\Sajjad Baloch\Desktop\fully updated\school_management-main\school_management-main\node_modules\mysql2\lib\commands\query.js:87:16
+    at process.processTicksAndRejections (node:internal/process/task_queues:84:11)
+
+[2026-02-02T11:57:48.300Z] SyntaxError: C:\Users\Sajjad Baloch\Desktop\fully updated\school_management-main\school_management-main\views\index.ejs:190
+    188|         </section>
+    189| 
+ >> 190|         <%- include('partials/footer') %>
+
+Invalid or unexpected token in C:\Users\Sajjad Baloch\Desktop\fully updated\school_management-main\school_management-main\views\partials\footer.ejs while compiling ejs
+
+If the above error is not helpful, you may want to try EJS-Lint:
+https://github.com/RyanZim/EJS-Lint
+Or, if you meant to create an async function, pass `async: true` as an option.
+    at new Function (<anonymous>)
+    at Template.compile (C:\Users\Sajjad Baloch\Desktop\fully updated\school_management-main\school_management-main\node_modules\ejs\lib\ejs.js:673:12)
+    at Object.compile (C:\Users\Sajjad Baloch\Desktop\fully updated\school_management-main\school_management-main\node_modules\ejs\lib\ejs.js:398:16)
+    at handleCache (C:\Users\Sajjad Baloch\Desktop\fully updated\school_management-main\school_management-main\node_modules\ejs\lib\ejs.js:235:18)
+    at includeFile (C:\Users\Sajjad Baloch\Desktop\fully updated\school_management-main\school_management-main\node_modules\ejs\lib\ejs.js:323:10)
+    at include (C:\Users\Sajjad Baloch\Desktop\fully updated\school_management-main\school_management-main\node_modules\ejs\lib\ejs.js:701:16)
+    at eval (eval at compile (C:\Users\Sajjad Baloch\Desktop\fully updated\school_management-main\school_management-main\node_modules\ejs\lib\ejs.js:673:12), <anonymous>:104:17)
+    at index (C:\Users\Sajjad Baloch\Desktop\fully updated\school_management-main\school_management-main\node_modules\ejs\lib\ejs.js:703:17)
+    at tryHandleCache (C:\Users\Sajjad Baloch\Desktop\fully updated\school_management-main\school_management-main\node_modules\ejs\lib\ejs.js:274:36)
+    at exports.renderFile [as engine] (C:\Users\Sajjad Baloch\Desktop\fully updated\school_management-main\school_management-main\node_modules\ejs\lib\ejs.js:491:10)
+    at View.render (C:\Users\Sajjad Baloch\Desktop\fully updated\school_management-main\school_management-main\node_modules\express\lib\view.js:135:8)
+    at tryRender (C:\Users\Sajjad Baloch\Desktop\fully updated\school_management-main\school_management-main\node_modules\express\lib\application.js:657:10)
+    at app.render (C:\Users\Sajjad Baloch\Desktop\fully updated\school_management-main\school_management-main\node_modules\express\lib\application.js:609:3)
+    at ServerResponse.render (C:\Users\Sajjad Baloch\Desktop\fully updated\school_management-main\school_management-main\node_modules\express\lib\response.js:1049:7)
+    at Query.onResult (C:\Users\Sajjad Baloch\Desktop\fully updated\school_management-main\school_management-main\server.js:689:13)
+    at C:\Users\Sajjad Baloch\Desktop\fully updated\school_management-main\school_management-main\node_modules\mysql2\lib\commands\query.js:87:16
+
+[2026-02-02T11:59:26.385Z] SyntaxError: C:\Users\Sajjad Baloch\Desktop\fully updated\school_management-main\school_management-main\views\index.ejs:190
+    188|         </section>
+    189| 
+ >> 190|         <%- include('partials/footer') %>
+
+Invalid or unexpected token in C:\Users\Sajjad Baloch\Desktop\fully updated\school_management-main\school_management-main\views\partials\footer.ejs while compiling ejs
+
+If the above error is not helpful, you may want to try EJS-Lint:
+https://github.com/RyanZim/EJS-Lint
+Or, if you meant to create an async function, pass `async: true` as an option.
+    at new Function (<anonymous>)
+    at Template.compile (C:\Users\Sajjad Baloch\Desktop\fully updated\school_management-main\school_management-main\node_modules\ejs\lib\ejs.js:673:12)
+    at Object.compile (C:\Users\Sajjad Baloch\Desktop\fully updated\school_management-main\school_management-main\node_modules\ejs\lib\ejs.js:398:16)
+    at handleCache (C:\Users\Sajjad Baloch\Desktop\fully updated\school_management-main\school_management-main\node_modules\ejs\lib\ejs.js:235:18)
+    at includeFile (C:\Users\Sajjad Baloch\Desktop\fully updated\school_management-main\school_management-main\node_modules\ejs\lib\ejs.js:323:10)
+    at include (C:\Users\Sajjad Baloch\Desktop\fully updated\school_management-main\school_management-main\node_modules\ejs\lib\ejs.js:701:16)
+    at eval (eval at compile (C:\Users\Sajjad Baloch\Desktop\fully updated\school_management-main\school_management-main\node_modules\ejs\lib\ejs.js:673:12), <anonymous>:104:17)
+    at index (C:\Users\Sajjad Baloch\Desktop\fully updated\school_management-main\school_management-main\node_modules\ejs\lib\ejs.js:703:17)
+    at tryHandleCache (C:\Users\Sajjad Baloch\Desktop\fully updated\school_management-main\school_management-main\node_modules\ejs\lib\ejs.js:274:36)
+    at exports.renderFile [as engine] (C:\Users\Sajjad Baloch\Desktop\fully updated\school_management-main\school_management-main\node_modules\ejs\lib\ejs.js:491:10)
+    at View.render (C:\Users\Sajjad Baloch\Desktop\fully updated\school_management-main\school_management-main\node_modules\express\lib\view.js:135:8)
+    at tryRender (C:\Users\Sajjad Baloch\Desktop\fully updated\school_management-main\school_management-main\node_modules\express\lib\application.js:657:10)
+    at app.render (C:\Users\Sajjad Baloch\Desktop\fully updated\school_management-main\school_management-main\node_modules\express\lib\application.js:609:3)
+    at ServerResponse.render (C:\Users\Sajjad Baloch\Desktop\fully updated\school_management-main\school_management-main\node_modules\express\lib\response.js:1049:7)
+    at Query.onResult (C:\Users\Sajjad Baloch\Desktop\fully updated\school_management-main\school_management-main\server.js:689:13)
+    at C:\Users\Sajjad Baloch\Desktop\fully updated\school_management-main\school_management-main\node_modules\mysql2\lib\commands\query.js:87:16
+
+[2026-02-02T12:00:17.344Z] SyntaxError: C:\Users\Sajjad Baloch\Desktop\fully updated\school_management-main\school_management-main\views\index.ejs:79
+    77|         </section>
+    78| 
+ >> 79|         <%- include('partials/footer') %>
+
+Invalid or unexpected token in C:\Users\Sajjad Baloch\Desktop\fully updated\school_management-main\school_management-main\views\partials\footer.ejs while compiling ejs
+
+If the above error is not helpful, you may want to try EJS-Lint:
+https://github.com/RyanZim/EJS-Lint
+Or, if you meant to create an async function, pass `async: true` as an option.
+    at new Function (<anonymous>)
+    at Template.compile (C:\Users\Sajjad Baloch\Desktop\fully updated\school_management-main\school_management-main\node_modules\ejs\lib\ejs.js:673:12)
+    at Object.compile (C:\Users\Sajjad Baloch\Desktop\fully updated\school_management-main\school_management-main\node_modules\ejs\lib\ejs.js:398:16)
+    at handleCache (C:\Users\Sajjad Baloch\Desktop\fully updated\school_management-main\school_management-main\node_modules\ejs\lib\ejs.js:235:18)
+    at includeFile (C:\Users\Sajjad Baloch\Desktop\fully updated\school_management-main\school_management-main\node_modules\ejs\lib\ejs.js:323:10)
+    at include (C:\Users\Sajjad Baloch\Desktop\fully updated\school_management-main\school_management-main\node_modules\ejs\lib\ejs.js:701:16)
+    at eval (eval at compile (C:\Users\Sajjad Baloch\Desktop\fully updated\school_management-main\school_management-main\node_modules\ejs\lib\ejs.js:673:12), <anonymous>:46:17)
+    at index (C:\Users\Sajjad Baloch\Desktop\fully updated\school_management-main\school_management-main\node_modules\ejs\lib\ejs.js:703:17)
+    at tryHandleCache (C:\Users\Sajjad Baloch\Desktop\fully updated\school_management-main\school_management-main\node_modules\ejs\lib\ejs.js:274:36)
+    at exports.renderFile [as engine] (C:\Users\Sajjad Baloch\Desktop\fully updated\school_management-main\school_management-main\node_modules\ejs\lib\ejs.js:491:10)
+    at View.render (C:\Users\Sajjad Baloch\Desktop\fully updated\school_management-main\school_management-main\node_modules\express\lib\view.js:135:8)
+    at tryRender (C:\Users\Sajjad Baloch\Desktop\fully updated\school_management-main\school_management-main\node_modules\express\lib\application.js:657:10)
+    at app.render (C:\Users\Sajjad Baloch\Desktop\fully updated\school_management-main\school_management-main\node_modules\express\lib\application.js:609:3)
+    at ServerResponse.render (C:\Users\Sajjad Baloch\Desktop\fully updated\school_management-main\school_management-main\node_modules\express\lib\response.js:1049:7)
+    at Query.onResult (C:\Users\Sajjad Baloch\Desktop\fully updated\school_management-main\school_management-main\server.js:689:13)
+    at C:\Users\Sajjad Baloch\Desktop\fully updated\school_management-main\school_management-main\node_modules\mysql2\lib\commands\query.js:87:16
+
+[2026-02-02T12:01:20.471Z] SyntaxError: C:\Users\Sajjad Baloch\Desktop\fully updated\school_management-main\school_management-main\views\about.ejs:77
+    75|         </section>
+    76| 
+ >> 77|         <%- include('partials/footer') %>
+
+Invalid or unexpected token in C:\Users\Sajjad Baloch\Desktop\fully updated\school_management-main\school_management-main\views\partials\footer.ejs while compiling ejs
+
+If the above error is not helpful, you may want to try EJS-Lint:
+https://github.com/RyanZim/EJS-Lint
+Or, if you meant to create an async function, pass `async: true` as an option.
+    at new Function (<anonymous>)
+    at Template.compile (C:\Users\Sajjad Baloch\Desktop\fully updated\school_management-main\school_management-main\node_modules\ejs\lib\ejs.js:673:12)
+    at Object.compile (C:\Users\Sajjad Baloch\Desktop\fully updated\school_management-main\school_management-main\node_modules\ejs\lib\ejs.js:398:16)
+    at handleCache (C:\Users\Sajjad Baloch\Desktop\fully updated\school_management-main\school_management-main\node_modules\ejs\lib\ejs.js:235:18)
+    at includeFile (C:\Users\Sajjad Baloch\Desktop\fully updated\school_management-main\school_management-main\node_modules\ejs\lib\ejs.js:323:10)
+    at include (C:\Users\Sajjad Baloch\Desktop\fully updated\school_management-main\school_management-main\node_modules\ejs\lib\ejs.js:701:16)
+    at eval (eval at compile (C:\Users\Sajjad Baloch\Desktop\fully updated\school_management-main\school_management-main\node_modules\ejs\lib\ejs.js:673:12), <anonymous>:57:17)
+    at about (C:\Users\Sajjad Baloch\Desktop\fully updated\school_management-main\school_management-main\node_modules\ejs\lib\ejs.js:703:17)
+    at tryHandleCache (C:\Users\Sajjad Baloch\Desktop\fully updated\school_management-main\school_management-main\node_modules\ejs\lib\ejs.js:274:36)
+    at exports.renderFile [as engine] (C:\Users\Sajjad Baloch\Desktop\fully updated\school_management-main\school_management-main\node_modules\ejs\lib\ejs.js:491:10)
+    at View.render (C:\Users\Sajjad Baloch\Desktop\fully updated\school_management-main\school_management-main\node_modules\express\lib\view.js:135:8)
+    at tryRender (C:\Users\Sajjad Baloch\Desktop\fully updated\school_management-main\school_management-main\node_modules\express\lib\application.js:657:10)
+    at app.render (C:\Users\Sajjad Baloch\Desktop\fully updated\school_management-main\school_management-main\node_modules\express\lib\application.js:609:3)
+    at ServerResponse.render (C:\Users\Sajjad Baloch\Desktop\fully updated\school_management-main\school_management-main\node_modules\express\lib\response.js:1049:7)
+    at C:\Users\Sajjad Baloch\Desktop\fully updated\school_management-main\school_management-main\server.js:692:37
+    at Layer.handle [as handle_request] (C:\Users\Sajjad Baloch\Desktop\fully updated\school_management-main\school_management-main\node_modules\express\lib\router\layer.js:95:5)
+
+[2026-02-02T12:01:23.686Z] SyntaxError: C:\Users\Sajjad Baloch\Desktop\fully updated\school_management-main\school_management-main\views\admissions.ejs:69
+    67|         </section>
+    68| 
+ >> 69|         <%- include('partials/footer') %>
+
+Invalid or unexpected token in C:\Users\Sajjad Baloch\Desktop\fully updated\school_management-main\school_management-main\views\partials\footer.ejs while compiling ejs
+
+If the above error is not helpful, you may want to try EJS-Lint:
+https://github.com/RyanZim/EJS-Lint
+Or, if you meant to create an async function, pass `async: true` as an option.
+    at new Function (<anonymous>)
+    at Template.compile (C:\Users\Sajjad Baloch\Desktop\fully updated\school_management-main\school_management-main\node_modules\ejs\lib\ejs.js:673:12)
+    at Object.compile (C:\Users\Sajjad Baloch\Desktop\fully updated\school_management-main\school_management-main\node_modules\ejs\lib\ejs.js:398:16)
+    at handleCache (C:\Users\Sajjad Baloch\Desktop\fully updated\school_management-main\school_management-main\node_modules\ejs\lib\ejs.js:235:18)
+    at includeFile (C:\Users\Sajjad Baloch\Desktop\fully updated\school_management-main\school_management-main\node_modules\ejs\lib\ejs.js:323:10)
+    at include (C:\Users\Sajjad Baloch\Desktop\fully updated\school_management-main\school_management-main\node_modules\ejs\lib\ejs.js:701:16)
+    at eval (eval at compile (C:\Users\Sajjad Baloch\Desktop\fully updated\school_management-main\school_management-main\node_modules\ejs\lib\ejs.js:673:12), <anonymous>:39:17)
+    at admissions (C:\Users\Sajjad Baloch\Desktop\fully updated\school_management-main\school_management-main\node_modules\ejs\lib\ejs.js:703:17)
+    at tryHandleCache (C:\Users\Sajjad Baloch\Desktop\fully updated\school_management-main\school_management-main\node_modules\ejs\lib\ejs.js:274:36)
+    at exports.renderFile [as engine] (C:\Users\Sajjad Baloch\Desktop\fully updated\school_management-main\school_management-main\node_modules\ejs\lib\ejs.js:491:10)
+    at View.render (C:\Users\Sajjad Baloch\Desktop\fully updated\school_management-main\school_management-main\node_modules\express\lib\view.js:135:8)
+    at tryRender (C:\Users\Sajjad Baloch\Desktop\fully updated\school_management-main\school_management-main\node_modules\express\lib\application.js:657:10)
+    at app.render (C:\Users\Sajjad Baloch\Desktop\fully updated\school_management-main\school_management-main\node_modules\express\lib\application.js:609:3)
+    at ServerResponse.render (C:\Users\Sajjad Baloch\Desktop\fully updated\school_management-main\school_management-main\node_modules\express\lib\response.js:1049:7)
+    at C:\Users\Sajjad Baloch\Desktop\fully updated\school_management-main\school_management-main\server.js:693:42
+    at Layer.handle [as handle_request] (C:\Users\Sajjad Baloch\Desktop\fully updated\school_management-main\school_management-main\node_modules\express\lib\router\layer.js:95:5)
+

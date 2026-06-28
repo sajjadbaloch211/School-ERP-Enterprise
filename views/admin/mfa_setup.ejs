@@ -1,66 +1,58 @@
 <%- include('../partials/header') %>
+<div class="adm-layout">
+  <%- include('../partials/sidebar', { active: 'mfa' }) %>
 
-    <div class="admin-layout animate-fade-in"
-        style="margin-top: 100px; display: flex; justify-content: center; align-items: center; min-height: 70vh; padding: 20px;">
+  <main class="adm-main" role="main" aria-label="MFA Setup">
+    <div style="display: flex; justify-content: center; align-items: center; min-height: 70vh; padding: 20px;">
+        <div class="adm-card" style="max-width: 500px; width: 100%; padding: 3rem; text-align: center;">
 
-        <div class="card glass"
-            style="max-width: 500px; width: 100%; padding: 3rem; border-radius: 30px; border: 2px solid rgba(255, 255, 255, 0.5); box-shadow: 0 25px 50px -12px rgba(59, 130, 246, 0.25);">
-
-            <div style="text-align: center; margin-bottom: 2.5rem;">
-                <div
-                    style="width: 80px; height: 80px; background: rgba(59, 130, 246, 0.1); border-radius: 24px; display: flex; align-items: center; justify-content: center; margin: 0 auto 1.5rem; color: var(--accent); font-size: 2.5rem;">
+            <div style="margin-bottom: 2.5rem;">
+                <div style="width: 80px; height: 80px; background: var(--adm-indigo-bg); border-radius: 24px; display: flex; align-items: center; justify-content: center; margin: 0 auto 1.5rem; color: var(--adm-indigo); font-size: 2.5rem;">
                     <i class="fas fa-shield-alt"></i>
                 </div>
-                <h2 style="font-weight: 800; color: var(--primary); font-size: 1.8rem; margin-bottom: 0.5rem;">Secure
-                    Your Account</h2>
-                <p style="color: var(--text-muted); font-size: 0.95rem; line-height: 1.6;">Two-Factor Authentication
-                    adds an extra layer of security to your admin account.</p>
+                <h2 style="font-weight: 700; color: var(--adm-text-primary); font-size: 1.8rem; margin-bottom: 0.5rem;">Secure Your Account</h2>
+                <p style="color: var(--adm-text-secondary); font-size: 0.95rem; line-height: 1.6;">Two-Factor Authentication adds an extra layer of security to your admin account.</p>
             </div>
 
             <% if (error) { %>
-                <div
-                    style="background: #fef2f2; border-left: 5px solid #ef4444; color: #991b1b; padding: 1rem; border-radius: 12px; margin-bottom: 2rem; display: flex; align-items: center; gap: 12px; font-weight: 600;">
-                    <i class="fas fa-exclamation-circle" style="color: #ef4444;"></i>
-                    <%= error %>
-                </div>
-                <% } %>
-
-                    <div style="text-align: center; margin-bottom: 2rem;">
-                        <p style="font-weight: 700; color: var(--primary); margin-bottom: 1.5rem;">Step 1: Scan this QR
-                            Code</p>
-                        <div
-                            style="background: white; padding: 15px; border-radius: 20px; display: inline-block; box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);">
-                            <img src="<%= qrCode %>" alt="QR Code" style="width: 200px; height: 200px; display: block;">
-                        </div>
-                        <p style="font-size: 0.8rem; color: var(--text-muted); margin-top: 1rem;">Use Google
-                            Authenticator or Microsoft Authenticator app.</p>
+                <div class="adm-banner adm-banner-danger" role="alert" style="margin-bottom: 2rem;">
+                    <i class="fas fa-exclamation-triangle adm-banner-icon" aria-hidden="true"></i>
+                    <div class="adm-banner-content">
+                        <div class="adm-banner-body"><%= error %></div>
                     </div>
+                </div>
+            <% } %>
 
-                    <form action="/admin/mfa-enable" method="POST">
-                        <input type="hidden" name="_csrf" value="<%= csrfToken %>">
-                        <input type="hidden" name="secret" value="<%= secret %>">
+            <div style="text-align: center; margin-bottom: 2rem;">
+                <p style="font-weight: 600; color: var(--adm-text-primary); margin-bottom: 1.5rem;">Step 1: Scan this QR Code</p>
+                <div style="background: white; padding: 15px; border-radius: var(--adm-r-lg); display: inline-block; box-shadow: var(--adm-shadow-sm); border: 1px solid var(--adm-border);">
+                    <img src="<%= qrCode %>" alt="QR Code" style="width: 200px; height: 200px; display: block;">
+                </div>
+                <p style="font-size: 0.8rem; color: var(--adm-text-muted); margin-top: 1rem;">Use Google Authenticator or Microsoft Authenticator app.</p>
+            </div>
 
-                        <div style="margin-bottom: 2rem;">
-                            <label
-                                style="display: block; font-weight: 700; color: var(--primary); margin-bottom: 10px; text-align: center;">Step
-                                2: Enter 6-Digit Code</label>
-                            <input type="text" name="token" placeholder="000 000" maxlength="6" required autofocus
-                                style="width: 100%; padding: 15px; border-radius: 15px; border: 2px solid #e2e8f0; background: #f8fafc; font-size: 1.5rem; text-align: center; letter-spacing: 10px; font-weight: 800; color: var(--accent); transition: all 0.3s;"
-                                onfocus="this.style.borderColor = 'var(--accent)';"
-                                onblur="this.style.borderColor = '#e2e8f0';">
-                        </div>
+            <form action="/admin/mfa-enable" method="POST">
+                <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+                <input type="hidden" name="secret" value="<%= secret %>">
 
-                        <button type="submit" class="btn btn-primary"
-                            style="width: 100%; padding: 1rem; border-radius: 15px; font-weight: 800; font-size: 1.1rem; display: flex; align-items: center; justify-content: center; gap: 10px;">
-                            <i class="fas fa-lock"></i> Enable 2FA Protection
-                        </button>
-                    </form>
+                <div style="margin-bottom: 2rem;">
+                    <label style="display: block; font-weight: 600; color: var(--adm-text-primary); margin-bottom: 10px;">Step 2: Enter 6-Digit Code</label>
+                    <input type="text" name="token" placeholder="000 000" maxlength="6" required autofocus
+                        style="width: 100%; padding: 15px; border-radius: var(--adm-r-md); border: 2px solid var(--adm-border); background: var(--adm-bg-canvas); font-size: 1.5rem; text-align: center; letter-spacing: 10px; font-weight: 700; color: var(--adm-text-primary); transition: var(--adm-t-fast);"
+                        onfocus="this.style.borderColor = 'var(--adm-indigo)';"
+                        onblur="this.style.borderColor = 'var(--adm-border)';">
+                </div>
 
-                    <p style="text-align: center; margin-top: 2rem; font-size: 0.85rem; color: var(--text-muted);">
-                        Manual Secret: <code
-                            style="background: #f1f5f9; padding: 3px 6px; border-radius: 4px; font-weight: 700; color: var(--primary);"><%= secret %></code>
-                    </p>
+                <button type="submit" class="adm-btn adm-btn-primary" style="width: 100%; padding: 1rem; border-radius: var(--adm-r-md); font-weight: 600; font-size: 1.1rem; display: flex; align-items: center; justify-content: center; gap: 10px;">
+                    <i class="fas fa-lock"></i> Enable 2FA Protection
+                </button>
+            </form>
+
+            <p style="text-align: center; margin-top: 2rem; font-size: 0.85rem; color: var(--adm-text-muted);">
+                Manual Secret: <code style="background: var(--adm-bg-elevated); padding: 4px 8px; border-radius: 4px; font-weight: 600; color: var(--adm-text-primary); border: 1px solid var(--adm-border);"><%= secret %></code>
+            </p>
         </div>
     </div>
-
-    <%- include('../partials/footer') %>
+  </main>
+</div>
+<%- include('../partials/footer') %>

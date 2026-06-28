@@ -456,6 +456,11 @@ db.getConnection((err, connection) => {
 // Global Website Data Middleware (Theme, Settings, Menus)
 // Middleware
 app.use(bodyParser.urlencoded({ extended: true }));
+
+// 🔒 GATEWAY CONTROLLER — Must be mounted BEFORE bodyParser.json()
+// This preserves raw request body for Stripe webhook signature verification.
+require('./src/controllers/gateway.controller')(app, db.promise());
+
 app.use(bodyParser.json());
 app.use(express.static('public'));
 
@@ -659,12 +664,6 @@ const submissionStorage = multer.diskStorage({
 const uploadSubmission = multer({ storage: submissionStorage, limits: { fileSize: 10 * 1024 * 1024 } });
 
 // Routes (MIGRATE TO DYNAMIC CMS)
-app.get('/', (req, res) => res.render('index', { isHomepage: true }));
-app.get('/about', (req, res) => res.render('about'));
-app.get('/admissions', (req, res) => res.render('admissions'));
-app.get('/fee-structure', (req, res) => res.render('fee-structure'));
-app.get('/gallery', (req, res) => res.render('gallery'));
-app.get('/contact', (req, res) => res.render('contact'));
 
 // Login Page
 app.get('/login', csrfProtection, (req, res) => {
@@ -688,14 +687,28 @@ app.get('/login', csrfProtection, (req, res) => {
     const host = req.get('host');
     const loginUrl = `${protocol}://${host}/login?campus_code=${campusCode}`;
 
-    QRCode.toDataURL(loginUrl, (err, qrCodeUrl) => {
+    QRCode.toDataURL(loginUrl, async (err, qrCodeUrl) => {
         logSecurityEvent(req, null, 'VIEW_LOGIN');
+        // Fetch CMS settings + theme for dynamic branding
+        let cmsSettings = {};
+        let cmsTheme = null;
+        try {
+            const [settingsRows] = await db.promise().query('SELECT setting_key, setting_value FROM cms_settings');
+            settingsRows.forEach(r => cmsSettings[r.setting_key] = r.setting_value);
+            const [themeRows] = await db.promise().query('SELECT * FROM cms_themes WHERE is_active = 1 LIMIT 1');
+            if (themeRows.length > 0) {
+                cmsTheme = themeRows[0];
+                if (typeof cmsTheme.colors === 'string') cmsTheme.colors = JSON.parse(cmsTheme.colors);
+            }
+        } catch(e) { /* use defaults */ }
         res.render('login', {
             error: errorMsg,
             qrCode: qrCodeUrl || null,
             campusCode: campusCode,
             returnTo: returnTo,
-            csrfToken: req.csrfToken()
+            csrfToken: req.csrfToken(),
+            settings: cmsSettings,
+            theme: cmsTheme
         });
     });
 });
@@ -1275,71 +1288,114 @@ app.get('/logout', (req, res) => {
 });
 
 // Admin Dashboard
-app.get('/admin/dashboard', (req, res) => {
+app.get('/admin/dashboard', async (req, res) => {
     if (!req.session.user || req.session.user.role !== 'admin') {
         return res.redirect('/login');
     }
 
     const isSuperAdmin = (req.session.user.username === 'admin' && Number(req.session.user.campus_id) === 1);
-
-    // 🛡️ PEOPLE SECURITY: Forced MFA for Super-Admin (Temporarily Disabled for Recovery)
-    /*
-    if (isSuperAdmin && !req.session.user.mfa_enabled) {
-        return res.redirect('/admin/mfa-setup?force=true');
-    }
-    */
-
     const campusId = req.session.campus ? req.session.campus.id : (req.session.user ? req.session.user.campus_id : 1);
 
-    let statsQuery = '';
-    let params = [];
+    try {
+        // Stats Subqueries
+        let statsQuery = '';
+        let params = [];
 
-    if (isSuperAdmin) {
-        // SUPER ADMIN: Global Stats
-        statsQuery = `
-            SELECT 
-                (SELECT COUNT(*) FROM students) as total_students,
-                (SELECT COUNT(*) FROM teachers) as total_teachers,
-                (SELECT SUM(remaining_balance) FROM vouchers WHERE remaining_balance > 0) as total_fees_pending
-        `;
-    } else {
-        // REGULAR ADMIN: Campus Stats
-        statsQuery = `
-            SELECT 
-                (SELECT COUNT(*) FROM students WHERE campus_id = ?) as total_students,
-                (SELECT COUNT(*) FROM teachers WHERE campus_id = ?) as total_teachers,
-                (SELECT SUM(remaining_balance) FROM vouchers WHERE remaining_balance > 0 AND campus_id = ?) as total_fees_pending
-        `;
-        params = [campusId, campusId, campusId];
-    }
-
-    db.query(statsQuery, params, (err, results) => {
-        if (err) {
-            console.error(err);
-            return res.status(500).send('Database Error: ' + err.message);
+        if (isSuperAdmin) {
+            statsQuery = `
+                SELECT 
+                    (SELECT COUNT(*) FROM students) as total_students,
+                    (SELECT COUNT(*) FROM teachers) as total_teachers,
+                    (SELECT COALESCE(SUM(remaining_balance), 0) FROM vouchers WHERE remaining_balance > 0) as total_fees_pending,
+                    (SELECT COALESCE(SUM(balance), 0) FROM student_wallets) as total_wallet_balance,
+                    (SELECT COALESCE(SUM(amount_paid), 0) FROM fee_payments WHERE MONTH(payment_date) = MONTH(CURRENT_DATE) AND YEAR(payment_date) = YEAR(CURRENT_DATE)) as total_revenue_inflow,
+                    (SELECT COALESCE(SUM(net_payable), 0) FROM payroll_items WHERE status = 'paid' AND MONTH(created_at) = MONTH(CURRENT_DATE) AND YEAR(created_at) = YEAR(CURRENT_DATE)) as total_payroll_outflow
+            `;
+        } else {
+            statsQuery = `
+                SELECT 
+                    (SELECT COUNT(*) FROM students WHERE campus_id = ?) as total_students,
+                    (SELECT COUNT(*) FROM teachers WHERE campus_id = ?) as total_teachers,
+                    (SELECT COALESCE(SUM(remaining_balance), 0) FROM vouchers WHERE remaining_balance > 0 AND campus_id = ?) as total_fees_pending,
+                    (SELECT COALESCE(SUM(sw.balance), 0) FROM student_wallets sw JOIN students s ON sw.student_id = s.id WHERE s.campus_id = ?) as total_wallet_balance,
+                    (SELECT COALESCE(SUM(amount_paid), 0) FROM fee_payments WHERE campus_id = ? AND MONTH(payment_date) = MONTH(CURRENT_DATE) AND YEAR(payment_date) = YEAR(CURRENT_DATE)) as total_revenue_inflow,
+                    (SELECT COALESCE(SUM(pi.net_payable), 0) FROM payroll_items pi JOIN payroll_runs pr ON pi.payroll_run_id = pr.id WHERE pr.campus_id = ? AND pi.status = 'paid' AND MONTH(pi.created_at) = MONTH(CURRENT_DATE) AND YEAR(pi.created_at) = YEAR(CURRENT_DATE)) as total_payroll_outflow
+            `;
+            params = [campusId, campusId, campusId, campusId, campusId, campusId];
         }
-        const data = results[0];
+
+        const [statsRows] = await db.promise().query(statsQuery, params);
+        const data = statsRows[0];
+
+        // Fetch last 6 months trends (Inflow vs Outflow)
+        const trendQuery = isSuperAdmin
+            ? `
+                SELECT 
+                    months.m as month_num,
+                    (SELECT COALESCE(SUM(amount_paid), 0) FROM fee_payments WHERE MONTH(payment_date) = months.m) as inflow,
+                    (SELECT COALESCE(SUM(net_payable), 0) FROM payroll_items WHERE status = 'paid' AND MONTH(created_at) = months.m) as outflow
+                FROM (
+                    SELECT MONTH(CURRENT_DATE - INTERVAL 5 MONTH) as m UNION
+                    SELECT MONTH(CURRENT_DATE - INTERVAL 4 MONTH) UNION
+                    SELECT MONTH(CURRENT_DATE - INTERVAL 3 MONTH) UNION
+                    SELECT MONTH(CURRENT_DATE - INTERVAL 2 MONTH) UNION
+                    SELECT MONTH(CURRENT_DATE - INTERVAL 1 MONTH) UNION
+                    SELECT MONTH(CURRENT_DATE)
+                ) months
+            `
+            : `
+                SELECT 
+                    months.m as month_num,
+                    (SELECT COALESCE(SUM(amount_paid), 0) FROM fee_payments WHERE MONTH(payment_date) = months.m AND campus_id = ?) as inflow,
+                    (SELECT COALESCE(SUM(pi.net_payable), 0) FROM payroll_items pi JOIN payroll_runs pr ON pi.payroll_run_id = pr.id WHERE pr.campus_id = ? AND pi.status = 'paid' AND MONTH(pi.created_at) = months.m) as outflow
+                FROM (
+                    SELECT MONTH(CURRENT_DATE - INTERVAL 5 MONTH) as m UNION
+                    SELECT MONTH(CURRENT_DATE - INTERVAL 4 MONTH) UNION
+                    SELECT MONTH(CURRENT_DATE - INTERVAL 3 MONTH) UNION
+                    SELECT MONTH(CURRENT_DATE - INTERVAL 2 MONTH) UNION
+                    SELECT MONTH(CURRENT_DATE - INTERVAL 1 MONTH) UNION
+                    SELECT MONTH(CURRENT_DATE)
+                ) months
+            `;
+        const trendParams = isSuperAdmin ? [] : [campusId, campusId];
+        const [trendRows] = await db.promise().query(trendQuery, trendParams);
+
+        // Map months names
+        const monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+        const trends = trendRows.map(r => ({
+            month: monthNames[r.month_num - 1],
+            inflow: parseFloat(r.inflow),
+            outflow: parseFloat(r.outflow)
+        }));
+
         const newUser = req.session.new_user || null;
         if (newUser) delete req.session.new_user;
 
-        // 📱 MOBILE QUICK LOGIN QR
         const protocol = req.protocol;
         const host = req.get('host');
         const campusCode = req.session.campus ? req.session.campus.campus_code : 'MAIN';
         const loginUrl = `${protocol}://${host}/login?campus_code=${campusCode}`;
 
-        QRCode.toDataURL(loginUrl, (err, qrCodeUrl) => {
-            res.render('admin/dashboard', {
-                total_students: data.total_students || 0,
-                total_teachers: data.total_teachers || 0,
-                total_fees_pending: data.total_fees_pending || 0,
-                newUser: newUser,
-                isSuperAdmin: isSuperAdmin,
-                qrCode: qrCodeUrl || null,
-                loginUrl: loginUrl
-            });
+        const qrCodeUrl = await QRCode.toDataURL(loginUrl);
+
+        res.render('admin/dashboard', {
+            total_students: data.total_students || 0,
+            total_teachers: data.total_teachers || 0,
+            total_fees_pending: data.total_fees_pending || 0,
+            total_wallet_balance: data.total_wallet_balance || 0,
+            total_revenue_inflow: data.total_revenue_inflow || 0,
+            total_payroll_outflow: data.total_payroll_outflow || 0,
+            trends: JSON.stringify(trends),
+            newUser: newUser,
+            isSuperAdmin: isSuperAdmin,
+            qrCode: qrCodeUrl || null,
+            loginUrl: loginUrl
         });
-    });
+
+    } catch (err) {
+        console.error(err);
+        res.status(500).send('Database Error: ' + err.message);
+    }
 });
 
 // Admin - Manage Students (Class-wise Blocks + Global Search)
@@ -2607,6 +2663,15 @@ app.post('/admin/fees/pay/:id', csrfProtection, (req, res) => {
                                         });
                                     }
                                     connection.release();
+                                    // 🔔 Notify admins of fee payment
+                                    if (global._notifSvc) {
+                                        global._notifSvc.notifyFeePayment({
+                                            campusId: voucher.campus_id || campusId,
+                                            studentName: 'Student',
+                                            amount: paymentAmount,
+                                            voucherId
+                                        }).catch(() => {});
+                                    }
                                     res.redirect('/admin/fees?success=paid');
                                 });
                             });
@@ -3530,7 +3595,6 @@ app.get('/admin/audit-logs', (req, res) => {
             sql += " WHERE l.campus_id = ?";
             logParams.push(campusId);
         }
-
         sql += " ORDER BY l.created_at DESC LIMIT ?";
         logParams.push(limit);
 
@@ -3544,110 +3608,166 @@ app.get('/admin/audit-logs', (req, res) => {
     });
 });
 
-// Admin - Payroll Management
-app.get('/admin/payroll', (req, res) => {
+// Admin - Enterprise Payroll & Salary Ledger
+const PayrollService = require('./src/services/payroll.service');
+const _payrollSvc = new PayrollService(db.promise());
+
+app.get('/admin/payroll', csrfProtection, async (req, res) => {
     if (!req.session.user || req.session.user.role !== 'admin') return res.redirect('/login');
 
-    const selectedMonth = req.query.month || new Date().toLocaleString('default', { month: 'long' });
-    const selectedYear = req.query.year || new Date().getFullYear();
+    // Parse YYYY-MM if provided
+    let selectedMonth = req.query.month;
+    let selectedYear = req.query.year;
+    
+    if (req.query.monthYear) {
+        const [year, month] = req.query.monthYear.split('-');
+        const monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+        selectedMonth = monthNames[parseInt(month) - 1];
+        selectedYear = parseInt(year);
+    }
+
+    if (!selectedMonth) selectedMonth = new Date().toLocaleString('default', { month: 'long' });
+    if (!selectedYear) selectedYear = new Date().getFullYear();
 
     const campusId = req.session.campus ? req.session.campus.id : (req.session.user ? req.session.user.campus_id : 1);
-
-    // Fetch teachers with their payroll record for selected month/year (Scoped to Campus)
-    const query = `
-        SELECT t.id as teacher_id, u.full_name, t.salary, p.id as payroll_id, p.status, p.paid_date
-        FROM teachers t
-        JOIN users u ON t.user_id = u.id
-        LEFT JOIN payroll p ON t.id = p.teacher_id AND p.month = ? AND p.year = ?
-        WHERE t.campus_id = ?
-    `;
-
-    db.query(query, [selectedMonth, selectedYear, campusId], (err, results) => {
-        if (err) console.error(err);
-        res.render('admin/payroll', {
-            results,
-            selectedMonth,
-            selectedYear,
-            months: ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"]
-        });
-    });
-});
-
-// Admin - Mark Salary as Paid - SECURED
-// 🔒 CSRF Protected
-app.post('/admin/payroll/pay', csrfProtection, (req, res) => {
-    if (!req.session.user || req.session.user.role !== 'admin') return res.status(403).send("Forbidden");
-    const { teacher_id, amount, month, year } = req.body;
-
-    // DEBUG LOGGING
-    console.log('=== PAYROLL PAYMENT REQUEST ===');
-    console.log('Received Data:', { teacher_id, amount, month, year });
-    console.log('User:', req.session.user.username, 'Campus:', req.session.campus);
-
     const isSuperAdmin = (req.session.user.username === 'admin' && req.session.user.campus_id === 1);
-    const campusId = req.session.campus ? req.session.campus.id : (req.session.user ? req.session.user.campus_id : 1);
 
-    // Security Check: Ensure teacher matches campus
-    const secureTeacherQuery = isSuperAdmin ?
-        'SELECT id, campus_id FROM teachers WHERE id = ?' :
-        'SELECT id, campus_id FROM teachers WHERE id = ? AND campus_id = ?';
-    const secureParams = isSuperAdmin ? [teacher_id] : [teacher_id, campusId];
+    try {
+        const { run, items } = await _payrollSvc.getOrCalculatePayroll(selectedMonth, selectedYear, campusId);
 
-    console.log('Teacher Query:', secureTeacherQuery, 'Params:', secureParams);
+        // Fetch active teachers for dropdown selection (salary config)
+        const teachersQuery = isSuperAdmin
+            ? 'SELECT t.id, u.full_name FROM teachers t JOIN users u ON t.user_id = u.id'
+            : 'SELECT t.id, u.full_name FROM teachers t JOIN users u ON t.user_id = u.id WHERE t.campus_id = ?';
+        const params = isSuperAdmin ? [] : [campusId];
 
-    db.query(secureTeacherQuery, secureParams, (errT, teacherRes) => {
-        if (errT) {
-            console.error('Teacher Query Error:', errT);
-            return res.send("Error: Database error - " + errT.message);
-        }
-
-        if (teacherRes.length === 0) {
-            console.error('Teacher not found. ID:', teacher_id, 'Campus:', campusId);
-            return res.send("Error: Teacher not found or access denied.");
-        }
-
-        const authorizedTeacher = teacherRes[0];
-        console.log('Teacher Found:', authorizedTeacher);
-
-        // Use teacher's campus for the record (important for Super Admin paying for a specific campus teacher)
-        const recordCampusId = authorizedTeacher.campus_id;
-
-        const checkQuery = "SELECT id FROM payroll WHERE teacher_id = ? AND month = ? AND year = ?";
-        console.log('Check Query:', checkQuery, 'Params:', [teacher_id, month, year]);
-
-        db.query(checkQuery, [teacher_id, month, year], (err, exists) => {
-            if (err) {
-                console.error('Check Query Error:', err);
-                return res.send("Error: " + err.message);
-            }
-
-            console.log('Existing Records Found:', exists.length, exists);
-
-            if (exists.length > 0) {
-                console.log('Updating existing record ID:', exists[0].id);
-                db.execute("UPDATE payroll SET status = 'paid', paid_date = CURRENT_DATE WHERE id = ?", [exists[0].id], (err2) => {
-                    if (err2) {
-                        console.error('Update Error:', err2);
-                        return res.send("Error updating: " + err2.message);
-                    }
-                    console.log('✓ Successfully updated payroll record');
-                    res.redirect(`/admin/payroll?month=${month}&year=${year}`);
-                });
-            } else {
-                console.log('Creating new payroll record');
-                db.execute("INSERT INTO payroll (teacher_id, amount, month, year, status, paid_date, campus_id) VALUES (?, ?, ?, ?, 'paid', CURRENT_DATE, ?)",
-                    [teacher_id, amount, month, year, recordCampusId], (err2) => {
-                        if (err2) {
-                            console.error('Insert Error:', err2);
-                            return res.send("Error inserting: " + err2.message);
-                        }
-                        console.log('✓ Successfully created payroll record');
-                        res.redirect(`/admin/payroll?month=${month}&year=${year}`);
-                    });
-            }
+        db.query(teachersQuery, params, (err, activeTeachers) => {
+            if (err) { console.error(err); activeTeachers = []; }
+            
+            res.render('admin/payroll', {
+                run,
+                items: items || [],
+                activeTeachers: activeTeachers || [],
+                selectedMonth,
+                selectedYear,
+                isSuperAdmin,
+                csrfToken: req.csrfToken(),
+                user: req.session.user,
+                campus: req.session.campus,
+                query: req.query,
+                months: ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"]
+            });
         });
-    });
+    } catch (err) {
+        console.error(err);
+        res.send("Payroll System Error: " + err.message);
+    }
 });
+
+// Save salary configuration
+app.post('/admin/payroll/config', csrfProtection, async (req, res) => {
+    if (!req.session.user || req.session.user.role !== 'admin') return res.status(403).send("Forbidden");
+    const { teacher_id, base_salary, tax_rate_percent, allowances } = req.body;
+    try {
+        const repo = _payrollSvc.payrollRepo;
+        await repo.saveSalaryConfig(
+            parseInt(teacher_id),
+            parseFloat(base_salary),
+            parseFloat(tax_rate_percent || 0),
+            parseFloat(allowances || 0)
+        );
+        res.redirect('/admin/payroll?success=configured');
+    } catch (err) {
+        res.redirect(`/admin/payroll?error=${encodeURIComponent(err.message)}`);
+    }
+});
+
+// Initialize payroll run
+app.post('/admin/payroll/generate', csrfProtection, async (req, res) => {
+    if (!req.session.user || req.session.user.role !== 'admin') return res.status(403).send("Forbidden");
+    const { month, year } = req.body;
+    const campusId = req.session.campus ? req.session.campus.id : (req.session.user ? req.session.user.campus_id : 1);
+    try {
+        await _payrollSvc.generatePayrollRun(month, parseInt(year), req.session.user.id, campusId);
+        res.redirect(`/admin/payroll?month=${month}&year=${year}&success=generated`);
+    } catch (err) {
+        res.redirect(`/admin/payroll?month=${month}&year=${year}&error=${encodeURIComponent(err.message)}`);
+    }
+});
+
+// Approve payroll run
+app.post('/admin/payroll/approve', csrfProtection, async (req, res) => {
+    if (!req.session.user || req.session.user.role !== 'admin') return res.status(403).send("Forbidden");
+    const { runId } = req.body;
+    try {
+        const run = await _payrollSvc.payrollRepo.getPayrollRun(parseInt(runId));
+        await _payrollSvc.approvePayroll(parseInt(runId), req.session.user.id);
+        
+        // Fetch total sum for notification
+        const [sumRow] = await db.promise().query('SELECT SUM(net_payable) as total FROM payroll_items WHERE payroll_run_id = ?', [runId]);
+        const totalAmount = sumRow[0] ? sumRow[0].total : 0;
+
+        if (global._notifSvc) {
+            await global._notifSvc.notifyPayrollApproved({
+                campusId: run.campus_id || 1,
+                month: run.month,
+                year: run.year,
+                totalAmount: totalAmount || 0,
+                runId: runId
+            }).catch(e => console.error(e));
+        }
+
+        res.redirect(`/admin/payroll?month=${run.month}&year=${run.year}&success=approved`);
+    } catch (err) {
+        res.redirect(`/admin/payroll?error=${encodeURIComponent(err.message)}`);
+    }
+});
+
+// Disburse payroll run and post double-entry posts
+app.post('/admin/payroll/disburse', csrfProtection, async (req, res) => {
+    if (!req.session.user || req.session.user.role !== 'admin') return res.status(403).send("Forbidden");
+    const { runId } = req.body;
+    try {
+        const run = await _payrollSvc.payrollRepo.getPayrollRun(parseInt(runId));
+        await _payrollSvc.disbursePayroll(parseInt(runId), req.session.user.id);
+
+        // Fetch total sum for notification
+        const [sumRow] = await db.promise().query('SELECT SUM(net_payable) as total FROM payroll_items WHERE payroll_run_id = ?', [runId]);
+        const totalAmount = sumRow[0] ? sumRow[0].total : 0;
+
+        if (global._notifSvc) {
+            await global._notifSvc.notifyPayrollDisbursed({
+                campusId: run.campus_id || 1,
+                month: run.month,
+                year: run.year,
+                totalAmount: totalAmount || 0
+            }).catch(e => console.error(e));
+        }
+
+        res.redirect(`/admin/payroll?month=${run.month}&year=${run.year}&success=disbursed`);
+    } catch (err) {
+        res.redirect(`/admin/payroll?error=${encodeURIComponent(err.message)}`);
+    }
+});
+
+// Export CSV for bank bulk transfer
+app.get('/admin/payroll/export-bank', async (req, res) => {
+    if (!req.session.user || req.session.user.role !== 'admin') return res.status(403).send("Forbidden");
+    const { runId } = req.query;
+    try {
+        const run = await _payrollSvc.payrollRepo.getPayrollRun(parseInt(runId));
+        if (!run) throw new Error('Run not found.');
+        const items = await _payrollSvc.payrollRepo.getPayrollItems(parseInt(runId));
+
+        const csvContent = _payrollSvc.generateBulkTransferCSV(run.month, run.year, items);
+        res.setHeader('Content-Type', 'text/csv');
+        res.setHeader('Content-Disposition', `attachment; filename=Bulk_Transfer_${run.month}_${run.year}.csv`);
+        res.send(csvContent);
+    } catch (err) {
+        res.status(500).send("Export Error: " + err.message);
+    }
+});
+
 
 
 app.get('/teacher/dashboard', (req, res) => {
@@ -4427,11 +4547,6 @@ app.post('/admin/send-email', csrfProtection, (req, res) => {
 // STATIC ROUTES (CMS REMOVED)
 // ============================================================
 
-app.get('/', (req, res) => {
-    res.render('index', { user: req.session.user, isHomepage: true });
-});
-// ============================================================
-
 // Helper: Haversine Distance Calculation (km)
 function calculateDistance(lat1, lon1, lat2, lon2) {
     if (!lat1 || !lon1 || !lat2 || !lon2) return 0;
@@ -4685,6 +4800,160 @@ app.get('/admin/cms/pages/delete/:id', (req, res) => {
     });
 });
 
+// ── CMS SECTION CRUD ──────────────────────────────────────────────────────────
+
+// Section editor (GET)
+app.get('/admin/cms/sections/edit/:id', csrfProtection, (req, res) => {
+    if (!req.session.user || req.session.user.role !== 'admin') return res.redirect('/login');
+    const sectionId = req.params.id;
+    db.query('SELECT * FROM cms_sections WHERE id = ?', [sectionId], (err, results) => {
+        if (err || !results.length) return res.redirect('/admin/cms/pages');
+        const section = results[0];
+        try { section.content = JSON.parse(section.content); } catch(e) { section.content = {}; }
+        res.render('admin/cms/section_editor', {
+            section,
+            csrfToken: req.csrfToken(),
+            active: 'cms',
+            user: req.session.user,
+            campus: req.session.campus
+        });
+    });
+});
+
+// Section update (POST)
+app.post('/admin/cms/sections/update/:id', upload.single('image'), csrfProtection, (req, res) => {
+    if (!req.session.user || req.session.user.role !== 'admin') return res.redirect('/login');
+    const sectionId = req.params.id;
+
+    db.query('SELECT content, page_id, section_type FROM cms_sections WHERE id = ?', [sectionId], (err, results) => {
+        if (err || !results.length) return res.status(500).send('Error');
+
+        const row = results[0];
+        let content = {};
+        try { content = JSON.parse(row.content); } catch(e) { content = {}; }
+
+        const stype = row.section_type;
+        const body = req.body;
+
+        if (stype === 'hero') {
+            if (body.headline !== undefined)           content.headline           = body.headline;
+            if (body.subheadline !== undefined)        content.subheadline        = body.subheadline;
+            if (body.primary_cta_text !== undefined)   content.primary_cta_text   = body.primary_cta_text;
+            if (body.primary_cta_link !== undefined)   content.primary_cta_link   = body.primary_cta_link;
+            if (body.secondary_cta_text !== undefined) content.secondary_cta_text = body.secondary_cta_text;
+            if (body.secondary_cta_link !== undefined) content.secondary_cta_link = body.secondary_cta_link;
+            if (req.file) {
+                content.image_url = '/uploads/cms/' + req.file.filename;
+            } else if (body.image_url) {
+                content.image_url = body.image_url;
+            }
+
+        } else if (stype === 'features') {
+            if (body.title    !== undefined) content.title    = body.title;
+            if (body.subtitle !== undefined) content.subtitle = body.subtitle;
+            const items = content.items || [];
+            for (let i = 0; i < items.length; i++) {
+                if (body[`feature_title_${i}`] !== undefined) items[i].title       = body[`feature_title_${i}`];
+                if (body[`feature_desc_${i}`]  !== undefined) items[i].description = body[`feature_desc_${i}`];
+                if (body[`feature_icon_${i}`]  !== undefined) items[i].icon        = body[`feature_icon_${i}`];
+            }
+            content.items = items;
+
+        } else if (stype === 'stats') {
+            if (body.stats && Array.isArray(body.stats)) {
+                content.items = body.stats.map(s => ({ number: s.number, label: s.label }));
+            }
+
+        } else if (stype === 'text' || stype === 'content') {
+            if (body.title !== undefined) content.title = body.title;
+            if (body.body  !== undefined) content.body  = body.body;
+
+        } else if (stype === 'gallery') {
+            if (body.title !== undefined) content.title = body.title;
+            const imgs = content.images || [];
+            imgs.forEach((img, i) => {
+                if (body[`gallery_url_${i}`]) imgs[i] = { url: body[`gallery_url_${i}`] };
+            });
+            if (body.new_gallery_url && body.new_gallery_url.trim()) {
+                imgs.push({ url: body.new_gallery_url.trim() });
+            }
+            content.images = imgs;
+
+        } else {
+            if (body.raw_json) {
+                try { content = JSON.parse(body.raw_json); } catch(e) { /* keep old */ }
+            }
+        }
+
+        db.query('UPDATE cms_sections SET content = ? WHERE id = ?', [JSON.stringify(content), sectionId], (err2) => {
+            if (err2) console.error(err2);
+            logSecurityEvent(req, req.session.user, 'UPDATE_SECTION', { sectionId });
+            res.redirect('/admin/cms/pages/edit/' + row.page_id + '?saved=true');
+        });
+    });
+});
+
+// Add new section (POST)
+app.post('/admin/cms/sections/add', csrfProtection, (req, res) => {
+    if (!req.session.user || req.session.user.role !== 'admin') return res.redirect('/login');
+    const { page_id, section_type, section_name } = req.body;
+
+    let defaultContent = {};
+    if (section_type === 'hero') {
+        defaultContent = {
+            headline: 'Welcome to Our School',
+            subheadline: 'Empowering the next generation of leaders.',
+            primary_cta_text: 'Apply for Admission',
+            primary_cta_link: '/admissions',
+            secondary_cta_text: 'Learn More',
+            secondary_cta_link: '/about',
+            image_url: ''
+        };
+    } else if (section_type === 'features') {
+        defaultContent = {
+            title: 'Why Choose Us?',
+            subtitle: 'We provide world-class education.',
+            items: [
+                { title: 'Expert Faculty', description: 'Highly qualified teachers', icon: 'fas fa-chalkboard-teacher' },
+                { title: 'Modern Facilities', description: 'State-of-the-art campus', icon: 'fas fa-microscope' },
+                { title: 'Digital Campus', description: 'Integrated online portals', icon: 'fas fa-laptop-code' }
+            ]
+        };
+    } else if (section_type === 'stats') {
+        defaultContent = { items: [{ number: '1000', label: 'Students' }, { number: '50', label: 'Teachers' }, { number: '100%', label: 'Pass Rate' }] };
+    } else if (section_type === 'gallery') {
+        defaultContent = { title: 'School Gallery', images: [] };
+    } else {
+        defaultContent = { title: 'New Section', body: '<p>Write your content here...</p>' };
+    }
+
+    const maxOrderQuery = 'SELECT COALESCE(MAX(display_order), 0) + 1 as next_order FROM cms_sections WHERE page_id = ?';
+    db.query(maxOrderQuery, [page_id], (err, orderResult) => {
+        const nextOrder = orderResult && orderResult[0] ? orderResult[0].next_order : 10;
+        db.query('INSERT INTO cms_sections (page_id, section_type, section_name, content, display_order, enabled) VALUES (?, ?, ?, ?, ?, 1)',
+            [page_id, section_type, section_name, JSON.stringify(defaultContent), nextOrder],
+            (err2) => {
+                if (err2) return res.status(500).send('Error adding section');
+                res.redirect('/admin/cms/pages/edit/' + page_id);
+            }
+        );
+    });
+});
+
+// Delete section (POST)
+app.post('/admin/cms/sections/delete/:id', csrfProtection, (req, res) => {
+    if (!req.session.user || req.session.user.role !== 'admin') return res.redirect('/login');
+    const sectionId = req.params.id;
+    db.query('SELECT page_id FROM cms_sections WHERE id = ?', [sectionId], (err, results) => {
+        if (err || !results.length) return res.redirect('/admin/cms/pages');
+        const pageId = results[0].page_id;
+        db.query('DELETE FROM cms_sections WHERE id = ?', [sectionId], (err2) => {
+            logSecurityEvent(req, req.session.user, 'DELETE_SECTION', { sectionId });
+            res.redirect('/admin/cms/pages/edit/' + pageId);
+        });
+    });
+});
+
 // 4. CMS Menus
 app.get('/admin/cms/menus', (req, res) => {
     if (!req.session.user || req.session.user.role !== 'admin') return res.redirect('/login');
@@ -4720,8 +4989,383 @@ app.get('/p/:slug', (req, res) => {
     });
 });
 
+// ============================================================
+// PUBLIC DYNAMIC CMS ROUTER
+// ============================================================
+app.get('/:slug?', async (req, res, next) => {
+    // Exclude API, admin, and static asset routes
+    const slug = req.params.slug || 'home';
+    const ignorePaths = ['favicon.ico', 'api', 'admin', 'login', 'logout', 'images', 'uploads', 'css', 'js'];
+    if (ignorePaths.includes(slug)) return next();
+
+    try {
+        // 1. Fetch Global Settings
+        const [settingsRows] = await db.promise().query(`SELECT setting_key, setting_value FROM cms_settings`);
+        const settings = {};
+        settingsRows.forEach(row => settings[row.setting_key] = row.setting_value);
+
+        // 2. Fetch Active Theme
+        const [themeRows] = await db.promise().query(`SELECT * FROM cms_themes WHERE is_active = 1 LIMIT 1`);
+        let theme = themeRows.length > 0 ? themeRows[0] : null;
+        if (theme && typeof theme.colors === 'string') theme.colors = JSON.parse(theme.colors);
+        if (theme && typeof theme.fonts === 'string') theme.fonts = JSON.parse(theme.fonts);
+        if (theme && typeof theme.button_styles === 'string') theme.button_styles = JSON.parse(theme.button_styles);
+
+        // 3. Fetch Navigation Menus
+        const [menuRows] = await db.promise().query(`SELECT * FROM cms_menu_items WHERE enabled = 1 ORDER BY display_order ASC`);
+        const menus = { header: [], footer: [] };
+        menuRows.forEach(item => {
+            if (item.menu_location === 'header') menus.header.push(item);
+            if (item.menu_location === 'footer') menus.footer.push(item);
+        });
+
+        // 4. Fetch Target Page
+        const pageQuery = slug === 'home' 
+            ? `SELECT * FROM cms_pages WHERE is_homepage = 1 AND status = 'published' LIMIT 1` 
+            : `SELECT * FROM cms_pages WHERE slug = ? AND status = 'published' LIMIT 1`;
+        const queryParams = slug === 'home' ? [] : [slug];
+        
+        const [pageRows] = await db.promise().query(pageQuery, queryParams);
+        
+        if (pageRows.length === 0) {
+            return next(); // Pass to 404 handler
+        }
+        
+        const page = pageRows[0];
+
+        // 5. Fetch Page Sections
+        const [sectionRows] = await db.promise().query(`SELECT * FROM cms_sections WHERE page_id = ? AND enabled = 1 ORDER BY display_order ASC`, [page.id]);
+
+        // Parse section JSON content
+        sectionRows.forEach(sec => {
+            if (typeof sec.content === 'string') {
+                try { sec.content = JSON.parse(sec.content); } catch (e) { sec.content = {}; }
+            }
+        });
+
+        // 6. Render Dynamic View
+        res.render('dynamic_page', {
+            page: page,
+            sections: sectionRows,
+            theme: theme,
+            settings: settings,
+            menus: menus,
+            user: req.session.user || null
+        });
+
+    } catch (error) {
+        console.error('[CMS Frontend Error]', error);
+        next(error);
+    }
+});
+
+// ── Admin Finance / General Ledger & Double-Entry Accounting
+const AccountingService = require('./src/services/accounting.service');
+const _accountingSvc = new AccountingService(db.promise());
+
+app.get('/admin/finance', csrfProtection, async (req, res) => {
+    if (!req.session.user || req.session.user.role !== 'admin') return res.redirect('/login');
+    const campusId = req.session.campus ? req.session.campus.id : (req.session.user ? req.session.user.campus_id : 1);
+    
+    try {
+        const entries = await _accountingSvc.getJournalEntries(200, campusId);
+        
+        // Fetch COA for manual entry dropdown
+        const coa = await _accountingSvc.accountRepo.getAccounts(campusId);
+
+        res.render('admin/finance', {
+            entries: entries || [],
+            coa: coa || [],
+            csrfToken: req.csrfToken(),
+            user: req.session.user,
+            campus: req.session.campus,
+            active: 'finance',
+            query: req.query
+        });
+    } catch (err) {
+        console.error(err);
+        res.status(500).send("Accounting System Error: " + err.message);
+    }
+});
+
+app.post('/admin/finance/add', csrfProtection, async (req, res) => {
+    if (!req.session.user || req.session.user.role !== 'admin') return res.status(403).send("Forbidden");
+    const { entry_date, reference, description, account_id, debit, credit } = req.body;
+    
+    try {
+        // Build items list
+        const items = [];
+        for (let i = 0; i < account_id.length; i++) {
+            const accId = account_id[i];
+            const deb = parseFloat(debit[i] || 0);
+            const cred = parseFloat(credit[i] || 0);
+
+            if (!accId) continue;
+            if (deb === 0 && cred === 0) continue;
+
+            items.push({
+                accountId: parseInt(accId),
+                debit: deb,
+                credit: cred
+            });
+        }
+
+        if (items.length < 2) {
+            throw new Error('Double-entry requires at least two account allocations.');
+        }
+
+        const entryDetails = {
+            entryNumber: `JV-${Date.now().toString().slice(-6)}`,
+            description,
+            reference: reference || null,
+            entryDate: entry_date,
+            campusId: req.session.campus ? req.session.campus.id : (req.session.user ? req.session.user.campus_id : 1)
+        };
+
+        const entryId = await _accountingSvc.postManualEntry(entryDetails, items, req.session.user.id);
+        
+        // Calculate total amount from first debit lines
+        const totalDebit = items.reduce((sum, item) => sum + item.debit, 0);
+
+        if (global._notifSvc) {
+            await global._notifSvc.notifyJournalEntry({
+                campusId: entryDetails.campusId,
+                description: entryDetails.description,
+                amount: totalDebit,
+                entryId: entryId
+            }).catch(e => console.error(e));
+        }
+
+        res.redirect('/admin/finance?success=added');
+    } catch (err) {
+        res.redirect(`/admin/finance?error=${encodeURIComponent(err.message)}`);
+    }
+});
+
+// Financial Statements (Trial Balance, P&L)
+app.get('/admin/accounting', async (req, res) => {
+    if (!req.session.user || req.session.user.role !== 'admin') return res.redirect('/login');
+    const campusId = req.session.campus ? req.session.campus.id : (req.session.user ? req.session.user.campus_id : 1);
+    
+    try {
+        const trialBalance = await _accountingSvc.getTrialBalance(campusId);
+        const profitLoss = await _accountingSvc.getProfitAndLoss(campusId);
+
+        res.render('admin/accounting', {
+            trialBalance,
+            profitLoss,
+            user: req.session.user,
+            campus: req.session.campus,
+            active: 'finance'
+        });
+    } catch (err) {
+        console.error(err);
+        res.status(500).send("Accounting System Error: " + err.message);
+    }
+});
+
+// ── Admin Wallet Management Routes
+const WalletService = require('./src/services/wallet.service');
+const _walletSvc = new WalletService(db.promise());
+
+app.get('/admin/wallet', csrfProtection, async (req, res) => {
+    if (!req.session.user || req.session.user.role !== 'admin') return res.redirect('/login');
+    const campusId = req.session.campus ? req.session.campus.id : req.session.user.campus_id;
+    const isSuperAdmin = (req.session.user.username === 'admin' && req.session.user.campus_id === 1);
+
+    const studentQuery = isSuperAdmin
+        ? 'SELECT s.id, u.full_name, c.class_name, c.section, cp.campus_name FROM students s JOIN users u ON s.user_id=u.id JOIN classes c ON s.class_id=c.id LEFT JOIN campuses cp ON s.campus_id=cp.id'
+        : 'SELECT s.id, u.full_name, c.class_name, c.section FROM students s JOIN users u ON s.user_id=u.id JOIN classes c ON s.class_id=c.id WHERE s.campus_id=?';
+    const params = isSuperAdmin ? [] : [campusId];
+
+    db.query(studentQuery, params, async (err, students) => {
+        let walletData = null;
+        const selectedStudentId = req.query.student_id;
+        if (selectedStudentId) {
+            try { walletData = await _walletSvc.getWalletDetails(parseInt(selectedStudentId)); } catch(e) { console.error(e); }
+        }
+        res.render('admin/wallet', {
+            students: students || [],
+            walletData,
+            selectedStudentId,
+            isSuperAdmin,
+            csrfToken: req.csrfToken(),
+            user: req.session.user,
+            campus: req.session.campus,
+            active: 'wallet',
+            query: req.query
+        });
+    });
+});
+
+app.post('/admin/wallet/topup', csrfProtection, async (req, res) => {
+    if (!req.session.user || req.session.user.role !== 'admin') return res.redirect('/login');
+    const { student_id, amount, description } = req.body;
+    const campusId = req.session.campus ? req.session.campus.id : req.session.user.campus_id;
+    try {
+        await _walletSvc.adminTopUp(parseInt(student_id), parseFloat(amount), description, req.session.user.id);
+        // 🔔 Notify
+        if (global._notifSvc) {
+            global._notifSvc.notifyWalletTopup({
+                campusId,
+                studentName: 'Student',
+                amount: parseFloat(amount),
+                studentId: student_id
+            }).catch(() => {});
+        }
+        res.redirect(`/admin/wallet?student_id=${student_id}&success=topup`);
+    } catch (err) {
+        res.redirect(`/admin/wallet?student_id=${student_id}&error=${encodeURIComponent(err.message)}`);
+    }
+});
+
+app.post('/admin/wallet/settle', csrfProtection, async (req, res) => {
+    if (!req.session.user || req.session.user.role !== 'admin') return res.redirect('/login');
+    const { student_id } = req.body;
+    try {
+        await _walletSvc.settleFromWallet(parseInt(student_id), req.session.user.id);
+        res.redirect(`/admin/wallet?student_id=${student_id}&success=settled`);
+    } catch (err) {
+        res.redirect(`/admin/wallet?student_id=${student_id}&error=${encodeURIComponent(err.message)}`);
+    }
+});
+
+
+app.post('/admin/wallet/concession', csrfProtection, async (req, res) => {
+    if (!req.session.user || req.session.user.role !== 'admin') return res.redirect('/login');
+    const { student_id, type, value_type, value, reason } = req.body;
+    try {
+        await _walletSvc.applyConcession(parseInt(student_id), type, value_type, parseFloat(value), reason);
+        res.redirect(`/admin/wallet?student_id=${student_id}&success=concession`);
+    } catch (err) {
+        res.redirect(`/admin/wallet?student_id=${student_id}&error=${encodeURIComponent(err.message)}`);
+    }
+});
+
+
+// ─────────────────────────────────────────────────────────────────────────────
+// 🔔 NOTIFICATIONS MODULE
+// ─────────────────────────────────────────────────────────────────────────────
+const NotificationService = require('./src/services/notification.service');
+const migrateNotifications = require('./src/migrations/notifications.migration');
+const _notifSvc = new NotificationService(db.promise());
+
+// Run notification table migration on startup (idempotent)
+migrateNotifications(db.promise()).catch(err => console.warn('[Notification Migration]', err.message));
+
+// Make notif service globally accessible for other modules
+global._notifSvc = _notifSvc;
+
+// ── Helper: human-readable time ago (used in EJS) ─────────────────────────
+function timeAgo(date) {
+    const now = new Date();
+    const diff = Math.floor((now - new Date(date)) / 1000); // seconds
+    if (diff < 60)          return `${diff}s ago`;
+    if (diff < 3600)        return `${Math.floor(diff / 60)}m ago`;
+    if (diff < 86400)       return `${Math.floor(diff / 3600)}h ago`;
+    if (diff < 604800)      return `${Math.floor(diff / 86400)}d ago`;
+    return new Date(date).toLocaleDateString('en-PK', { day: 'numeric', month: 'short' });
+}
+
+// ── GET /admin/notifications — full notification center page ──────────────
+app.get('/admin/notifications', csrfProtection, async (req, res) => {
+    if (!req.session.user || req.session.user.role !== 'admin') return res.redirect('/login');
+    const campusId = req.session.campus ? req.session.campus.id : req.session.user.campus_id;
+    const userId   = req.session.user.id;
+
+    try {
+        const notifications = await _notifSvc.getAll(campusId, 100);
+        const unreadCount   = notifications.filter(n => !n.is_read).length;
+        const successCount  = notifications.filter(n => n.type === 'success').length;
+        const warningCount  = notifications.filter(n => n.type === 'warning').length;
+        const errorCount    = notifications.filter(n => n.type === 'error').length;
+
+        res.render('admin/notifications', {
+            notifications,
+            unreadCount,
+            successCount,
+            warningCount,
+            errorCount,
+            timeAgo,
+            csrfToken: req.csrfToken(),
+            success: req.query.success || null
+        });
+    } catch (err) {
+        console.error(err);
+        res.status(500).send('Notification Error: ' + err.message);
+    }
+});
+
+// ── POST /admin/notifications/:id/mark-read ──────────────────────────────
+app.post('/admin/notifications/:id/mark-read', csrfProtection, async (req, res) => {
+    if (!req.session.user || req.session.user.role !== 'admin') return res.redirect('/login');
+    try {
+        await _notifSvc.markRead([parseInt(req.params.id)], req.session.user.id);
+        res.redirect('/admin/notifications?success=Marked+as+read');
+    } catch (err) {
+        res.redirect('/admin/notifications');
+    }
+});
+
+// ── POST /admin/notifications/mark-all-read ───────────────────────────────
+app.post('/admin/notifications/mark-all-read', csrfProtection, async (req, res) => {
+    if (!req.session.user || req.session.user.role !== 'admin') return res.redirect('/login');
+    const campusId = req.session.campus ? req.session.campus.id : req.session.user.campus_id;
+    try {
+        await _notifSvc.markAllRead(req.session.user.id, campusId);
+        res.redirect('/admin/notifications?success=All+notifications+marked+read');
+    } catch (err) {
+        res.redirect('/admin/notifications');
+    }
+});
+
+// ── POST /admin/notifications/clear-all ──────────────────────────────────
+app.post('/admin/notifications/clear-all', csrfProtection, async (req, res) => {
+    if (!req.session.user || req.session.user.role !== 'admin') return res.redirect('/login');
+    const campusId = req.session.campus ? req.session.campus.id : req.session.user.campus_id;
+    try {
+        await _notifSvc.cleanup(campusId);
+        res.redirect('/admin/notifications?success=Old+notifications+cleared');
+    } catch (err) {
+        res.redirect('/admin/notifications');
+    }
+});
+
+// ── GET /api/notifications/count — unread badge count (JSON) ──────────────
+app.get('/api/notifications/count', async (req, res) => {
+    if (!req.session.user) return res.json({ count: 0 });
+    const campusId = req.session.campus ? req.session.campus.id : req.session.user.campus_id;
+    try {
+        const count = await _notifSvc.getUnreadCount(req.session.user.id, campusId);
+        res.json({ count });
+    } catch {
+        res.json({ count: 0 });
+    }
+});
+
+// ── GET /api/notifications/recent — latest 5 for dropdown ─────────────────
+app.get('/api/notifications/recent', async (req, res) => {
+    if (!req.session.user) return res.json([]);
+    const campusId = req.session.campus ? req.session.campus.id : req.session.user.campus_id;
+    try {
+        const items = await _notifSvc.getForUser(req.session.user.id, campusId, 5);
+        res.json(items.map(n => ({
+            id: n.id,
+            type: n.type,
+            title: n.title,
+            message: n.message,
+            link: n.link,
+            is_read: n.is_read,
+            time: timeAgo(n.created_at)
+        })));
+    } catch {
+        res.json([]);
+    }
+});
+
 // 404 Page Not Found (Catch-all)
 app.use((req, res) => {
+
     res.status(404).render('404');
 });
 

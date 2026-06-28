@@ -1,199 +1,386 @@
 <%- include('../partials/header') %>
 
-    <div class="admin-layout animate-fade-in" style="margin-top: 80px;">
-        <!-- Sidebar -->
-        <!-- Sidebar -->
-        <%- include('../partials/sidebar', { active: 'dashboard' }) %>
+  <!-- ════════════════════════════════════════════════════════════
+       ADMIN LAYOUT
+       ════════════════════════════════════════════════════════════ -->
+  <div class="adm-layout">
 
-            <!-- Main Content -->
-            <main class="main-content">
-                <header
-                    style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 3rem;">
-                    <div>
-                        <h2 style="font-size: 2rem; font-weight: 800; color: var(--primary);">System Dashboard</h2>
-                        <p style="color: var(--text-muted);">Welcome back, <span
-                                style="color: var(--accent); font-weight: 600;">
-                                <%= user.full_name %>
-                            </span></p>
-                    </div>
-                    <div class="glass"
-                        style="padding: 12px 25px; border-radius: 50px; font-weight: 600; font-size: 0.9rem; color: var(--text-main);">
-                        <%= new Date().toLocaleDateString('en-US', { weekday: 'long' , year: 'numeric' , month: 'long' ,
-                            day: 'numeric' }) %>
-                    </div>
-                </header>
+    <!-- Sidebar -->
+    <%- include('../partials/sidebar', { active: 'dashboard' }) %>
 
-                <% if (typeof newUser !=='undefined' && newUser) { %>
-                    <div class="card animate-scale-in"
-                        style="margin-bottom: 2rem; border-left: 6px solid #10b981; background: #ecfdf5;">
-                        <div style="display: flex; justify-content: space-between; align-items: start;">
-                            <div>
-                                <h3 style="color: #065f46; font-weight: 800; margin-bottom: 0.5rem;">
-                                    <i class="fas fa-check-circle"></i> New <%= newUser.role %> Account Created
-                                </h3>
-                                <p style="color: #064e3b; margin-bottom: 1rem;">
-                                    The account for <strong>
-                                        <%= newUser.full_name %>
-                                    </strong> is ready. Please share these credentials securely.
-                                </p>
-                                <div
-                                    style="display: flex; gap: 2rem; background: white; padding: 1rem 1.5rem; border-radius: 12px; border: 1px solid #d1fae5;">
-                                    <div>
-                                        <small
-                                            style="display: block; color: #6b7280; font-weight: 700; text-transform: uppercase; font-size: 0.7rem;">Username</small>
-                                        <span
-                                            style="font-weight: 800; font-size: 1.1rem; color: #059669; font-family: monospace;">
-                                            <%= newUser.username %>
-                                        </span>
-                                    </div>
-                                    <div>
-                                        <small
-                                            style="display: block; color: #6b7280; font-weight: 700; text-transform: uppercase; font-size: 0.7rem;">Password</small>
-                                        <span
-                                            style="font-weight: 800; font-size: 1.1rem; color: #059669; font-family: monospace;">
-                                            <%= newUser.password %>
-                                        </span>
-                                    </div>
-                                </div>
-                            </div>
-                            <button onclick="this.parentElement.parentElement.style.display='none'"
-                                style="background: none; border: none; font-size: 1.2rem; cursor: pointer; color: #065f46;">
-                                <i class="fas fa-times"></i>
-                            </button>
-                        </div>
-                    </div>
-                    <% } %>
+    <!-- ══ MAIN CONTENT ══════════════════════════════════════════ -->
+    <main class="adm-main" role="main" aria-label="Dashboard content">
 
-                        <div class="stat-group animate-slide-up">
-                            <div class="stat-card card">
-                                <div class="stat-icon"
-                                    style="background: rgba(59, 130, 246, 0.1); color: var(--accent);">
-                                    <i class="fas fa-user-graduate"></i>
-                                </div>
-                                <div>
-                                    <p
-                                        style="color: var(--text-muted); font-size: 0.9rem; font-weight: 600; text-transform: uppercase; letter-spacing: 1px;">
-                                        Students</p>
-                                    <h3 style="font-size: 2rem; font-weight: 800; color: var(--primary);">
-                                        <%= total_students %>
-                                    </h3>
-                                </div>
-                            </div>
+      <!-- ── Page Header ── -->
+      <div class="adm-page-header">
+        <div class="adm-page-greeting">
+          <p class="adm-greeting-text">
+            <% 
+              var hour = new Date().getHours();
+              var greeting = hour < 12 ? 'Good Morning' : hour < 17 ? 'Good Afternoon' : 'Good Evening';
+            %>
+            <%= greeting %>, <%= user.full_name.split(' ')[0] %> 👋
+          </p>
+          <h1 class="adm-page-title">System Dashboard</h1>
+          <p class="adm-page-subtitle">Here's an overview of your school today</p>
+        </div>
 
-                            <div class="stat-card card">
-                                <div class="stat-icon"
-                                    style="background: rgba(16, 185, 129, 0.1); color: var(--success);">
-                                    <i class="fas fa-chalkboard-teacher"></i>
-                                </div>
-                                <div>
-                                    <p
-                                        style="color: var(--text-muted); font-size: 0.9rem; font-weight: 600; text-transform: uppercase; letter-spacing: 1px;">
-                                        Teachers</p>
-                                    <h3 style="font-size: 2rem; font-weight: 800; color: var(--primary);">
-                                        <%= total_teachers %>
-                                    </h3>
-                                </div>
-                            </div>
+        <div class="adm-date-badge">
+          <i class="fas fa-calendar-day" aria-hidden="true"></i>
+          <span><%= new Date().toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' }) %></span>
+        </div>
+      </div>
 
-                            <div class="stat-card card">
-                                <div class="stat-icon"
-                                    style="background: rgba(239, 68, 68, 0.1); color: var(--danger);">
-                                    <i class="fas fa-sack-dollar"></i>
-                                </div>
-                                <div>
-                                    <p
-                                        style="color: var(--text-muted); font-size: 0.9rem; font-weight: 600; text-transform: uppercase; letter-spacing: 1px;">
-                                        Unpaid Fees</p>
-                                    <h3 style="font-size: 2rem; font-weight: 800; color: var(--primary);">Rs. <%=
-                                            total_fees_pending %>
-                                    </h3>
-                                </div>
-                            </div>
-                        </div>
+      <!-- ── New User Credential Banner ── -->
+      <% if (typeof newUser !== 'undefined' && newUser) { %>
+      <div class="adm-banner adm-banner-success" role="alert" aria-live="polite">
+        <i class="fas fa-check-circle adm-banner-icon" aria-hidden="true"></i>
+        <div class="adm-banner-content">
+          <div class="adm-banner-title">
+            <i class="fas fa-user-plus" aria-hidden="true"></i>
+            New <%= newUser.role %> Account Created
+          </div>
+          <p class="adm-banner-body">
+            The account for <strong><%= newUser.full_name %></strong> is ready. Please share these credentials securely.
+          </p>
+          <div class="adm-cred-box">
+            <div class="adm-cred-item">
+              <small>Username</small>
+              <span><%= newUser.username %></span>
+            </div>
+            <div class="adm-cred-item">
+              <small>Password</small>
+              <span><%= newUser.password %></span>
+            </div>
+          </div>
+        </div>
+        <button class="adm-banner-close" aria-label="Dismiss notification" type="button">
+          <i class="fas fa-times" aria-hidden="true"></i>
+        </button>
+      </div>
+      <% } %>
 
-                        <!-- Quick Access Section -->
-                        <div class="animate-slide-up" style="animation-delay: 0.2s;">
-                            <h3 style="margin-bottom: 2rem; font-weight: 800; color: var(--primary);">Administrative
-                                Controls</h3>
-                            <div class="grid" style="grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));">
-                                <a href="/admin/students" class="card"
-                                    style="text-decoration: none; display: flex; align-items: center; gap: 15px; padding: 1.5rem;">
-                                    <span
-                                        style="width: 45px; height: 45px; border-radius: 12px; background: #eff6ff; color: #3b82f6; display: flex; align-items: center; justify-content: center;"><i
-                                            class="fas fa-plus"></i></span>
-                                    <span style="font-weight: 700; color: var(--text-main);">Add Student</span>
-                                </a>
-                                <a href="/admin/fees" class="card"
-                                    style="text-decoration: none; display: flex; align-items: center; gap: 15px; padding: 1.5rem;">
-                                    <span
-                                        style="width: 45px; height: 45px; border-radius: 12px; background: #ecfdf5; color: #10b981; display: flex; align-items: center; justify-content: center;"><i
-                                            class="fas fa-receipt"></i></span>
-                                    <span style="font-weight: 700; color: var(--text-main);">Process Fees</span>
-                                </a>
-                                <a href="/admin/notices" class="card"
-                                    style="text-decoration: none; display: flex; align-items: center; gap: 15px; padding: 1.5rem;">
-                                    <span
-                                        style="width: 45px; height: 45px; border-radius: 12px; background: #fffbeb; color: #f59e0b; display: flex; align-items: center; justify-content: center;"><i
-                                            class="fas fa-bullhorn"></i></span>
-                                    <span style="font-weight: 700; color: var(--text-main);">Post Notice</span>
-                                </a>
-                                <a href="/admin/library/add" class="card"
-                                    style="text-decoration: none; display: flex; align-items: center; gap: 15px; padding: 1.5rem;">
-                                    <span
-                                        style="width: 45px; height: 45px; border-radius: 12px; background: #f0fdf4; color: #16a34a; display: flex; align-items: center; justify-content: center;"><i
-                                            class="fas fa-book-medical"></i></span>
-                                    <span style="font-weight: 700; color: var(--text-main);">Upload Resource</span>
-                                </a>
-                                <a href="/admin/email" class="card"
-                                    style="text-decoration: none; display: flex; align-items: center; gap: 15px; padding: 1.5rem;">
-                                    <span
-                                        style="width: 45px; height: 45px; border-radius: 12px; background: #eef2ff; color: #6366f1; display: flex; align-items: center; justify-content: center;"><i
-                                            class="fas fa-envelope"></i></span>
-                                    <span style="font-weight: 700; color: var(--text-main);">Send Email</span>
-                                </a>
-                            </div>
-                        </div>
+      <!-- ══════════════════════════════════════════════════════════
+           KPI STAT CARDS
+           ══════════════════════════════════════════════════════════ -->
+      <section aria-label="Key Performance Indicators">
+        <div class="adm-kpi-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 1.25rem; margin-bottom: 2rem;">
 
-                        <!-- 📱 Mobile Quick Login Section -->
-                        <div class="animate-slide-up"
-                            style="animation-delay: 0.3s; margin-top: 3rem; margin-bottom: 3rem;">
-                            <h3 style="margin-bottom: 1.5rem; font-weight: 800; color: var(--primary);">Mobile Portal
-                                Access</h3>
-                            <div class="card glass"
-                                style="display: flex; align-items: center; gap: 2rem; padding: 2rem; border-radius: 24px; border-left: 6px solid var(--accent);">
-                                <div
-                                    style="background: white; padding: 10px; border-radius: 16px; box-shadow: 0 10px 20px rgba(0,0,0,0.1);">
-                                    <% if (typeof qrCode !=='undefined' && qrCode) { %>
-                                        <img src="<%= qrCode %>" alt="Login QR Code"
-                                            style="width: 150px; height: 150px; display: block;">
-                                        <% } else { %>
-                                            <div
-                                                style="width: 150px; height: 150px; display: flex; align-items: center; justify-content: center; background: #f1f5f9; color: var(--text-muted); font-size: 0.8rem; text-align: center;">
-                                                QR Code Error</div>
-                                            <% } %>
-                                </div>
-                                <div style="flex: 1;">
-                                    <h4
-                                        style="font-weight: 800; color: var(--text-main); margin-bottom: 0.5rem; font-size: 1.2rem;">
-                                        Scan to Login on Mobile</h4>
-                                    <p style="color: var(--text-muted); line-height: 1.6; margin-bottom: 1rem;">Scanning
-                                        this QR code will open the login page on your mobile device with the current
-                                        campus code (<strong>
-                                            <%= typeof campus !=='undefined' && campus ? campus.campus_code : 'MAIN' %>
-                                        </strong>) already filled in.</p>
-                                    <div
-                                        style="display: flex; gap: 10px; align-items: center; background: #f8fafc; padding: 10px 15px; border-radius: 10px; border: 1px solid #e2e8f0; font-family: monospace; font-size: 0.85rem; color: var(--primary);">
-                                        <i class="fas fa-link"></i>
-                                        <span style="overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">
-                                            <%= loginUrl %>
-                                        </span>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-            </main>
-    </div>
+          <!-- Students -->
+          <div class="adm-kpi-card">
+            <div class="adm-kpi-header">
+              <div class="adm-kpi-icon kpi-blue">
+                <i class="fas fa-user-graduate" aria-hidden="true"></i>
+              </div>
+              <span class="adm-kpi-trend trend-up">
+                <i class="fas fa-arrow-up" aria-hidden="true"></i> Active
+              </span>
+            </div>
+            <div>
+              <div class="adm-kpi-value">
+                <%= total_students %>
+              </div>
+              <div class="adm-kpi-label">Total Students</div>
+            </div>
+          </div>
 
-    </body>
+          <!-- Teachers -->
+          <div class="adm-kpi-card">
+            <div class="adm-kpi-header">
+              <div class="adm-kpi-icon kpi-green">
+                <i class="fas fa-chalkboard-teacher" aria-hidden="true"></i>
+              </div>
+              <span class="adm-kpi-trend trend-up">
+                <i class="fas fa-arrow-up" aria-hidden="true"></i> Active
+              </span>
+            </div>
+            <div>
+              <div class="adm-kpi-value">
+                <%= total_teachers %>
+              </div>
+              <div class="adm-kpi-label">Total Teachers</div>
+            </div>
+          </div>
 
-    </html>
+          <!-- Pending Fees -->
+          <div class="adm-kpi-card">
+            <div class="adm-kpi-header">
+              <div class="adm-kpi-icon kpi-red">
+                <i class="fas fa-sack-dollar" aria-hidden="true"></i>
+              </div>
+              <span class="adm-kpi-trend trend-down">
+                <i class="fas fa-exclamation-triangle" aria-hidden="true"></i> Due
+              </span>
+            </div>
+            <div>
+              <div class="adm-kpi-value" style="font-family:'JetBrains Mono',monospace;">
+                Rs. <%= total_fees_pending.toLocaleString() %>
+              </div>
+              <div class="adm-kpi-label">Unpaid Fees</div>
+            </div>
+          </div>
+
+          <!-- Wallet Balance Total -->
+          <div class="adm-kpi-card">
+            <div class="adm-kpi-header">
+              <div class="adm-kpi-icon kpi-blue" style="background:rgba(99,102,241,0.1);color:#6366f1;">
+                <i class="fas fa-wallet" aria-hidden="true"></i>
+              </div>
+              <span class="adm-kpi-trend trend-up">
+                <i class="fas fa-check" aria-hidden="true"></i> Safe
+              </span>
+            </div>
+            <div>
+              <div class="adm-kpi-value" style="font-family:'JetBrains Mono',monospace;">
+                Rs. <%= total_wallet_balance.toLocaleString() %>
+              </div>
+              <div class="adm-kpi-label">Total Wallet Balance</div>
+            </div>
+          </div>
+
+          <!-- Collections (Inflow) -->
+          <div class="adm-kpi-card">
+            <div class="adm-kpi-header">
+              <div class="adm-kpi-icon kpi-green">
+                <i class="fas fa-arrow-trend-up" aria-hidden="true"></i>
+              </div>
+              <span class="adm-kpi-trend trend-up">
+                <i class="fas fa-calendar" aria-hidden="true"></i> Month
+              </span>
+            </div>
+            <div>
+              <div class="adm-kpi-value" style="font-family:'JetBrains Mono',monospace;color:#10b981;">
+                +Rs. <%= total_revenue_inflow.toLocaleString() %>
+              </div>
+              <div class="adm-kpi-label">Fee Collections (Inflow)</div>
+            </div>
+          </div>
+
+          <!-- Payroll Cost (Outflow) -->
+          <div class="adm-kpi-card">
+            <div class="adm-kpi-header">
+              <div class="adm-kpi-icon kpi-red">
+                <i class="fas fa-arrow-trend-down" aria-hidden="true"></i>
+              </div>
+              <span class="adm-kpi-trend trend-down">
+                <i class="fas fa-money-bill-wave" aria-hidden="true"></i> Paid
+              </span>
+            </div>
+            <div>
+              <div class="adm-kpi-value" style="font-family:'JetBrains Mono',monospace;color:#ef4444;">
+                -Rs. <%= total_payroll_outflow.toLocaleString() %>
+              </div>
+              <div class="adm-kpi-label">Teacher Salaries (Outflow)</div>
+            </div>
+          </div>
+
+        </div>
+      </section>
+
+      <!-- ══════════════════════════════════════════════════════════
+           CHARTS SECTION
+           ══════════════════════════════════════════════════════════ -->
+      <div class="adm-card-grid-2">
+
+        <!-- Fee Collection Trend -->
+        <div class="adm-card">
+          <div class="adm-card-header">
+            <div>
+              <h2 class="adm-card-title">Inflow vs Outflow Cash Trend</h2>
+              <p class="adm-card-subtitle">Monthly collections vs disbursements</p>
+            </div>
+            <span class="adm-badge adm-badge-blue">Last 6 Months</span>
+          </div>
+          <div class="adm-card-body">
+            <div class="adm-chart-wrap" style="height: 220px;">
+              <canvas id="admFeeChart" aria-label="Fee collection trend chart" role="img"></canvas>
+            </div>
+          </div>
+        </div>
+
+        <!-- Student Distribution -->
+        <div class="adm-card">
+          <div class="adm-card-header">
+            <div>
+              <h2 class="adm-card-title">Student Distribution</h2>
+              <p class="adm-card-subtitle">By grade level</p>
+            </div>
+            <span class="adm-badge adm-badge-green">Current Year</span>
+          </div>
+          <div class="adm-card-body">
+            <div class="adm-chart-wrap" style="height: 220px;">
+              <canvas id="admDistChart" aria-label="Student distribution chart" role="img"></canvas>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Injected Script to Override Chart.js data dynamically -->
+      <script>
+        document.addEventListener('DOMContentLoaded', () => {
+          // Parse trends passed from server
+          const rawTrends = `<%- trends %>`;
+          try {
+            const trends = JSON.parse(rawTrends);
+            
+            // Extract chart inputs
+            const labels = trends.map(t => t.month);
+            const inflows = trends.map(t => t.inflow);
+            const outflows = trends.map(t => t.outflow);
+
+            // Fetch Chart.js instance when initialized in admin.js
+            setTimeout(() => {
+              const canvas = document.getElementById('admFeeChart');
+              if (canvas) {
+                const chart = Chart.getChart(canvas);
+                if (chart) {
+                  // Destory and recreate with double dataset (Inflow vs Outflow)
+                  chart.destroy();
+                  
+                  const isDark = document.body.classList.contains('dark-theme');
+                  new Chart(canvas, {
+                    type: 'line',
+                    data: {
+                      labels: labels,
+                      datasets: [
+                        {
+                          label: 'Collections (Inflow)',
+                          data: inflows,
+                          borderColor: '#10b981',
+                          borderWidth: 2,
+                          pointBackgroundColor: '#10b981',
+                          pointRadius: 3,
+                          fill: true,
+                          backgroundColor: 'rgba(16,185,129,0.08)',
+                          tension: 0.4
+                        },
+                        {
+                          label: 'Salaries (Outflow)',
+                          data: outflows,
+                          borderColor: '#ef4444',
+                          borderWidth: 2,
+                          pointBackgroundColor: '#ef4444',
+                          pointRadius: 3,
+                          fill: true,
+                          backgroundColor: 'rgba(239,68,68,0.08)',
+                          tension: 0.4
+                        }
+                      ]
+                    },
+                    options: {
+                      responsive: true,
+                      maintainAspectRatio: false,
+                      plugins: {
+                        legend: { display: true, position: 'top' },
+                        tooltip: {
+                          callbacks: {
+                            label: function(ctx) { return ' Rs. ' + ctx.parsed.y.toLocaleString(); }
+                          }
+                        }
+                      }
+                    }
+                  });
+                }
+              }
+            }, 300); // Small timeout to ensure admin.js runs first
+
+          } catch (e) {
+            console.error('[DYNAMIC CHART ERROR]', e);
+          }
+        });
+      </script>
+
+
+      <!-- ══════════════════════════════════════════════════════════
+           QUICK ACTIONS
+           ══════════════════════════════════════════════════════════ -->
+      <div class="adm-section-label">Administrative Controls</div>
+      <div class="adm-action-grid">
+
+        <a href="/admin/students" class="adm-action-card" aria-label="Add Student">
+          <div class="adm-action-icon grad-blue">
+            <i class="fas fa-user-plus" aria-hidden="true"></i>
+          </div>
+          <span class="adm-action-label">Add Student</span>
+          <span class="adm-action-desc">Register new enrollment</span>
+        </a>
+
+        <a href="/admin/fees" class="adm-action-card" aria-label="Process Fees">
+          <div class="adm-action-icon grad-green">
+            <i class="fas fa-receipt" aria-hidden="true"></i>
+          </div>
+          <span class="adm-action-label">Process Fees</span>
+          <span class="adm-action-desc">Manage fee payments</span>
+        </a>
+
+        <a href="/admin/notices" class="adm-action-card" aria-label="Post Notice">
+          <div class="adm-action-icon grad-amber">
+            <i class="fas fa-bullhorn" aria-hidden="true"></i>
+          </div>
+          <span class="adm-action-label">Post Notice</span>
+          <span class="adm-action-desc">Announce to all portals</span>
+        </a>
+
+        <a href="/admin/library/add" class="adm-action-card" aria-label="Upload Resource">
+          <div class="adm-action-icon grad-teal">
+            <i class="fas fa-book-medical" aria-hidden="true"></i>
+          </div>
+          <span class="adm-action-label">Upload Resource</span>
+          <span class="adm-action-desc">E-Library material</span>
+        </a>
+
+        <a href="/admin/email" class="adm-action-card" aria-label="Send Email">
+          <div class="adm-action-icon grad-indigo">
+            <i class="fas fa-envelope" aria-hidden="true"></i>
+          </div>
+          <span class="adm-action-label">Send Email</span>
+          <span class="adm-action-desc">Email users directly</span>
+        </a>
+
+        <a href="/admin/attendance" class="adm-action-card" aria-label="Mark Attendance">
+          <div class="adm-action-icon grad-purple">
+            <i class="fas fa-calendar-check" aria-hidden="true"></i>
+          </div>
+          <span class="adm-action-label">Attendance</span>
+          <span class="adm-action-desc">Mark daily attendance</span>
+        </a>
+
+      </div>
+
+      <!-- ══════════════════════════════════════════════════════════
+           QR CODE — MOBILE PORTAL ACCESS (utility widget)
+           ══════════════════════════════════════════════════════════ -->
+      <div class="adm-section-label">Mobile Portal Access</div>
+      <div class="adm-card" style="margin-bottom: 2rem;">
+        <div class="adm-qr-widget">
+          <div class="adm-qr-img-wrap">
+            <% if (typeof qrCode !== 'undefined' && qrCode) { %>
+              <img src="<%= qrCode %>" alt="QR Code for mobile login" width="130" height="130">
+            <% } else { %>
+              <div style="width:130px; height:130px; display:flex; align-items:center; justify-content:center; background:var(--adm-bg-canvas); color:var(--adm-text-muted); font-size:0.75rem; text-align:center; border-radius:var(--adm-r-sm);">
+                QR Unavailable
+              </div>
+            <% } %>
+          </div>
+          <div class="adm-qr-info">
+            <h3 class="adm-qr-title">
+              <i class="fas fa-mobile-alt" style="margin-right:0.375rem; color:var(--adm-indigo);" aria-hidden="true"></i>
+              Scan to Login on Mobile
+            </h3>
+            <p class="adm-qr-desc">
+              Scanning this QR code will open the login page on your mobile device with the current
+              campus code (<strong><%= typeof campus !== 'undefined' && campus ? campus.campus_code : 'MAIN' %></strong>) already filled in.
+            </p>
+            <div class="adm-url-chip">
+              <i class="fas fa-link" aria-hidden="true"></i>
+              <span><%= loginUrl %></span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </main>
+  </div>
+
+<%- include('../partials/footer') %>

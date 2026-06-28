@@ -1,169 +1,260 @@
 <%- include('../partials/header') %>
 
-    <div class="admin-layout animate-fade-in" style="margin-top: 80px;">
-        <!-- Sidebar -->
-        <%- include('../partials/sidebar', { active: 'finance' }) %>
+<div class="adm-layout">
+  <%- include('../partials/sidebar', { active: 'finance' }) %>
 
-            <!-- Main Content -->
-            <main class="main-content">
-                <header
-                    style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 3rem;">
-                    <div>
-                        <h2 style="font-size: 2rem; font-weight: 800; color: var(--primary);">Financial Ledger</h2>
-                        <p style="color: var(--text-muted);">Track income, expenses, and audit logs.</p>
-                    </div>
-                    <button class="btn-primary" onclick="document.getElementById('addTransModal').style.display='flex'"
-                        style="padding: 12px 25px; border-radius: 50px; display: flex; align-items: center; gap: 10px;">
-                        <i class="fas fa-plus"></i> Add Transaction
-                    </button>
-                </header>
+  <main class="adm-main" role="main" aria-label="General Ledger & Double Entry Journals">
 
-                <% let totalIncome=0; let totalExpense=0; ledger.forEach(item=> {
-                    if(item.transaction_type === 'income') totalIncome += Number(item.amount);
-                    else totalExpense += Number(item.amount);
-                    });
-                    let balance = totalIncome - totalExpense;
-                    %>
+    <!-- Page Header -->
+    <div class="adm-page-header">
+      <div>
+        <h1 class="adm-page-title">
+          <i class="fas fa-book" style="color: var(--adm-indigo); margin-right: 0.5rem;"></i>
+          General Ledger Accounts
+        </h1>
+        <p class="adm-page-subtitle">Track double-entry accounting transactions, audit ledger entries, and configure ledger reports.</p>
+      </div>
 
-                    <!-- Stats -->
-                    <div class="stat-group animate-slide-up" style="margin-bottom: 2rem;">
-                        <div class="stat-card card">
-                            <div class="stat-icon" style="background: rgba(16, 185, 129, 0.1); color: var(--success);">
-                                <i class="fas fa-arrow-up"></i>
-                            </div>
-                            <div>
-                                <p
-                                    style="color: var(--text-muted); font-size: 0.9rem; font-weight: 600; text-transform: uppercase;">
-                                    Total Income</p>
-                                <h3 style="font-size: 2rem; font-weight: 800; color: var(--primary);">Rs. <%=
-                                        totalIncome.toLocaleString() %>
-                                </h3>
-                            </div>
-                        </div>
-                        <div class="stat-card card">
-                            <div class="stat-icon" style="background: rgba(239, 68, 68, 0.1); color: var(--danger);">
-                                <i class="fas fa-arrow-down"></i>
-                            </div>
-                            <div>
-                                <p
-                                    style="color: var(--text-muted); font-size: 0.9rem; font-weight: 600; text-transform: uppercase;">
-                                    Total Expenses</p>
-                                <h3 style="font-size: 2rem; font-weight: 800; color: var(--primary);">Rs. <%=
-                                        totalExpense.toLocaleString() %>
-                                </h3>
-                            </div>
-                        </div>
-                        <div class="stat-card card">
-                            <div class="stat-icon" style="background: rgba(59, 130, 246, 0.1); color: var(--accent);">
-                                <i class="fas fa-wallet"></i>
-                            </div>
-                            <div>
-                                <p
-                                    style="color: var(--text-muted); font-size: 0.9rem; font-weight: 600; text-transform: uppercase;">
-                                    Net Balance</p>
-                                <h3 style="font-size: 2rem; font-weight: 800; color: var(--primary);">Rs. <%=
-                                        balance.toLocaleString() %>
-                                </h3>
-                            </div>
-                        </div>
-                    </div>
+      <div style="display:flex;gap:0.75rem;align-items:center;">
+        
+        <a href="/admin/accounting" class="adm-btn adm-btn-ghost">
+          <i class="fas fa-file-invoice"></i> Financial Statements
+        </a>
 
-                    <!-- Ledger Table -->
-                    <div class="card animate-slide-up" style="padding: 0; overflow: hidden; animation-delay: 0.2s;">
-                        <div
-                            style="padding: 1.5rem; border-bottom: 1px solid rgba(0,0,0,0.05); background: var(--glass-bg);">
-                            <h3 style="font-weight: 700; color: var(--primary);">Recent Transactions</h3>
-                        </div>
-                        <div style="overflow-x: auto;">
-                            <table style="width: 100%; border-collapse: collapse;">
-                                <thead>
-                                    <tr
-                                        style="background: rgba(0,0,0,0.02); text-align: left; border-bottom: 2px solid rgba(0,0,0,0.05);">
-                                        <th style="padding: 1rem 1.5rem; color: var(--text-muted); font-weight: 600;">
-                                            Date
-                                        </th>
-                                        <th style="padding: 1rem 1.5rem; color: var(--text-muted); font-weight: 600;">
-                                            Description</th>
-                                        <th style="padding: 1rem 1.5rem; color: var(--text-muted); font-weight: 600;">
-                                            Type
-                                        </th>
-                                        <th
-                                            style="padding: 1rem 1.5rem; color: var(--text-muted); font-weight: 600; text-align: right;">
-                                            Amount</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <% ledger.forEach(item=> { %>
-                                        <tr style="border-bottom: 1px solid rgba(0,0,0,0.05); transition: all 0.2s;">
-                                            <td style="padding: 1rem 1.5rem; font-weight: 500;">
-                                                <%= new Date(item.created_at).toLocaleDateString() %>
-                                                    <span style="font-size: 0.8em; color: var(--text-muted);">
-                                                        <%= new Date(item.created_at).toLocaleTimeString() %>
-                                                    </span>
-                                            </td>
-                                            <td style="padding: 1rem 1.5rem; color: var(--text-main);">
-                                                <%= item.description %>
-                                            </td>
-                                            <td style="padding: 1rem 1.5rem;">
-                                                <span
-                                                    style="padding: 5px 12px; border-radius: 20px; font-size: 0.85rem; font-weight: 600; 
-                                    background: <%= item.transaction_type === 'income' ? 'var(--light-success)' : 'var(--light-danger)' %>; 
-                                    color: <%= item.transaction_type === 'income' ? 'var(--success)' : 'var(--danger)' %>;">
-                                                    <%= item.transaction_type.charAt(0).toUpperCase() +
-                                                        item.transaction_type.slice(1) %>
-                                                </span>
-                                            </td>
-                                            <td
-                                                style="padding: 1rem 1.5rem; text-align: right; font-weight: 700; color: var(--primary);">
-                                                <%= item.transaction_type==='income' ? '+' : '-' %> Rs. <%=
-                                                        Number(item.amount).toLocaleString() %>
-                                            </td>
-                                        </tr>
-                                        <% }); %>
-                                            <% if (ledger.length===0) { %>
-                                                <tr>
-                                                    <td colspan="4"
-                                                        style="text-align: center; padding: 2rem; color: var(--text-muted);">
-                                                        No transactions recorded yet.</td>
-                                                </tr>
-                                                <% } %>
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-            </main>
+        <button class="adm-btn adm-btn-primary" onclick="window.openModal('addJournalModal')">
+          <i class="fas fa-plus-circle"></i> Create Journal Entry
+        </button>
+
+      </div>
     </div>
 
-    <!-- Add Transaction Modal -->
-    <div id="addTransModal" class="modal"
-        style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 1000; align-items: center; justify-content: center;">
-        <div class="glass"
-            style="width: 100%; max-width: 500px; padding: 2rem; border-radius: 24px; animation: slideUp 0.3s ease;">
-            <h3 style="margin-bottom: 1.5rem; color: var(--primary);">Record Transaction</h3>
-            <form action="/admin/finance/add" method="POST">
-                <div class="form-group mb-3">
-                    <label>Description</label>
-                    <input type="text" name="description" required class="form-control"
-                        placeholder="e.g. Laboratory Equipment Purchase">
-                </div>
-                <div class="form-group mb-3">
-                    <label>Amount (Rs.)</label>
-                    <input type="number" name="amount" required class="form-control" placeholder="0.00">
-                </div>
-                <div class="form-group mb-4">
-                    <label>Transaction Type</label>
-                    <select name="transaction_type" class="form-control">
-                        <option value="expense">Expense (Debit)</option>
-                        <option value="income">Income (Credit)</option>
-                    </select>
-                </div>
-                <div style="display: flex; gap: 10px; justify-content: flex-end;">
-                    <button type="button" onclick="document.getElementById('addTransModal').style.display='none'"
-                        class="btn" style="background: transparent; color: var(--text-muted);">Cancel</button>
-                    <button type="submit" class="btn-primary">Record</button>
-                </div>
-            </form>
+    <!-- Success / Error alerts -->
+    <% if (query.success) { %>
+      <div class="adm-alert adm-alert-success" style="display:flex;align-items:center;gap:0.75rem;margin-bottom:1.5rem;padding:1rem 1.25rem;background:rgba(16,185,129,0.08);border:1px solid rgba(16,185,129,0.25);border-radius:12px;color:#10b981;font-weight:600;">
+        <i class="fas fa-check-circle"></i>
+        <span>Journal Entry recorded and Chart of Account balances updated!</span>
+      </div>
+    <% } %>
+    <% if (query.error) { %>
+      <div class="adm-alert adm-alert-error" style="display:flex;align-items:center;gap:0.75rem;margin-bottom:1.5rem;padding:1rem 1.25rem;background:rgba(239,68,68,0.08);border:1px solid rgba(239,68,68,0.25);border-radius:12px;color:#ef4444;font-weight:600;">
+        <i class="fas fa-exclamation-triangle"></i>
+        <span>Error: <%= decodeURIComponent(query.error) %></span>
+      </div>
+    <% } %>
+
+    <!-- Search/Filter Bar -->
+    <div class="adm-card" style="margin-bottom:1.5rem;padding:1rem 1.5rem;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:1rem;">
+      <h2 style="font-size:0.95rem;font-weight:800;color:var(--adm-text-primary);margin:0;">
+        <i class="fas fa-history" style="color:var(--adm-indigo);margin-right:0.5rem;"></i>
+        Double-Entry Transaction History
+      </h2>
+      <div style="position:relative;width:260px;">
+        <i class="fas fa-search" style="position:absolute;left:1rem;top:50%;transform:translateY(-50%);color:var(--adm-text-muted);"></i>
+        <input type="text" id="glSearch" placeholder="Search transactions..." class="adm-input" style="padding-left:2.5rem;border-radius:9999px;" onkeyup="filterGLTable()">
+      </div>
+    </div>
+
+    <!-- Journal Entries Timeline -->
+    <div class="adm-card" style="padding:0;overflow:hidden;">
+      <div style="overflow-x:auto;">
+        <table class="adm-table" id="glTable">
+          <thead>
+            <tr>
+              <th>Date</th>
+              <th>Entry Number</th>
+              <th>Description / Reference</th>
+              <th>Account Code & Title</th>
+              <th style="text-align:right;">Debit</th>
+              <th style="text-align:right;">Credit</th>
+            </tr>
+          </thead>
+          <tbody>
+            <% if (entries.length === 0) { %>
+              <tr>
+                <td colspan="6" style="text-align:center;padding:4rem 1rem;">
+                  <div class="adm-empty-state">
+                    <i class="fas fa-receipt adm-empty-icon"></i>
+                    <h3>No Journal Entries</h3>
+                    <p>The general ledger transaction history is currently empty.</p>
+                  </div>
+                </td>
+              </tr>
+            <% } else { %>
+              <% entries.forEach(entry => { %>
+                <% entry.items.forEach((item, index) => { %>
+                  <tr class="gl-row" style="<%= index === 0 ? 'border-top:2px solid var(--adm-border);' : '' %>">
+                    <td>
+                      <% if (index === 0) { %>
+                        <div style="font-weight:700;color:var(--adm-text-primary);"><%= new Date(entry.entry_date).toLocaleDateString() %></div>
+                      <% } %>
+                    </td>
+                    <td>
+                      <% if (index === 0) { %>
+                        <span style="font-family:'JetBrains Mono',monospace;font-weight:700;color:var(--adm-text-primary);"><%= entry.entry_number %></span>
+                      <% } %>
+                    </td>
+                    <td>
+                      <% if (index === 0) { %>
+                        <div style="font-weight:600;color:var(--adm-text-primary);"><%= entry.description %></div>
+                        <% if (entry.reference) { %>
+                          <div style="font-size:0.75rem;color:var(--adm-text-muted);">Ref: <%= entry.reference %></div>
+                        <% } %>
+                        <div style="font-size:0.7rem;color:var(--adm-text-muted);">By: <%= entry.creator_name || 'System' %></div>
+                      <% } %>
+                    </td>
+                    <td>
+                      <div style="font-weight:600;color:var(--adm-text-primary);padding-left:<%= item.credit > 0 ? '1.5rem' : '0' %>">
+                        <span style="font-family:'JetBrains Mono',monospace;color:var(--adm-text-muted);font-size:0.8rem;margin-right:0.5rem;"><%= item.account_code %></span>
+                        <%= item.account_name %>
+                      </div>
+                    </td>
+                    <td style="text-align:right;font-family:'JetBrains Mono',monospace;font-weight:700;color:var(--adm-text-primary);">
+                      <%= item.debit > 0 ? `Rs. ${Number(item.debit).toLocaleString()}` : '—' %>
+                    </td>
+                    <td style="text-align:right;font-family:'JetBrains Mono',monospace;font-weight:700;color:var(--adm-text-primary);">
+                      <%= item.credit > 0 ? `Rs. ${Number(item.credit).toLocaleString()}` : '—' %>
+                    </td>
+                  </tr>
+                <% }); %>
+              <% }); %>
+            <% } %>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+  </main>
+</div>
+
+<!-- Modal: Add Manual Journal Entry -->
+<div id="addJournalModal" class="adm-modal" role="dialog" aria-hidden="true">
+  <div class="adm-modal-content" style="max-width:600px;">
+    <div class="adm-modal-header">
+      <h2 class="adm-modal-title">Record Journal Entry</h2>
+      <button class="adm-modal-close" onclick="window.closeModal('addJournalModal')"><i class="fas fa-times"></i></button>
+    </div>
+    <form action="/admin/finance/add" method="POST" id="journalForm">
+      <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+      <div class="adm-modal-body">
+        
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.75rem;margin-bottom:1rem;">
+          <div class="adm-form-group">
+            <label class="adm-label">Entry Date</label>
+            <input type="date" name="entry_date" class="adm-input" value="<%= new Date().toISOString().split('T')[0] %>" required>
+          </div>
+          <div class="adm-form-group">
+            <label class="adm-label">Reference Number (optional)</label>
+            <input type="text" name="reference" class="adm-input" placeholder="e.g. Invoice / Slip #">
+          </div>
         </div>
-    </div>
 
-    <%- include('../partials/footer') %>
+        <div class="adm-form-group" style="margin-bottom:1.5rem;">
+          <label class="adm-label">Entry Narrative / Description</label>
+          <input type="text" name="description" class="adm-input" placeholder="e.g. Purchase of Lab Glassware" required>
+        </div>
+
+        <!-- Dynamic Debit/Credit lines -->
+        <h3 style="font-size:0.9rem;font-weight:800;margin-bottom:0.75rem;color:var(--adm-text-primary);">Ledger Allocation Lines</h3>
+        
+        <div id="journalLinesContainer">
+          
+          <!-- Line 1 -->
+          <div style="display:grid;grid-template-columns:2fr 1fr 1fr;gap:0.5rem;margin-bottom:0.5rem;" class="journal-line-row">
+            <select name="account_id[]" class="adm-input" required>
+              <option value="">-- Select Account --</option>
+              <% coa.forEach(a => { %>
+                <option value="<%= a.id %>">[<%= a.account_code %>] <%= a.name %> (<%= a.type %>)</option>
+              <% }); %>
+            </select>
+            <input type="number" name="debit[]" class="adm-input deb-input" placeholder="Debit Rs." min="0" step="0.01" onchange="recalcBalances()">
+            <input type="number" name="credit[]" class="adm-input cred-input" placeholder="Credit Rs." min="0" step="0.01" onchange="recalcBalances()">
+          </div>
+
+          <!-- Line 2 -->
+          <div style="display:grid;grid-template-columns:2fr 1fr 1fr;gap:0.5rem;margin-bottom:0.5rem;" class="journal-line-row">
+            <select name="account_id[]" class="adm-input" required>
+              <option value="">-- Select Account --</option>
+              <% coa.forEach(a => { %>
+                <option value="<%= a.id %>">[<%= a.account_code %>] <%= a.name %> (<%= a.type %>)</option>
+              <% }); %>
+            </select>
+            <input type="number" name="debit[]" class="adm-input deb-input" placeholder="Debit Rs." min="0" step="0.01" onchange="recalcBalances()">
+            <input type="number" name="credit[]" class="adm-input cred-input" placeholder="Credit Rs." min="0" step="0.01" onchange="recalcBalances()">
+          </div>
+
+        </div>
+
+        <button type="button" class="adm-btn adm-btn-ghost" style="padding:0.4rem 0.8rem;font-size:0.8rem;margin-bottom:1rem;" onclick="addJournalLineRow()">
+          <i class="fas fa-plus"></i> Add Split Allocation
+        </button>
+
+        <div style="display:flex;justify-content:space-between;background:var(--adm-bg-surface);padding:0.75rem 1rem;border-radius:8px;font-size:0.85rem;font-weight:700;">
+          <span id="balanceCheckMsg" style="color:#ef4444;">Debits must equal Credits.</span>
+          <div>
+            <span style="margin-right:1rem;">Dr: Rs. <span id="sumDebitVal">0</span></span>
+            <span>Cr: Rs. <span id="sumCreditVal">0</span></span>
+          </div>
+        </div>
+
+      </div>
+      <div class="adm-modal-footer">
+        <button type="button" class="adm-btn adm-btn-ghost" onclick="window.closeModal('addJournalModal')">Cancel</button>
+        <button type="submit" class="adm-btn adm-btn-primary" id="journalSubmitBtn" disabled>Post Journal Entry</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<script>
+  function addJournalLineRow() {
+    const container = document.getElementById('journalLinesContainer');
+    const firstRow = container.querySelector('.journal-line-row');
+    const newRow = firstRow.cloneNode(true);
+    
+    // Reset values
+    newRow.querySelector('select').value = "";
+    newRow.querySelectorAll('input').forEach(i => i.value = "");
+    
+    container.appendChild(newRow);
+  }
+
+  function recalcBalances() {
+    const container = document.getElementById('journalLinesContainer');
+    const debInputs = container.querySelectorAll('.deb-input');
+    const credInputs = container.querySelectorAll('.cred-input');
+
+    let sumDebit = 0;
+    let sumCredit = 0;
+
+    debInputs.forEach(i => { sumDebit += parseFloat(i.value || 0); });
+    credInputs.forEach(i => { sumCredit += parseFloat(i.value || 0); });
+
+    document.getElementById('sumDebitVal').innerText = sumDebit.toLocaleString(undefined, {minimumFractionDigits: 2});
+    document.getElementById('sumCreditVal').innerText = sumCredit.toLocaleString(undefined, {minimumFractionDigits: 2});
+
+    const isBalanced = Math.abs(sumDebit - sumCredit) < 0.01 && sumDebit > 0;
+    const msg = document.getElementById('balanceCheckMsg');
+    const btn = document.getElementById('journalSubmitBtn');
+
+    if (isBalanced) {
+      msg.innerText = "✓ Balanced";
+      msg.style.color = "#10b981";
+      btn.removeAttribute('disabled');
+    } else {
+      msg.innerText = "Debits must equal Credits.";
+      msg.style.color = "#ef4444";
+      btn.setAttribute('disabled', 'true');
+    }
+  }
+
+  function filterGLTable() {
+    const val = document.getElementById('glSearch').value.toLowerCase();
+    const rows = document.querySelectorAll('.gl-row');
+    rows.forEach(r => {
+      const text = r.textContent.toLowerCase();
+      r.style.display = text.includes(val) ? "" : "none";
+    });
+  }
+</script>
+
+<%- include('../partials/footer') %>

@@ -1,118 +1,123 @@
 <%- include('../partials/header') %>
 
-    <div class="admin-layout animate-fade-in" style="margin-top: 80px;">
-        <!-- Sidebar -->
-        <!-- Sidebar -->
-        <%- include('../partials/sidebar', { active: 'library' }) %>
+  <!-- ════════════════════════════════════════════════════════════
+       ADMIN LAYOUT
+       ════════════════════════════════════════════════════════════ -->
+  <div class="adm-layout">
 
-            <!-- Main Content -->
-            <main class="main-content">
-                <header
-                    style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 3rem;">
-                    <div>
-                        <h2 style="font-size: 2rem; font-weight: 800; color: var(--primary);">Digital Library</h2>
-                        <p style="color: var(--text-muted);">Manage e-books and study materials</p>
-                    </div>
-                    <!-- Changed to Link -->
-                    <a href="/admin/library/add" class="btn-primary"
-                        style="text-decoration: none; padding: 12px 25px; border-radius: 50px; display: flex; align-items: center; gap: 10px;">
-                        <i class="fas fa-cloud-upload-alt"></i> Upload Resource
-                    </a>
-                </header>
+    <!-- Sidebar -->
+    <%- include('../partials/sidebar', { active: 'library' }) %>
 
-                <!-- Stats -->
-                <div class="stat-group animate-slide-up" style="margin-bottom: 2rem;">
-                    <div class="stat-card card">
-                        <div class="stat-icon" style="background: rgba(59, 130, 246, 0.1); color: var(--accent);">
-                            <i class="fas fa-book"></i>
-                        </div>
-                        <div>
-                            <p
-                                style="color: var(--text-muted); font-size: 0.9rem; font-weight: 600; text-transform: uppercase;">
-                                Total Books</p>
-                            <h3 style="font-size: 2rem; font-weight: 800; color: var(--primary);">
-                                <%= books.length %>
-                            </h3>
-                        </div>
-                    </div>
-                </div>
+    <!-- ══ MAIN CONTENT ══════════════════════════════════════════ -->
+    <main class="adm-main" role="main" aria-label="Digital Library Management">
 
-                <!-- Books Grid -->
-                <div class="grid animate-slide-up"
-                    style="grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 1.5rem;">
-                    <% books.forEach(book=> { %>
-                        <div class="card"
-                            style="padding: 1.5rem; position: relative; border-radius: 16px; transition: var(--transition);">
-                            <div
-                                style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 1rem;">
-                                <% let icon='fa-file-alt' ; let color='#64748b' ; if(book.file_type==='pdf' ) {
-                                    icon='fa-file-pdf' ; color='#ef4444' ; } else if(book.file_type==='word' ) {
-                                    icon='fa-file-word' ; color='#3b82f6' ; } else if(book.file_type==='image' ) {
-                                    icon='fa-file-image' ; color='#10b981' ; } else if(book.file_type==='video' ) {
-                                    icon='fa-file-video' ; color='#8b5cf6' ; } else if(book.file_type==='archive' ) {
-                                    icon='fa-file-archive' ; color='#f59e0b' ; } %>
-                                    <div
-                                        style="width: 50px; height: 50px; border-radius: 12px; background: <%= color %>15; color: <%= color %>; display: flex; align-items: center; justify-content: center; font-size: 1.5rem;">
-                                        <i class="fas <%= icon %>"></i>
-                                    </div>
-                                    <a href="/admin/library/delete/<%= book.id %>"
-                                        onclick="return confirm('Delete this book?')"
-                                        style="color: var(--danger); background: rgba(239,68,68,0.1); padding: 8px; border-radius: 8px;">
-                                        <i class="fas fa-trash"></i>
-                                    </a>
-                            </div>
-                            <h4 style="font-weight: 700; color: var(--primary); margin-bottom: 0.25rem;">
-                                <%= book.title %>
-                            </h4>
-                            <p style="color: var(--text-muted); font-size: 0.9rem; margin-bottom: 0.5rem;">
-                                <i class="fas fa-tag"></i>
-                                <%= book.subject %>
-                            </p>
-                            <% if (typeof isSuperAdmin !=='undefined' && isSuperAdmin && book.campus_name) { %>
-                                <div style="margin-bottom: 1rem;">
-                                    <span
-                                        style="font-size: 0.75rem; font-weight: 700; color: #6366f1; background: #e0e7ff; padding: 4px 10px; border-radius: 50px; border: 1px solid #c7d2fe;">
-                                        <i class="fas fa-building"></i>
-                                        <%= book.campus_name %>
-                                    </span>
-                                </div>
-                                <% } %>
-                                    <div style="margin-bottom: 1rem; display: flex; flex-wrap: wrap; gap: 5px;">
-                                        <span
-                                            style="font-size: 0.75rem; font-weight: 700; color: #3b82f6; background: #eff6ff; padding: 4px 10px; border-radius: 50px; border: 1px solid #dbeafe;">
-                                            <i class="fas fa-users"></i> Target: <%= book.target_grade || 'General' %>
-                                        </span>
-                                        <span
-                                            style="font-size: 0.75rem; font-weight: 700; color: #10b981; background: #ecfdf5; padding: 4px 10px; border-radius: 50px; border: 1px solid #d1fae5;">
-                                            <i class="fas fa-eye"></i> For: <%= String(book.visibility || 'both'
-                                                ).toUpperCase() %>
-                                        </span>
-                                    </div>
+      <!-- ── Page Header ── -->
+      <div class="adm-page-header">
+        <div>
+          <h1 class="adm-page-title">Digital Library</h1>
+          <p class="adm-page-subtitle">Manage e-books, study materials, and academic resources.</p>
+        </div>
+        <div>
+          <a href="/admin/library/add" class="adm-btn adm-btn-primary" style="text-decoration: none;">
+            <i class="fas fa-cloud-upload-alt" aria-hidden="true"></i> Upload Resource
+          </a>
+        </div>
+      </div>
 
-                                    <div style="display: flex; gap: 8px; margin-top: 1rem;">
-                                        <a href="<%= book.file_path %>" target="_blank" class="btn"
-                                            style="flex: 1; text-align: center; background: #f8fafc; color: var(--primary); font-weight: 600; padding: 8px; border: 1px solid #e2e8f0; font-size: 0.8rem; text-decoration: none; border-radius: 8px;">
-                                            <i class="fas fa-eye"></i> View
-                                        </a>
-                                        <a href="<%= book.file_path %>" download="<%= book.title %>" class="btn"
-                                            style="flex: 1; text-align: center; background: var(--accent); color: white; font-weight: 600; padding: 8px; border: none; font-size: 0.8rem; text-decoration: none; border-radius: 8px;">
-                                            <i class="fas fa-download"></i> Download
-                                        </a>
-                                    </div>
-                        </div>
-                        <% }); %>
-                            <% if (books.length===0) { %>
-                                <div
-                                    style="grid-column: 1/-1; text-align: center; padding: 3rem; color: var(--text-muted);">
-                                    <i class="fas fa-book-open" style="font-size: 3rem; opacity: 0.5;"></i>
-                                    <p style="margin-top: 1rem;">No books found in the library.</p>
-                                </div>
-                                <% } %>
-                </div>
+      <!-- ── KPI Cards ── -->
+      <div style="margin-bottom: 2rem;">
+        <article class="adm-kpi-card" style="border-left-color: var(--adm-indigo); max-width: 320px;">
+          <div class="adm-kpi-icon" style="background: var(--adm-indigo-bg); color: var(--adm-indigo);">
+            <i class="fas fa-book-open" aria-hidden="true"></i>
+          </div>
+          <div class="adm-kpi-content">
+            <h3 class="adm-kpi-title">Total Resources</h3>
+            <div class="adm-kpi-value" data-target="<%= books.length %>">
+              <%= books.length %>
+            </div>
+          </div>
+        </article>
+      </div>
 
-            </main>
-    </div>
+      <!-- ── Books Grid ── -->
+      <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 1.5rem;">
+        
+        <% if (books.length === 0) { %>
+          <div style="grid-column: 1 / -1; padding: 4.5rem; text-align: center; color: var(--adm-text-muted); background: var(--adm-bg-surface); border-radius: var(--adm-r-lg); border: 1px dashed var(--adm-border);">
+            <i class="fas fa-books" style="font-size: 3rem; opacity: 0.25; display: block; margin-bottom: 1rem;" aria-hidden="true"></i>
+            <h3 style="color: var(--adm-text-primary); font-weight: 700; margin-bottom: 0.5rem;">Library Empty</h3>
+            <p>Click "Upload Resource" to add your first study material.</p>
+          </div>
+        <% } %>
 
-    <!-- No Modal Needed Anymore -->
+        <% books.forEach(book => { %>
+          <article class="adm-card" style="padding: 1.5rem; display: flex; flex-direction: column;">
+            
+            <!-- Header Icon & Delete -->
+            <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 1rem;">
+              
+              <% 
+                let icon = 'fa-file-alt'; 
+                let iconBg = 'var(--adm-bg-elevated)';
+                let iconColor = 'var(--adm-text-muted)';
+                
+                if (book.file_type === 'pdf') { icon = 'fa-file-pdf'; iconBg = 'var(--adm-red-bg)'; iconColor = 'var(--adm-red)'; } 
+                else if (book.file_type === 'word') { icon = 'fa-file-word'; iconBg = 'var(--adm-blue-bg)'; iconColor = 'var(--adm-blue)'; } 
+                else if (book.file_type === 'image') { icon = 'fa-file-image'; iconBg = 'var(--adm-green-bg)'; iconColor = 'var(--adm-green)'; } 
+                else if (book.file_type === 'video') { icon = 'fa-file-video'; iconBg = 'var(--adm-indigo-bg)'; iconColor = 'var(--adm-indigo)'; } 
+                else if (book.file_type === 'archive') { icon = 'fa-file-archive'; iconBg = 'var(--adm-amber-bg)'; iconColor = 'var(--adm-amber)'; } 
+              %>
+              
+              <div class="adm-avatar" style="width: 48px; height: 48px; border-radius: var(--adm-r-md); background: <%= iconBg %>; color: <%= iconColor %>; font-size: 1.5rem;">
+                <i class="fas <%= icon %>" aria-hidden="true"></i>
+              </div>
+              
+              <a href="/admin/library/delete/<%= book.id %>" onclick="return confirm('Permanently delete this resource from the library?')" class="adm-btn adm-btn-ghost adm-btn-danger" style="padding: 0.5rem; margin: -0.5rem;" aria-label="Delete Resource">
+                <i class="fas fa-trash-alt" aria-hidden="true"></i>
+              </a>
+            </div>
 
-    <%- include('../partials/footer') %>
+            <!-- Title & Subject -->
+            <h3 style="font-size: 1.15rem; font-weight: 800; color: var(--adm-text-primary); margin-bottom: 0.25rem;">
+              <%= book.title %>
+            </h3>
+            <p style="color: var(--adm-text-muted); font-size: 0.9rem; margin-bottom: 1rem; font-weight: 600;">
+              <i class="fas fa-tag" aria-hidden="true" style="margin-right: 0.25rem;"></i> <%= book.subject %>
+            </p>
+
+            <!-- Metadata Badges -->
+            <div style="margin-bottom: 1.5rem; display: flex; flex-wrap: wrap; gap: 0.5rem; flex-grow: 1;">
+              
+              <% if (typeof isSuperAdmin !== 'undefined' && isSuperAdmin && book.campus_name) { %>
+                <span class="adm-badge adm-badge-blue" style="font-size: 0.7rem;">
+                  <i class="fas fa-building" aria-hidden="true" style="margin-right: 0.25rem;"></i> <%= book.campus_name %>
+                </span>
+              <% } %>
+              
+              <span class="adm-badge adm-badge-amber" style="font-size: 0.7rem;">
+                <i class="fas fa-users" aria-hidden="true" style="margin-right: 0.25rem;"></i> Grade: <%= book.target_grade || 'General' %>
+              </span>
+              
+              <span class="adm-badge adm-badge-green" style="font-size: 0.7rem;">
+                <i class="fas fa-eye" aria-hidden="true" style="margin-right: 0.25rem;"></i> For: <%= String(book.visibility || 'both').toUpperCase() %>
+              </span>
+            </div>
+
+            <!-- Action Buttons -->
+            <div style="display: flex; gap: 0.75rem; border-top: 1px solid var(--adm-border); padding-top: 1rem;">
+              <a href="<%= book.file_path %>" target="_blank" class="adm-btn adm-btn-ghost" style="flex: 1; justify-content: center; background: var(--adm-bg-elevated); border: 1px solid var(--adm-border); text-decoration: none;">
+                <i class="fas fa-external-link-alt" aria-hidden="true"></i> View
+              </a>
+              <a href="<%= book.file_path %>" download="<%= book.title %>" class="adm-btn adm-btn-primary" style="flex: 1; justify-content: center; text-decoration: none;">
+                <i class="fas fa-download" aria-hidden="true"></i> DL
+              </a>
+            </div>
+
+          </article>
+        <% }); %>
+
+      </div>
+    </main>
+  </div>
+
+<%- include('../partials/footer') %>

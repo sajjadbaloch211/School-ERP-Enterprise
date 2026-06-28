@@ -1,0 +1,227 @@
+<%- include('partials/header') %>
+
+    <div style="background: #f1f5f9; padding: 3rem 1rem; min-height: 100vh;">
+        <div style="max-width: 800px; margin: 0 auto; background: white; padding: 3rem; border-radius: 20px; box-shadow: 0 20px 50px rgba(0,0,0,0.1); position: relative; overflow: hidden;"
+            id="receiptContent">
+
+            <!-- Watermark -->
+            <div
+                style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%) rotate(-45deg); font-size: 8rem; color: rgba(0,0,0,0.03); font-weight: 900; pointer-events: none; text-transform: uppercase;">
+                MASTER LEDGER
+            </div>
+
+            <!-- Header -->
+            <div
+                style="display: flex; justify-content: space-between; align-items: center; border-bottom: 3px solid var(--primary); padding-bottom: 2rem; margin-bottom: 2rem;">
+                <div style="display: flex; align-items: center; gap: 20px;">
+                    <img src="/images/waqar.png" alt="School Logo"
+                        style="height: 100px; width: 100px; object-fit: contain; border-radius: 15px; border: 2px solid #eee; padding: 5px; background: white;">
+                    <div>
+                        <h1
+                            style="color: var(--primary); font-size: 2rem; font-weight: 900; margin: 0; text-transform: uppercase; letter-spacing: 1px;">
+                            Waqar Public Higher Secondary School</h1>
+                        <p style="color: var(--text-muted); font-weight: 600; margin: 5px 0 0;">Excellence in Education
+                            - Annual Fee Statement</p>
+                    </div>
+                </div>
+                <div style="text-align: right;">
+                    <div
+                        style="background: var(--primary); color: white; padding: 10px 25px; border-radius: 12px; display: inline-block;">
+                        <p
+                            style="margin: 0; font-size: 0.8rem; text-transform: uppercase; font-weight: 700; opacity: 0.8;">
+                            Voucher ID</p>
+                        <h3 style="margin: 0; font-size: 1.5rem; font-weight: 900;">#<%= voucher.id %>
+                        </h3>
+                    </div>
+                    <p style="margin-top: 10px; font-weight: 700; color: var(--text-muted);">Session: <%=
+                            voucher.academic_year %>
+                    </p>
+                </div>
+            </div>
+
+            <!-- Student Bio Area -->
+            <div
+                style="display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; margin-bottom: 3rem; background: #f8fafc; padding: 2rem; border-radius: 20px; border: 1px solid #edf2f7;">
+                <div>
+                    <span
+                        style="display: block; font-size: 0.7rem; color: #64748b; font-weight: 800; text-transform: uppercase;">Student
+                        Name</span>
+                    <span style="font-size: 1.2rem; font-weight: 800; color: var(--primary);">
+                        <%= voucher.full_name %>
+                    </span>
+                </div>
+                <div style="text-align: right;">
+                    <span
+                        style="display: block; font-size: 0.7rem; color: #64748b; font-weight: 800; text-transform: uppercase;">Class
+                        & Roll No</span>
+                    <span style="font-size: 1.2rem; font-weight: 800; color: var(--primary);">
+                        <%= voucher.class_name %> - Roll #<%= voucher.roll_no %>
+                    </span>
+                </div>
+            </div>
+
+            <!-- Account Summary -->
+            <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; margin-bottom: 3rem;">
+                <div style="padding: 1.5rem; background: #eff6ff; border-radius: 15px; text-align: center;">
+                    <p
+                        style="margin: 0; font-size: 0.7rem; font-weight: 800; color: #3b82f6; text-transform: uppercase;">
+                        Total Charged</p>
+                    <h4 style="margin: 5px 0 0; font-weight: 900; color: #1e40af;">RS <%=
+                            voucher.total_charged.toLocaleString() %>
+                    </h4>
+                </div>
+                <div style="padding: 1.5rem; background: #ecfdf5; border-radius: 15px; text-align: center;">
+                    <p
+                        style="margin: 0; font-size: 0.7rem; font-weight: 800; color: #10b981; text-transform: uppercase;">
+                        Total Collected</p>
+                    <h4 style="margin: 5px 0 0; font-weight: 900; color: #065f46;">RS <%=
+                            voucher.total_paid.toLocaleString() %>
+                    </h4>
+                </div>
+                <div style="padding: 1.5rem; background: #fff1f2; border-radius: 15px; text-align: center;">
+                    <p
+                        style="margin: 0; font-size: 0.7rem; font-weight: 800; color: #ef4444; text-transform: uppercase;">
+                        Outstanding</p>
+                    <h4 style="margin: 5px 0 0; font-weight: 900; color: #991b1b;">RS <%=
+                            voucher.remaining_balance.toLocaleString() %>
+                    </h4>
+                </div>
+            </div>
+
+            <!-- Ledger Details -->
+            <div style="margin-bottom: 3rem;">
+                <h3
+                    style="font-weight: 800; margin-bottom: 1.5rem; color: var(--primary); border-left: 5px solid var(--accent); padding-left: 15px;">
+                    Monthly Billing Breakdown</h3>
+                <table style="width: 100%; border-collapse: collapse;">
+                    <thead>
+                        <tr style="background: #f1f5f9;">
+                            <th
+                                style="text-align: left; padding: 15px; font-weight: 800; font-size: 0.8rem; text-transform: uppercase;">
+                                Period</th>
+                            <th
+                                style="text-align: right; padding: 15px; font-weight: 800; font-size: 0.8rem; text-transform: uppercase;">
+                                Amount (RS)</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <% items.forEach(item=> { %>
+                            <tr style="border-bottom: 1px solid #f1f5f9;">
+                                <td style="padding: 15px; font-weight: 700; color: #475569;">
+                                    <%= item.month %>
+                                        <%= item.year %> - Tuition Fee
+                                </td>
+                                <td style="padding: 15px; text-align: right; font-weight: 700; color: #1e293b;">RS <%=
+                                        item.amount.toLocaleString() %>
+                                </td>
+                            </tr>
+                            <% }) %>
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Payment History -->
+            <div style="margin-bottom: 4rem;">
+                <h3
+                    style="font-weight: 800; margin-bottom: 1.5rem; color: var(--primary); border-left: 5px solid #10b981; padding-left: 15px;">
+                    Transaction History</h3>
+                <% if(payments.length> 0) { %>
+                    <table style="width: 100%; border-collapse: collapse;">
+                        <thead>
+                            <tr style="background: #f0fdf4;">
+                                <th style="text-align: left; padding: 12px; font-weight: 800; font-size: 0.75rem;">DATE
+                                </th>
+                                <th style="text-align: left; padding: 12px; font-weight: 800; font-size: 0.75rem;">
+                                    RECEIPT #</th>
+                                <th style="text-align: right; padding: 12px; font-weight: 800; font-size: 0.75rem;">
+                                    AMOUNT</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <% payments.forEach(p=> { %>
+                                <tr style="border-bottom: 1px dashed #e2e8f0;">
+                                    <td style="padding: 12px; font-size: 0.85rem; font-weight: 600;">
+                                        <%= new Date(p.payment_date).toLocaleDateString() %>
+                                    </td>
+                                    <td style="padding: 12px; font-size: 0.85rem; font-weight: 700; color: #64748b;">
+                                        <%= p.receipt_no %>
+                                    </td>
+                                    <td style="padding: 12px; text-align: right; font-weight: 800; color: #10b981;">RS
+                                        <%= p.amount_paid.toLocaleString() %>
+                                    </td>
+                                </tr>
+                                <% }) %>
+                        </tbody>
+                    </table>
+                    <% } else { %>
+                        <p
+                            style="text-align: center; color: var(--text-muted); padding: 2rem; background: #f8fafc; border-radius: 12px;">
+                            No payment transactions recorded yet.</p>
+                        <% } %>
+            </div>
+
+            <!-- Footer / Signatures -->
+            <div style="display: flex; justify-content: space-between; align-items: flex-end; margin-top: 4rem;">
+                <div style="text-align: center; width: 250px;">
+                    <div style="height: 1px; background: #000; margin-bottom: 10px;"></div>
+                    <p style="margin: 0; font-weight: 700; font-size: 0.9rem; color: var(--text-muted);">Parent
+                        Signature</p>
+                </div>
+                <div style="text-align: center;">
+                    <div style="display: flex; flex-direction: column; align-items: center; gap: 10px;">
+                        <img src="/logo.jpg" style="height: 40px; opacity: 0.3; filter: grayscale(1);">
+                        <p style="margin: 0; font-size: 0.8rem; font-weight: 800; color: var(--primary);">Accounts
+                            Department Verified</p>
+                    </div>
+                </div>
+            </div>
+
+            <div style="margin-top: 4rem; text-align: center; border-top: 1px dashed #ddd; padding-top: 2rem;">
+                <p style="color: var(--text-muted); font-size: 0.8rem; font-weight: 600;">
+                    This is a official computer-generated annual statement for Waqar Public Higher Secondary School.
+                    <br>All balances are calculated against the Master Voucher Ledger.
+                </p>
+            </div>
+        </div>
+
+        <!-- Print Control -->
+        <div style="max-width: 800px; margin: 2rem auto; text-align: center;" class="no-print">
+            <button onclick="window.print()" class="btn-primary"
+                style="padding: 15px 40px; border-radius: 50px; font-weight: 800; font-size: 1.1rem; box-shadow: 0 10px 20px rgba(59, 130, 246, 0.3);">
+                <i class="fas fa-print"></i> PRINT OFFICIAL STATEMENT
+            </button>
+            <p style="margin-top: 15px;"><a href="/student/fees"
+                    style="color: var(--text-muted); font-weight: 700; text-decoration: none;">Return to Fees Panel</a>
+            </p>
+        </div>
+    </div>
+
+    <style>
+        @media print {
+            .no-print {
+                display: none !important;
+            }
+
+            body {
+                background: white !important;
+            }
+
+            #receiptContent {
+                box-shadow: none !important;
+                margin: 0 !important;
+                padding: 0 !important;
+                border-radius: 0 !important;
+            }
+
+            main {
+                padding: 0 !important;
+            }
+
+            header,
+            footer {
+                display: none !important;
+            }
+        }
+    </style>
+
+    <%- include('partials/footer') %>

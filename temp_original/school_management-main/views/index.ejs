@@ -1,0 +1,427 @@
+<%- include('partials/header') %>
+
+    <!-- Original Hero Section Structure -->
+    <div class="hero d-flex align-items-center"
+        style="background: url('<%= (typeof settings !== 'undefined' && settings.hero_image) ? settings.hero_image : '/images/school-bg.jpg' %>') no-repeat center center/cover; min-height: 80vh; position: relative;">
+        <div class="overlay"
+            style="background: rgba(0,0,0,0.6); position: absolute; top: 0; left: 0; right: 0; bottom: 0;"></div>
+        <div class="container text-center text-white position-relative z-1" style="padding-top: 80px;">
+            <span class="badge bg-warning text-dark mb-3 px-3 py-2 rounded-pill text-uppercase fw-bold">
+                <%= (typeof settings !=='undefined' && settings.hero_badge) ? settings.hero_badge : 'Welcome' %>
+            </span>
+            <h1 class="display-3 fw-bold mb-4">
+                <%= (typeof settings !=='undefined' && settings.hero_title) ? settings.hero_title
+                    : 'Excellence in Education' %>
+            </h1>
+            <p class="lead mb-5 mx-auto" style="max-width: 700px; font-size: 1.25rem; opacity: 0.9;">
+                <%= (typeof settings !=='undefined' && settings.hero_desc) ? settings.hero_desc
+                    : 'Empowering students to achieve their full potential through holistic learning.' %>
+            </p>
+            <div class="d-flex justify-content-center gap-3">
+                <% if(typeof user !=='undefined' && user) { %>
+                    <a href="/<%= user.role %>/dashboard"
+                        class="btn btn-primary btn-lg px-5 py-3 rounded-pill fw-bold">Dashboard</a>
+                    <% } else { %>
+                        <a href="/login" class="btn btn-primary btn-lg px-5 py-3 rounded-pill fw-bold">Login Portal</a>
+                        <a href="/admissions" class="btn btn-outline-light btn-lg px-5 py-3 rounded-pill fw-bold">Apply
+                            Now</a>
+                        <% } %>
+            </div>
+        </div>
+    </div>
+
+    <!-- Features Section -->
+    <section class="py-5 bg-light">
+        <div class="container">
+            <div class="row text-center">
+                <div class="col-md-4 mb-4">
+                    <div class="card h-100 border-0 shadow-sm p-4 hover-lift">
+                        <div class="icon-box text-primary mb-3">
+                            <i
+                                class="<%= (typeof settings !== 'undefined' && settings.feature1_icon) ? settings.feature1_icon : 'fas fa-book-reader' %> fa-3x"></i>
+                        </div>
+                        <h3 class="h4 fw-bold">
+                            <%= (typeof settings !=='undefined' && settings.feature1_title) ? settings.feature1_title
+                                : 'Academic Excellence' %>
+                        </h3>
+                        <p class="text-muted">
+                            <%= (typeof settings !=='undefined' && settings.feature1_desc) ? settings.feature1_desc
+                                : 'Our curriculum is designed to challenge and inspire students.' %>
+                        </p>
+                    </div>
+                </div>
+                <div class="col-md-4 mb-4">
+                    <div class="card h-100 border-0 shadow-sm p-4 hover-lift">
+                        <div class="icon-box text-success mb-3">
+                            <i
+                                class="<%= (typeof settings !== 'undefined' && settings.feature2_icon) ? settings.feature2_icon : 'fas fa-users' %> fa-3x"></i>
+                        </div>
+                        <h3 class="h4 fw-bold">
+                            <%= (typeof settings !=='undefined' && settings.feature2_title) ? settings.feature2_title
+                                : 'Expert Faculty' %>
+                        </h3>
+                        <p class="text-muted">
+                            <%= (typeof settings !=='undefined' && settings.feature2_desc) ? settings.feature2_desc
+                                : 'Learn from experienced and dedicated educators.' %>
+                        </p>
+                    </div>
+                </div>
+                <div class="col-md-4 mb-4">
+                    <div class="card h-100 border-0 shadow-sm p-4 hover-lift">
+                        <div class="icon-box text-warning mb-3">
+                            <i
+                                class="<%= (typeof settings !== 'undefined' && settings.feature3_icon) ? settings.feature3_icon : 'fas fa-futbol' %> fa-3x"></i>
+                        </div>
+                        <h3 class="h4 fw-bold">
+                            <%= (typeof settings !=='undefined' && settings.feature3_title) ? settings.feature3_title
+                                : 'Sports & Activities' %>
+                        </h3>
+                        <p class="text-muted">
+                            <%= (typeof settings !=='undefined' && settings.feature3_desc) ? settings.feature3_desc
+                                : 'A balanced approach to education with sports and arts.' %>
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Stats Section -->
+    <section class="py-5 bg-primary text-white">
+        <div class="container">
+            <div class="row text-center">
+                <div class="col-md-3 mb-4">
+                    <h2 class="display-4 fw-bold counter">1500+</h2>
+                    <p class="text-white-50">Students</p>
+                </div>
+                <div class="col-md-3 mb-4">
+                    <h2 class="display-4 fw-bold counter">100+</h2>
+                    <p class="text-white-50">Teachers</p>
+                </div>
+                <div class="col-md-3 mb-4">
+                    <h2 class="display-4 fw-bold counter">50+</h2>
+                    <p class="text-white-50">Awards</p>
+                </div>
+                <div class="col-md-3 mb-4">
+                    <h2 class="display-4 fw-bold counter">25+</h2>
+                    <p class="text-white-50">Years</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Notices Section -->
+    <section class="py-5">
+        <div class="container">
+            <div class="text-center mb-5">
+                <h2 class="fw-bold">Latest News & Notices</h2>
+                <p class="text-muted">Keep up with the latest updates from our school</p>
+            </div>
+            <div class="row">
+                <% if (typeof notices !=='undefined' && notices && notices.length> 0) { %>
+                    <% notices.forEach(notice=> { %>
+                        <div class="col-md-4 mb-4">
+                            <div class="card h-100 shadow-sm border-0">
+                                <div class="card-body">
+                                    <div class="badge bg-info mb-2 text-white">
+                                        <%= notice.created_at ? new Date(notice.created_at).toLocaleDateString() : 'New'
+                                            %>
+                                    </div>
+                                    <h5 class="card-title fw-bold">
+                                        <%= notice.title %>
+                                    </h5>
+                                    <p class="card-text text-muted small">
+                                        <%= notice.content.substring(0, 100) %>...
+                                    </p>
+                                    <a href="#" class="btn btn-sm btn-outline-primary mt-3">Read More</a>
+                                </div>
+                            </div>
+                        </div>
+                        <% }); %>
+                            <% } else { %>
+                                <div class="col-12 text-center text-muted">
+                                    <p>No recent notices to display.</p>
+                                </div>
+                                <% } %>
+            </div>
+        </div>
+    </section>
+
+    <%- include('partials/footer') %>
+
+        <!-- HERO SECTION -->
+        <header class="hero-section"
+            style="background-image: url('<%= (typeof settings !== 'undefined' && settings.hero_image) ? settings.hero_image : '/images/award.jpg' %>');">
+            <div class="hero-overlay"></div>
+            <div class="container hero-content">
+                <div class="row align-items-center">
+                    <div class="col-lg-7 animate-up">
+                        <div class="hero-badge">
+                            <i class="fas fa-trophy text-warning"></i>
+                            <%= (typeof settings !=='undefined' && settings.hero_badge) ? settings.hero_badge
+                                : 'Award-Winning Institution' %>
+                        </div>
+                        <h1 class="hero-title">
+                            <%= (typeof settings !=='undefined' && settings.hero_title) ? settings.hero_title
+                                : 'Leading the Way in Academic Excellence' %>
+                        </h1>
+                        <p class="hero-lead">
+                            <%= (typeof settings !=='undefined' && settings.hero_desc) ? settings.hero_desc
+                                : "Empowering the next generation of leaders in Khairpur Mir's with quality education, modern facilities, and a culture of success."
+                                %>
+                        </p>
+                        <div class="d-flex flex-wrap gap-3">
+                            <a href="/login" class="btn btn-login px-4 py-3" style="font-size: 1.1rem;">
+                                <i class="fas fa-rocket me-2"></i> Student Portal
+                            </a>
+                            <a href="/admissions" class="btn btn-outline-light px-4 py-3 rounded-pill fw-bold"
+                                style="font-size: 1.1rem; border-width: 2px;">
+                                <i class="fas fa-graduation-cap me-2"></i> Apply Now
+                            </a>
+                        </div>
+                    </div>
+                    <!-- Optional Right Side Visual (hidden on mobile) -->
+                    <div class="col-lg-5 d-none d-lg-block animate-up delay-200">
+                        <div class="hero-img-wrapper ps-4">
+                            <!-- Using dynamic secondary image if available, else standard fallback -->
+                            <img src="/images/student1.jpg" alt="Student Success" class="img-fluid hero-img">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <!-- NOTICES / EVENTS TICKER (Optional) -->
+        <% if (typeof notices !=='undefined' && notices && notices.length> 0) { %>
+            <div class="bg-dark text-white py-2">
+                <div class="container">
+                    <div class="row align-items-center">
+                        <div class="col-auto">
+                            <span class="badge bg-danger rounded-pill px-3">LATEST NEWS</span>
+                        </div>
+                        <div class="col">
+                            <marquee behavior="scroll" direction="left" class="mb-0">
+                                <% notices.forEach(notice=> { %>
+                                    <span class="me-5"><i class="fas fa-bullhorn text-warning me-2"></i> <strong>
+                                            <%= notice.title %>:
+                                        </strong>
+                                        <%= notice.content %>
+                                    </span>
+                                    <% }); %>
+                            </marquee>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <% } %>
+
+                <!-- FEATURES SECTION -->
+                <section class="section-padding bg-white">
+                    <div class="container">
+                        <div class="text-center mb-5 animate-up">
+                            <span class="section-label">Why Choose Us</span>
+                            <h2 class="section-title">Excellence in <span class="text-gradient">Education</span></h2>
+                            <p class="section-desc">Discover the unique features that make our school the premier choice
+                                for
+                                your child's future.</p>
+                        </div>
+
+                        <div class="row g-4">
+                            <!-- Dynamic Feature 1 -->
+                            <div class="col-md-4 animate-up delay-100">
+                                <div class="card-feature">
+                                    <div class="icon-box">
+                                        <i
+                                            class="<%= (typeof settings !== 'undefined' && settings.feature1_icon) ? settings.feature1_icon : 'fas fa-book-reader' %>"></i>
+                                    </div>
+                                    <h4>
+                                        <%= (typeof settings !=='undefined' && settings.feature1_title) ?
+                                            settings.feature1_title : 'Quality Education' %>
+                                    </h4>
+                                    <p class="text-muted">
+                                        <%= (typeof settings !=='undefined' && settings.feature1_desc) ?
+                                            settings.feature1_desc
+                                            : 'World-class curriculum focused on holistic development.' %>
+                                    </p>
+                                </div>
+                            </div>
+
+                            <!-- Dynamic Feature 2 -->
+                            <div class="col-md-4 animate-up delay-200">
+                                <div class="card-feature">
+                                    <div class="icon-box">
+                                        <i
+                                            class="<%= (typeof settings !== 'undefined' && settings.feature2_icon) ? settings.feature2_icon : 'fas fa-chalkboard-teacher' %>"></i>
+                                    </div>
+                                    <h4>
+                                        <%= (typeof settings !=='undefined' && settings.feature2_title) ?
+                                            settings.feature2_title : 'Expert Faculty' %>
+                                    </h4>
+                                    <p class="text-muted">
+                                        <%= (typeof settings !=='undefined' && settings.feature2_desc) ?
+                                            settings.feature2_desc
+                                            : 'Highly qualified teachers dedicated to student success.' %>
+                                    </p>
+                                </div>
+                            </div>
+
+                            <!-- Dynamic Feature 3 -->
+                            <div class="col-md-4 animate-up delay-300">
+                                <div class="card-feature">
+                                    <div class="icon-box">
+                                        <i
+                                            class="<%= (typeof settings !== 'undefined' && settings.feature3_icon) ? settings.feature3_icon : 'fas fa-futbol' %>"></i>
+                                    </div>
+                                    <h4>
+                                        <%= (typeof settings !=='undefined' && settings.feature3_title) ?
+                                            settings.feature3_title : 'Sports & Activities' %>
+                                    </h4>
+                                    <p class="text-muted">
+                                        <%= (typeof settings !=='undefined' && settings.feature3_desc) ?
+                                            settings.feature3_desc : 'State-of-the-art sports facilities and clubs.' %>
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- STATS SECTION -->
+                <section class="stats-section">
+                    <div class="container">
+                        <div class="row text-center g-4">
+                            <div class="col-6 col-md-3 stat-item">
+                                <h3 class="counter" data-target="1500">0</h3>
+                                <p class="text-white-50 mb-0">Students Enrolled</p>
+                            </div>
+                            <div class="col-6 col-md-3 stat-item">
+                                <h3 class="counter" data-target="80">0</h3>
+                                <p class="text-white-50 mb-0">Expert Teachers</p>
+                            </div>
+                            <div class="col-6 col-md-3 stat-item">
+                                <h3 class="counter" data-target="50">0</h3>
+                                <p class="text-white-50 mb-0">Years of Legacy</p>
+                            </div>
+                            <div class="col-6 col-md-3 stat-item">
+                                <h3 class="counter" data-target="100">0</h3>
+                                <p class="text-white-50 mb-0">% Success Rate</p>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- LATEST NOTICES / EVENTS PREVIEW -->
+                <section class="section-padding bg-light">
+                    <div class="container">
+                        <div class="d-flex flex-wrap justify-content-between align-items-center mb-5 animate-up">
+                            <div>
+                                <span class="section-label">Happenings</span>
+                                <h2 class="section-title mb-0">Latest <span class="text-gradient">Notices</span></h2>
+                            </div>
+                            <a href="/notices" class="btn btn-outline-primary rounded-pill mt-3 mt-md-0">View All</a>
+                        </div>
+
+                        <div class="row g-4">
+                            <% if (typeof notices !=='undefined' && notices && notices.length> 0) { %>
+                                <!-- Show first 3 notices -->
+                                <% notices.slice(0, 3).forEach((notice, index)=> { %>
+                                    <div class="col-md-4 animate-up delay-<%= (index+1)*100 %>">
+                                        <div class="card h-100 border-0 shadow-hover rounded-4 p-4 bg-white">
+                                            <div class="d-flex justify-content-between align-items-center mb-3">
+                                                <span class="badge bg-primary-subtle text-primary rounded-pill px-3">
+                                                    <%= notice.date || 'Active' %>
+                                                </span>
+                                            </div>
+                                            <h4 class="fw-bold mb-3">
+                                                <%= notice.title %>
+                                            </h4>
+                                            <p class="text-muted mb-4">
+                                                <%= notice.content.substring(0, 100) %>...
+                                            </p>
+                                            <a href="/notices"
+                                                class="text-primary fw-bold text-decoration-none stretched-link">Read
+                                                More
+                                                <i class="fas fa-arrow-right ms-1"></i></a>
+                                        </div>
+                                    </div>
+                                    <% }); %>
+                                        <% } else { %>
+                                            <!-- Fallback Content -->
+                                            <div class="col-md-4">
+                                                <div class="card h-100 border-0 shadow-hover rounded-4 p-4 bg-white">
+                                                    <span class="badge bg-warning text-dark rounded-pill w-auto mb-3"
+                                                        style="width: fit-content;">Announcement</span>
+                                                    <h4 class="fw-bold mb-3">Admissions Open 2026</h4>
+                                                    <p class="text-muted">Admissions for the new academic session are
+                                                        now
+                                                        open. Visit the admissions office for more details.</p>
+                                                    <a href="/admissions"
+                                                        class="text-primary fw-bold text-decoration-none">Apply Now <i
+                                                            class="fas fa-arrow-right ms-1"></i></a>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-4">
+                                                <div class="card h-100 border-0 shadow-hover rounded-4 p-4 bg-white">
+                                                    <span class="badge bg-success rounded-pill w-auto mb-3"
+                                                        style="width: fit-content;">Event</span>
+                                                    <h4 class="fw-bold mb-3">Annual Sports Week</h4>
+                                                    <p class="text-muted">Get ready for the biggest sports event of the
+                                                        year! Registration starting soon for all houses.</p>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-4">
+                                                <div class="card h-100 border-0 shadow-hover rounded-4 p-4 bg-white">
+                                                    <span class="badge bg-info text-white rounded-pill w-auto mb-3"
+                                                        style="width: fit-content;">Academic</span>
+                                                    <h4 class="fw-bold mb-3">Parent Teacher Meeting</h4>
+                                                    <p class="text-muted">A mandatory meeting for all parents to discuss
+                                                        student progress is scheduled for this Saturday.</p>
+                                                </div>
+                                            </div>
+                                            <% } %>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- CTA SECTION -->
+                <section class="py-5 bg-primary text-white text-center">
+                    <div class="container py-4 animate-up">
+                        <h2 class="fw-bold mb-3">Ready to Join Us?</h2>
+                        <p class="lead text-white-50 mb-4">Start your journey towards a bright future with Waqar Public
+                            Higher Secondary School.</p>
+                        <a href="/admissions"
+                            class="btn btn-light rounded-pill px-5 py-3 fw-bold text-primary shadow-lg">Apply Online
+                            Now</a>
+                    </div>
+                </section>
+
+                <!-- Counter Script -->
+                <script>
+                    document.addEventListener('DOMContentLoaded', () => {
+                        const counters = document.querySelectorAll('.counter');
+                        const observer = new IntersectionObserver((entries) => {
+                            entries.forEach(entry => {
+                                if (entry.isIntersecting) {
+                                    const counter = entry.target;
+                                    const target = +counter.getAttribute('data-target');
+                                    const inc = target / 50;
+                                    let count = 0;
+                                    const update = () => {
+                                        count += inc;
+                                        if (count < target) {
+                                            counter.innerText = Math.ceil(count);
+                                            setTimeout(update, 30);
+                                        } else {
+                                            counter.innerText = target;
+                                        }
+                                    };
+                                    update();
+                                    observer.unobserve(counter);
+                                }
+                            });
+                        });
+                        counters.forEach(c => observer.observe(c));
+                    });
+                </script>
+
+                <%- include('partials/frontend_footer') %>

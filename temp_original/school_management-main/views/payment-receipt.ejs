@@ -1,0 +1,130 @@
+<%- include('partials/header') %>
+
+    <div style="background: #f1f5f9; padding: 3rem 1rem; min-height: 100vh;">
+        <div
+            style="max-width: 700px; margin: 0 auto; background: white; padding: 3rem; border-radius: 20px; box-shadow: 0 20px 50px rgba(0,0,0,0.1); border-top: 10px solid #10b981;">
+
+            <div style="text-align: center; margin-bottom: 2rem;">
+                <img src="/logo.jpg" alt="Logo" style="height: 80px; border-radius: 10px; margin-bottom: 1rem;">
+                <h1
+                    style="color: var(--primary); font-size: 1.8rem; font-weight: 900; margin: 0; text-transform: uppercase;">
+                    Waqar Public Higher Secondary School</h1>
+                <p style="color: #10b981; font-weight: 800; font-size: 1.1rem; margin-top: 5px;">PAYMENT TRANSACTION
+                    RECEIPT</p>
+            </div>
+
+            <div
+                style="background: #f8fafc; padding: 2rem; border-radius: 15px; border: 1px solid #e2e8f0; margin-bottom: 2rem; display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+                <div>
+                    <span
+                        style="display: block; font-size: 0.7rem; color: #64748b; font-weight: 800; text-transform: uppercase;">Receipt
+                        Number</span>
+                    <span style="font-size: 1.1rem; font-weight: 800; color: var(--text-main);">
+                        <%= payment.receipt_no %>
+                    </span>
+                </div>
+                <div style="text-align: right;">
+                    <span
+                        style="display: block; font-size: 0.7rem; color: #64748b; font-weight: 800; text-transform: uppercase;">Payment
+                        Date</span>
+                    <span style="font-size: 1.1rem; font-weight: 800; color: var(--text-main);">
+                        <%= new Date(payment.payment_date).toLocaleString() %>
+                    </span>
+                </div>
+                <div>
+                    <span
+                        style="display: block; font-size: 0.7rem; color: #64748b; font-weight: 800; text-transform: uppercase;">Student
+                        Name</span>
+                    <span style="font-size: 1.1rem; font-weight: 800; color: var(--text-main);">
+                        <%= payment.full_name %>
+                    </span>
+                </div>
+                <div style="text-align: right;">
+                    <span
+                        style="display: block; font-size: 0.7rem; color: #64748b; font-weight: 800; text-transform: uppercase;">Class
+                        / Roll No</span>
+                    <span style="font-size: 1.1rem; font-weight: 800; color: var(--text-main);">
+                        <%= payment.class_name %> - <%= payment.roll_no %>
+                    </span>
+                </div>
+            </div>
+
+            <table style="width: 100%; border-collapse: collapse; margin-bottom: 2rem;">
+                <thead style="background: #f1f5f9;">
+                    <tr>
+                        <th style="padding: 15px; text-align: left; font-weight: 800;">Description</th>
+                        <th style="padding: 15px; text-align: right; font-weight: 800;">Amount</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td style="padding: 15px; border-bottom: 1px solid #f1f5f9; font-weight: 700;">
+                            Payment for <%= payment.month %>
+                                <%= payment.year %> Fees
+                                    <br><small style="color: #64748b;">Method: <%= payment.payment_method %></small>
+                        </td>
+                        <td
+                            style="padding: 15px; border-bottom: 1px solid #f1f5f9; text-align: right; font-weight: 900; font-size: 1.2rem; color: #10b981;">
+                            RS <%= payment.amount_paid %>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <div
+                style="background: #fff1f2; padding: 1.5rem; border-radius: 12px; display: flex; justify-content: space-between; align-items: center;">
+                <span style="font-weight: 800; color: #e11d48; text-transform: uppercase; font-size: 0.8rem;">Remaining
+                    Balance for this Month</span>
+                <span style="font-size: 1.3rem; font-weight: 900; color: #e11d48;">RS <%= payment.remaining_amount %>
+                        </span>
+            </div>
+
+            <div style="margin-top: 3rem; display: flex; justify-content: space-between; align-items: flex-end;">
+                <div style="text-align: center; width: 200px;">
+                    <div style="height: 1px; background: #ddd; margin-bottom: 10px;"></div>
+                    <p style="font-size: 0.7rem; font-weight: 700; color: #64748b;">Depositor Signature</p>
+                </div>
+                <div style="text-align: center; width: 200px;">
+                    <div style="height: 12px; font-weight: 900; color: var(--primary); margin-bottom: 5px;">Accounts
+                        Dept</div>
+                    <div style="height: 1px; background: #ddd; margin-bottom: 10px;"></div>
+                    <p style="font-size: 0.7rem; font-weight: 700; color: #64748b;">System Verified Signature</p>
+                </div>
+            </div>
+
+            <div style="margin-top: 3rem; text-align: center; font-size: 0.7rem; color: #94a3b8; font-weight: 600;">
+                Waqar Public Higher Secondary School - Automated Billing Receipt
+                <br>This is a legal document of payment acknowledgment.
+            </div>
+        </div>
+
+        <div style="max-width: 700px; margin: 2rem auto; text-align: center;" class="no-print">
+            <button onclick="window.print()" class="btn-primary"
+                style="padding: 15px 30px; border-radius: 50px; font-weight: 800;">PRINT TRANSACTION RECEIPT</button>
+            <p style="margin-top: 15px;"><a href="/admin/fees"
+                    style="text-decoration: none; font-weight: 700; color: #64748b;">Back to Finance Ledger</a></p>
+        </div>
+    </div>
+
+    <style>
+        @media print {
+            .no-print {
+                display: none !important;
+            }
+
+            body {
+                background: white !important;
+            }
+
+            main {
+                padding: 0 !important;
+            }
+
+            header,
+            footer {
+                display: none !important;
+            }
+        }
+    </style>
+
+    <%- include('partials/footer') %>

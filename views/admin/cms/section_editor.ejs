@@ -1,123 +1,308 @@
 <%- include('../../partials/header') %>
-    <div class="admin-layout animate-fade-in" style="margin-top: 80px;">
-        <%- include('../../partials/sidebar', { active: 'cms' }) %>
+<div class="admin-layout" style="margin-top: 80px;">
+    <%- include('../../partials/sidebar', { active: 'cms' }) %>
 
-            <main class="main-content">
-                <div style="margin-bottom: 2rem;">
-                    <a href="/admin/cms/pages/edit/<%= section.page_id %>"
-                        style="color: var(--text-muted); text-decoration: none; font-weight: 600;">
-                        <i class="fas fa-arrow-left"></i> Back to Sections
-                    </a>
-                    <h1 style="font-size: 2rem; color: var(--primary); font-weight: 800; margin-top: 1rem;">
-                        Edit Section: <span style="color: var(--secondary);">
-                            <%= section.section_name %>
-                        </span>
-                    </h1>
+    <main class="main-content">
+
+        <!-- TOP BAR -->
+        <div style="display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:1rem; margin-bottom:2rem;">
+            <div>
+                <a href="/admin/cms/pages/edit/<%= section.page_id %>"
+                    style="color:var(--text-muted); text-decoration:none; font-size:0.85rem; font-weight:600;">
+                    <i class="fas fa-arrow-left"></i> Back to Page Sections
+                </a>
+                <h1 style="font-size:1.75rem; font-weight:800; margin-top:0.5rem; color:var(--primary);">
+                    ✏️ Editing: <span style="color:var(--secondary);"><%= section.section_name %></span>
+                </h1>
+                <p style="color:var(--text-muted); font-size:0.85rem; margin:0;">
+                    Section Type: <strong style="text-transform:uppercase; background:#f1f5f9; padding:2px 8px; border-radius:6px;"><%= section.section_type %></strong>
+                </p>
+            </div>
+            <a href="/<%= section.page_id %>" target="_blank" 
+               style="background:var(--indigo); color:white; padding:10px 20px; border-radius:10px; text-decoration:none; font-weight:700; font-size:0.85rem;">
+               <i class="fas fa-eye"></i> Preview Live Page
+            </a>
+        </div>
+
+        <!-- MAIN EDITOR FORM -->
+        <form action="/admin/cms/sections/update/<%= section.id %>" method="POST" enctype="multipart/form-data" id="sectionForm">
+            <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+
+            <!-- ═══════════════════════════════════════════════════════
+                 HERO SECTION EDITOR
+                 ═══════════════════════════════════════════════════════ -->
+            <% if (section.section_type === 'hero') { %>
+            
+            <div class="adm-card" style="margin-bottom:1.5rem;">
+                <div class="adm-card-header">
+                    <div>
+                        <div class="adm-card-title">🏠 Hero Banner — Main Text & Image</div>
+                        <div class="adm-card-subtitle">The large banner at the top of your page</div>
+                    </div>
                 </div>
+                <div class="adm-card-body" style="display:grid; gap:1.5rem;">
 
-                <div class="card" style="padding: 2rem;">
-                    <form action="/admin/cms/sections/update/<%= section.id %>" method="POST"
-                        enctype="multipart/form-data">
-                        <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+                    <div class="adm-form-group">
+                        <label class="adm-label">🔤 Main Headline (Big Title)</label>
+                        <input type="text" name="headline" class="adm-input" 
+                               value="<%= section.content.headline || section.content.heading || '' %>"
+                               placeholder="e.g. Welcome to Our School">
+                        <small style="color:var(--text-muted);">This is the biggest text visitors see first.</small>
+                    </div>
 
-                        <!-- HERO SECTION FORM -->
-                        <% if (section.section_type==='hero' ) { %>
-                            <div class="form-group">
-                                <label>Main Heading</label>
-                                <input type="text" name="heading" class="form-control"
-                                    value="<%= section.content.heading %>">
-                            </div>
-                            <div class="form-group">
-                                <label>Subheading / Description</label>
-                                <textarea name="subheading" class="form-control"
-                                    rows="3"><%= section.content.subheading %></textarea>
-                            </div>
-                            <div class="form-group">
-                                <label>CTA Button Text</label>
-                                <input type="text" name="cta_text" class="form-control"
-                                    value="<%= section.content.cta_text || '' %>">
-                            </div>
-                            <!-- Image Upload -->
-                            <div class="form-group">
-                                <label>Hero Image</label>
-                                <% if (section.content.image) { %>
-                                    <div style="margin-bottom: 10px;">
-                                        <img src="<%= section.content.image %>"
-                                            style="width: 150px; border-radius: 8px;">
-                                    </div>
-                                    <% } %>
-                                        <input type="file" name="image" class="form-control" accept="image/*">
-                            </div>
+                    <div class="adm-form-group">
+                        <label class="adm-label">📝 Subheadline (Smaller text below title)</label>
+                        <textarea name="subheadline" class="adm-input" rows="3"
+                                  placeholder="e.g. Empowering future leaders with quality education"><%= section.content.subheadline || section.content.subheading || '' %></textarea>
+                    </div>
 
-                            <!-- STATS SECTION FORM -->
-                            <% } else if (section.section_type==='stats' ) { %>
-                                <div class="alert alert-info">
-                                    Update the numbers and labels for your stats counters.
+                    <div style="display:grid; grid-template-columns:1fr 1fr; gap:1.5rem;">
+                        <div class="adm-form-group">
+                            <label class="adm-label">🟦 Primary Button Text</label>
+                            <input type="text" name="primary_cta_text" class="adm-input"
+                                   value="<%= section.content.primary_cta_text || section.content.cta_text || '' %>"
+                                   placeholder="e.g. Apply for Admission">
+                        </div>
+                        <div class="adm-form-group">
+                            <label class="adm-label">🔗 Primary Button Link (URL)</label>
+                            <input type="text" name="primary_cta_link" class="adm-input"
+                                   value="<%= section.content.primary_cta_link || section.content.cta_link || '' %>"
+                                   placeholder="e.g. /admissions">
+                        </div>
+                        <div class="adm-form-group">
+                            <label class="adm-label">⬜ Secondary Button Text</label>
+                            <input type="text" name="secondary_cta_text" class="adm-input"
+                                   value="<%= section.content.secondary_cta_text || '' %>"
+                                   placeholder="e.g. Learn More">
+                        </div>
+                        <div class="adm-form-group">
+                            <label class="adm-label">🔗 Secondary Button Link</label>
+                            <input type="text" name="secondary_cta_link" class="adm-input"
+                                   value="<%= section.content.secondary_cta_link || '' %>"
+                                   placeholder="e.g. /about">
+                        </div>
+                    </div>
+
+                    <div class="adm-form-group">
+                        <label class="adm-label">🖼️ Hero Image</label>
+                        <% if (section.content.image_url || section.content.image) { %>
+                            <div style="margin-bottom:1rem; display:flex; align-items:center; gap:1rem; padding:1rem; background:#f8fafc; border-radius:12px; border:1px solid #e2e8f0;">
+                                <img src="<%= section.content.image_url || section.content.image %>" 
+                                     style="height:80px; width:120px; object-fit:cover; border-radius:8px;">
+                                <div>
+                                    <p style="font-weight:700; font-size:0.85rem; margin:0 0 4px;">Current Image</p>
+                                    <p style="color:var(--text-muted); font-size:0.8rem; margin:0;">Upload a new one below to replace it.</p>
                                 </div>
-                                <% section.content.items.forEach((item, i)=> { %>
-                                    <div
-                                        style="background: #f8fafc; padding: 15px; margin-bottom: 10px; border-radius: 8px; border: 1px solid #e2e8f0;">
-                                        <h4 style="margin-bottom: 10px; font-size: 0.9rem; color: var(--text-muted);">
-                                            Stat #<%= i + 1 %>
-                                        </h4>
-                                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
-                                            <div class="form-group" style="margin-bottom: 0;">
-                                                <label>Number (Target)</label>
-                                                <input type="text" name="stats[<%= i %>][number]" class="form-control"
-                                                    value="<%= item.number %>">
-                                            </div>
-                                            <div class="form-group" style="margin-bottom: 0;">
-                                                <label>Label</label>
-                                                <input type="text" name="stats[<%= i %>][label]" class="form-control"
-                                                    value="<%= item.label %>">
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <% }) %>
-
-                                        <!-- GENERIC CONTENT/FEATURES/GALLERY FORM -->
-                                        <% } else if (section.section_type==='content' ||
-                                            section.section_type==='features' || section.section_type==='gallery' ) { %>
-                                            <div class="form-group">
-                                                <label>Section Title</label>
-                                                <input type="text" name="title" class="form-control"
-                                                    value="<%= section.content.title %>">
-                                            </div>
-                                            <% if (section.content.description !==undefined) { %>
-                                                <div class="form-group">
-                                                    <label>Description</label>
-                                                    <textarea name="description" class="form-control"
-                                                        rows="3"><%= section.content.description %></textarea>
-                                                </div>
-                                                <% } %>
-
-                                                    <% if (section.section_type==='content' ) { %>
-                                                        <div class="form-group">
-                                                            <label>Body Content (HTML allowed)</label>
-                                                            <textarea name="body" class="form-control"
-                                                                rows="10"><%= section.content.body %></textarea>
-                                                        </div>
-                                                        <% } %>
-
-                                                            <% } else { %>
-                                                                <div class="alert alert-warning">
-                                                                    This section type (<%= section.section_type %>) uses
-                                                                        complex
-                                                                        data
-                                                                        structures. Please ask an admin to edit the raw
-                                                                        JSON if
-                                                                        needed.
-                                                                </div>
-                                                                <% } %>
-
-                                                                    <button type="submit" class="btn-primary"
-                                                                        style="margin-top: 2rem; width: 100%;">Save
-                                                                        Changes</button>
-                    </form>
+                            </div>
+                        <% } %>
+                        <input type="file" name="image" class="adm-input" accept="image/*" 
+                               style="padding:0.5rem;">
+                        <small style="color:var(--text-muted);">OR paste an image URL below:</small>
+                        <input type="text" name="image_url" class="adm-input" style="margin-top:0.5rem;"
+                               value="<%= section.content.image_url || '' %>"
+                               placeholder="https://example.com/image.jpg">
+                    </div>
                 </div>
-            </main>
+            </div>
 
-    </div>
-    </body>
+            <!-- ═══════════════════════════════════════════════════════
+                 FEATURES SECTION EDITOR
+                 ═══════════════════════════════════════════════════════ -->
+            <% } else if (section.section_type === 'features') { %>
 
-    </html>
+            <div class="adm-card" style="margin-bottom:1.5rem;">
+                <div class="adm-card-header">
+                    <div>
+                        <div class="adm-card-title">⭐ Features Grid — Section Title & Cards</div>
+                        <div class="adm-card-subtitle">Edit the main title and each feature card below</div>
+                    </div>
+                </div>
+                <div class="adm-card-body" style="display:grid; gap:1.5rem;">
+                    <div style="display:grid; grid-template-columns:1fr 1fr; gap:1.5rem;">
+                        <div class="adm-form-group">
+                            <label class="adm-label">📌 Section Title</label>
+                            <input type="text" name="title" class="adm-input"
+                                   value="<%= section.content.title || '' %>"
+                                   placeholder="e.g. Why Choose Us?">
+                        </div>
+                        <div class="adm-form-group">
+                            <label class="adm-label">📝 Section Subtitle</label>
+                            <input type="text" name="subtitle" class="adm-input"
+                                   value="<%= section.content.subtitle || section.content.description || '' %>"
+                                   placeholder="e.g. We provide world-class education">
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Feature Cards -->
+            <% const featureItems = section.content.items || []; %>
+            <% featureItems.forEach((item, i) => { %>
+            <div class="adm-card" style="margin-bottom:1rem; border-left:4px solid var(--indigo);">
+                <div class="adm-card-header">
+                    <div class="adm-card-title">📦 Feature Card #<%= i + 1 %></div>
+                </div>
+                <div class="adm-card-body" style="display:grid; grid-template-columns:1fr 1fr 1fr; gap:1.25rem;">
+                    <div class="adm-form-group">
+                        <label class="adm-label">📌 Card Title</label>
+                        <input type="text" name="feature_title_<%= i %>" class="adm-input"
+                               value="<%= item.title || '' %>"
+                               placeholder="e.g. Expert Faculty">
+                    </div>
+                    <div class="adm-form-group">
+                        <label class="adm-label">📝 Card Description</label>
+                        <input type="text" name="feature_desc_<%= i %>" class="adm-input"
+                               value="<%= item.description || item.text || '' %>"
+                               placeholder="e.g. Highly qualified teachers">
+                    </div>
+                    <div class="adm-form-group">
+                        <label class="adm-label">🎨 Icon (Font Awesome class)</label>
+                        <div style="display:flex; gap:0.5rem; align-items:center;">
+                            <input type="text" name="feature_icon_<%= i %>" class="adm-input"
+                                   value="<%= item.icon || 'fas fa-star' %>"
+                                   placeholder="fas fa-star">
+                            <i class="<%= item.icon || 'fas fa-star' %>" 
+                               style="font-size:1.5rem; color:var(--indigo); flex-shrink:0;"></i>
+                        </div>
+                        <small style="color:var(--text-muted);">
+                            Find icons at <a href="https://fontawesome.com/icons" target="_blank" style="color:var(--indigo);">fontawesome.com/icons</a>
+                        </small>
+                    </div>
+                </div>
+            </div>
+            <% }); %>
+
+            <!-- Add more feature cards -->
+            <div class="adm-card" style="border:2px dashed #cbd5e1; background:#f8fafc; margin-bottom:1.5rem;">
+                <div class="adm-card-body" style="text-align:center; padding:1.5rem;">
+                    <p style="color:var(--text-muted); margin:0; font-size:0.9rem;">
+                        <i class="fas fa-info-circle"></i>
+                        To add or remove feature cards, save first, then use the page editor to delete/add sections.
+                    </p>
+                </div>
+            </div>
+
+            <!-- ═══════════════════════════════════════════════════════
+                 STATS SECTION EDITOR
+                 ═══════════════════════════════════════════════════════ -->
+            <% } else if (section.section_type === 'stats') { %>
+
+            <div class="adm-card" style="margin-bottom:1.5rem;">
+                <div class="adm-card-header">
+                    <div class="adm-card-title">📊 Stats Counter — Numbers & Labels</div>
+                    <div class="adm-card-subtitle">Edit each number and its label</div>
+                </div>
+                <div class="adm-card-body" style="display:grid; gap:1rem;">
+                    <% const statsItems = section.content.items || []; %>
+                    <% statsItems.forEach((item, i) => { %>
+                    <div style="display:grid; grid-template-columns:1fr 1fr; gap:1rem; padding:1rem; background:#f8fafc; border-radius:12px; border:1px solid #e2e8f0;">
+                        <div class="adm-form-group" style="margin:0;">
+                            <label class="adm-label">🔢 Number (e.g. 1000 or 100%)</label>
+                            <input type="text" name="stats[<%= i %>][number]" class="adm-input"
+                                   value="<%= item.number || '' %>"
+                                   placeholder="e.g. 1000">
+                        </div>
+                        <div class="adm-form-group" style="margin:0;">
+                            <label class="adm-label">🏷️ Label (e.g. Students)</label>
+                            <input type="text" name="stats[<%= i %>][label]" class="adm-input"
+                                   value="<%= item.label || '' %>"
+                                   placeholder="e.g. Students Enrolled">
+                        </div>
+                    </div>
+                    <% }); %>
+                </div>
+            </div>
+
+            <!-- ═══════════════════════════════════════════════════════
+                 TEXT / CONTENT SECTION EDITOR
+                 ═══════════════════════════════════════════════════════ -->
+            <% } else if (section.section_type === 'text' || section.section_type === 'content') { %>
+
+            <div class="adm-card" style="margin-bottom:1.5rem;">
+                <div class="adm-card-header">
+                    <div class="adm-card-title">📄 Text Block — Title & Body Content</div>
+                    <div class="adm-card-subtitle">Edit the title and main body text of this section</div>
+                </div>
+                <div class="adm-card-body" style="display:grid; gap:1.5rem;">
+                    <div class="adm-form-group">
+                        <label class="adm-label">📌 Section Title</label>
+                        <input type="text" name="title" class="adm-input"
+                               value="<%= section.content.title || '' %>"
+                               placeholder="e.g. About Our School">
+                    </div>
+                    <div class="adm-form-group">
+                        <label class="adm-label">📝 Body Content</label>
+                        <textarea name="body" id="richEditor" class="adm-input" rows="12"
+                                  placeholder="Write your content here..."><%= section.content.body || '' %></textarea>
+                        <small style="color:var(--text-muted);">You can use HTML tags like &lt;b&gt;bold&lt;/b&gt;, &lt;br&gt; for line break.</small>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ═══════════════════════════════════════════════════════
+                 GALLERY SECTION EDITOR
+                 ═══════════════════════════════════════════════════════ -->
+            <% } else if (section.section_type === 'gallery') { %>
+
+            <div class="adm-card" style="margin-bottom:1.5rem;">
+                <div class="adm-card-header">
+                    <div class="adm-card-title">🖼️ Gallery — Title & Images</div>
+                </div>
+                <div class="adm-card-body" style="display:grid; gap:1.5rem;">
+                    <div class="adm-form-group">
+                        <label class="adm-label">📌 Gallery Title</label>
+                        <input type="text" name="title" class="adm-input"
+                               value="<%= section.content.title || '' %>"
+                               placeholder="e.g. School Gallery">
+                    </div>
+                    <% const galleryImages = section.content.images || []; %>
+                    <% galleryImages.forEach((img, i) => { %>
+                    <div style="display:grid; grid-template-columns:120px 1fr; gap:1rem; align-items:center; background:#f8fafc; padding:1rem; border-radius:12px; border:1px solid #e2e8f0;">
+                        <img src="<%= img.url || img %>" style="width:120px; height:80px; object-fit:cover; border-radius:8px;">
+                        <div class="adm-form-group" style="margin:0;">
+                            <label class="adm-label">Image URL</label>
+                            <input type="text" name="gallery_url_<%= i %>" class="adm-input"
+                                   value="<%= img.url || img %>"
+                                   placeholder="https://...">
+                        </div>
+                    </div>
+                    <% }); %>
+                    <div class="adm-form-group">
+                        <label class="adm-label">➕ Add New Image URL</label>
+                        <input type="text" name="new_gallery_url" class="adm-input"
+                               placeholder="https://example.com/photo.jpg">
+                    </div>
+                </div>
+            </div>
+
+            <% } else { %>
+            <!-- UNKNOWN / CUSTOM SECTION -->
+            <div class="adm-card" style="margin-bottom:1.5rem; border-left:4px solid var(--amber);">
+                <div class="adm-card-body">
+                    <h3 style="color:var(--amber);"><i class="fas fa-exclamation-triangle"></i> Custom Section Type: <%= section.section_type %></h3>
+                    <p style="color:var(--text-muted);">Edit the raw JSON content below:</p>
+                    <textarea name="raw_json" class="adm-input" rows="15"><%= JSON.stringify(section.content, null, 2) %></textarea>
+                </div>
+            </div>
+            <% } %>
+
+            <!-- SAVE BUTTON -->
+            <div class="adm-card" style="position:sticky; bottom:1rem; z-index:100;">
+                <div class="adm-card-body" style="display:flex; gap:1rem; align-items:center; justify-content:space-between; padding:1.25rem 1.5rem;">
+                    <p style="color:var(--text-muted); margin:0; font-size:0.85rem;">
+                        <i class="fas fa-info-circle"></i> All changes will go live on the website immediately after saving.
+                    </p>
+                    <div style="display:flex; gap:1rem;">
+                        <a href="/admin/cms/pages/edit/<%= section.page_id %>" class="adm-btn adm-btn-ghost">Cancel</a>
+                        <button type="submit" class="adm-btn adm-btn-primary" style="min-width:160px;">
+                            <i class="fas fa-save"></i> Save Changes
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+        </form>
+    </main>
+</div>
+</body>
+</html>

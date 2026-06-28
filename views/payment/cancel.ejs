@@ -1,0 +1,133 @@
+<%- include('../partials/header') %>
+
+<style>
+  .payment-page {
+    min-height: 100vh;
+    background: linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #0f172a 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Inter', sans-serif;
+    padding: 2rem;
+  }
+
+  .payment-card {
+    background: rgba(255,255,255,0.04);
+    backdrop-filter: blur(20px);
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 24px;
+    padding: 3rem;
+    text-align: center;
+    max-width: 480px;
+    width: 100%;
+    animation: fadeSlideUp 0.6s cubic-bezier(0.16,1,0.3,1) both;
+  }
+
+  @keyframes fadeSlideUp {
+    from { opacity: 0; transform: translateY(40px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  .cancel-icon-ring {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    background: rgba(239,68,68,0.12);
+    border: 2px solid rgba(239,68,68,0.35);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 1.75rem;
+  }
+
+  .cancel-icon-ring i {
+    font-size: 2.75rem;
+    color: #ef4444;
+  }
+
+  .payment-title {
+    font-size: 1.9rem;
+    font-weight: 800;
+    color: #f8fafc;
+    margin-bottom: 0.5rem;
+    letter-spacing: -0.5px;
+  }
+
+  .payment-subtitle {
+    font-size: 1rem;
+    color: rgba(255,255,255,0.5);
+    line-height: 1.6;
+    margin-bottom: 2.5rem;
+  }
+
+  .btn-retry {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    background: linear-gradient(135deg, #ef4444, #dc2626);
+    color: #fff;
+    font-weight: 700;
+    font-size: 0.95rem;
+    padding: 0.85rem 2rem;
+    border-radius: 12px;
+    text-decoration: none;
+    transition: all 0.2s;
+    box-shadow: 0 8px 24px rgba(239,68,68,0.3);
+    margin-right: 0.75rem;
+  }
+
+  .btn-retry:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 12px 32px rgba(239,68,68,0.45);
+    color: #fff;
+    text-decoration: none;
+  }
+
+  .btn-ghost {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    background: rgba(255,255,255,0.06);
+    border: 1px solid rgba(255,255,255,0.12);
+    color: rgba(255,255,255,0.7);
+    font-weight: 600;
+    font-size: 0.95rem;
+    padding: 0.85rem 2rem;
+    border-radius: 12px;
+    text-decoration: none;
+    transition: all 0.2s;
+  }
+
+  .btn-ghost:hover {
+    background: rgba(255,255,255,0.1);
+    color: #fff;
+    text-decoration: none;
+  }
+</style>
+
+<div class="payment-page">
+  <div class="payment-card">
+    <div class="cancel-icon-ring">
+      <i class="fas fa-times"></i>
+    </div>
+
+    <h1 class="payment-title">Payment Cancelled</h1>
+    <p class="payment-subtitle">
+      Your payment was not completed. No charges have been made.<br>
+      You can retry the payment or return to your dashboard.
+    </p>
+
+    <div>
+      <a href="javascript:history.back()" class="btn-retry">
+        <i class="fas fa-redo"></i>
+        Try Again
+      </a>
+      <a href="<%= user && user.role === 'student' ? '/student/dashboard' : '/admin/fees' %>" class="btn-ghost">
+        <i class="fas fa-home"></i>
+        Dashboard
+      </a>
+    </div>
+  </div>
+</div>
+
+<%- include('../partials/footer') %>

@@ -1,254 +1,219 @@
 <%- include('../partials/header') %>
 
-    <div class="admin-layout animate-fade-in" style="margin-top: 80px;">
-        <!-- Sidebar -->
-        <!-- Sidebar -->
-        <%- include('../partials/sidebar', { active: 'attendance' }) %>
+  <!-- ════════════════════════════════════════════════════════════
+       ADMIN LAYOUT
+       ════════════════════════════════════════════════════════════ -->
+  <div class="adm-layout">
 
-            <main class="main-content">
-                <header style="margin-bottom: 2rem;">
-                    <h2 style="font-size: 2rem; font-weight: 800; color: var(--primary);">Attendance Dashboard</h2>
-                    <p style="color: var(--text-muted);">Monitor school-wide daily presence</p>
-                </header>
+    <!-- Sidebar -->
+    <%- include('../partials/sidebar', { active: 'attendance' }) %>
 
-                <div class="card"
-                    style="margin-bottom: 2rem; padding: 1rem 1.5rem; display: flex; justify-content: space-between; align-items: center; background: white; border-radius: 20px; border: 1px solid #eef2f6;">
-                    <form method="GET" action="/admin/attendance"
-                        style="display: flex; gap: 1rem; align-items: center;">
-                        <label style="font-weight: 700; color: var(--primary);">Review Date:</label>
-                        <input type="date" name="date" value="<%= selectedDate %>" onchange="this.form.submit()"
-                            class="form-control"
-                            style="padding: 10px 15px; border-radius: 12px; border: 2px solid #f1f5f9; font-weight: 600;">
-                    </form>
+    <!-- ══ MAIN CONTENT ══════════════════════════════════════════ -->
+    <main class="adm-main" role="main" aria-label="Attendance Dashboard">
 
-                    <div style="display: flex; gap: 1rem; align-items: center;">
-                        <a href="/admin/attendance/export/excel?date=<%= selectedDate %>" class="btn"
-                            style="background: #10b981; color: white; padding: 10px 20px; border-radius: 12px; font-weight: 700; display: flex; align-items: center; gap: 8px; text-decoration: none; font-size: 0.9rem;">
-                            <i class="fas fa-file-excel"></i> Export Excel
-                        </a>
+      <!-- ── Page Header ── -->
+      <div class="adm-page-header">
+        <div>
+          <h1 class="adm-page-title">Attendance Dashboard</h1>
+          <p class="adm-page-subtitle">Monitor school-wide daily presence and absence</p>
+        </div>
 
-                        <% if(viewMode==='detail' ) { %>
-                            <a href="/admin/attendance?date=<%= selectedDate %>" class="btn-primary"
-                                style="padding: 10px 20px; border-radius: 12px; font-weight: 700; background: transparent; color: var(--accent); border: 2px solid var(--accent); text-decoration: none; display: flex; align-items: center; gap: 8px; font-size: 0.9rem;"><i
-                                    class="fas fa-chevron-left"></i> Back to All Classes</a>
-                            <% } %>
-                    </div>
+        <div style="display: flex; gap: 0.75rem; align-items: center;">
+          <% if(viewMode === 'detail') { %>
+            <a href="/admin/attendance?date=<%= selectedDate %>" class="adm-btn adm-btn-ghost" style="color: var(--adm-indigo); background: var(--adm-indigo-bg);">
+              <i class="fas fa-chevron-left" aria-hidden="true"></i> Back to Overview
+            </a>
+          <% } %>
+          <a href="/admin/attendance/export/excel?date=<%= selectedDate %>" class="adm-btn adm-btn-primary" style="background: var(--adm-green); border-color: var(--adm-green);">
+            <i class="fas fa-file-excel" aria-hidden="true"></i> Export Excel
+          </a>
+        </div>
+      </div>
+
+      <!-- ── Date Filter Bar ── -->
+      <div class="adm-card" style="padding: 1rem 1.5rem; margin-bottom: 2rem; display: flex; align-items: center; justify-content: space-between;">
+        <form method="GET" action="/admin/attendance" style="display: flex; gap: 1rem; align-items: center;">
+          <label for="review_date" style="font-weight: 700; color: var(--adm-text-primary);">Review Date:</label>
+          <input type="date" name="date" id="review_date" value="<%= selectedDate %>" onchange="this.form.submit()" class="adm-input" style="max-width: 200px;">
+          <% if(viewMode === 'detail') { %>
+            <input type="hidden" name="class_id" value="<%= selectedClass %>">
+          <% } %>
+        </form>
+      </div>
+
+      <!-- ── Dynamic Content: Overview or Detail ── -->
+      <% if (viewMode === 'overview') { %>
+
+        <!-- OVERVIEW MODE -->
+        <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 1.5rem;">
+          <% overview.forEach(cls => {
+            const isMarked = cls.marked_count > 0;
+            const presentPercent = cls.total_students > 0 ? Math.round((cls.present_count / cls.total_students) * 100) : 0;
+          %>
+            <article class="adm-card" style="padding: 1.5rem; display: flex; flex-direction: column;">
+              
+              <!-- Header -->
+              <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 1.25rem;">
+                <div>
+                  <h3 style="font-size: 1.3rem; font-weight: 800; color: var(--adm-text-primary); margin-bottom: 0.25rem;">
+                    <%= cls.class_name %>
+                  </h3>
+                  <div style="display: flex; align-items: center; gap: 0.5rem; flex-wrap: wrap;">
+                    <span class="adm-badge" style="background: var(--adm-bg-elevated); color: var(--adm-text-secondary); border: 1px solid var(--adm-border);">
+                      Sec: <%= cls.section %>
+                    </span>
+                    <% if (typeof isSuperAdmin !== 'undefined' && isSuperAdmin && cls.campus_name) { %>
+                      <span class="adm-badge adm-badge-blue">
+                        <i class="fas fa-building" style="margin-right:0.25rem;" aria-hidden="true"></i> <%= cls.campus_name %>
+                      </span>
+                    <% } %>
+                  </div>
                 </div>
 
-                <% if (viewMode==='overview' ) { %>
-                    <!-- OVERVIEW MODE -->
-                    <div class="grid"
-                        style="grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 1.5rem;">
-                        <% overview.forEach(cls=> {
-                            const isMarked = cls.marked_count > 0;
-                            const presentPercent = cls.total_students > 0 ? Math.round((cls.present_count /
-                            cls.total_students) * 100) : 0;
-                            %>
-                            <div class="card animate-slide-up"
-                                style="position: relative; overflow: hidden; padding-bottom: 0;">
-                                <div
-                                    style="display: flex; justify-content: space-between; align-items: start; margin-bottom: 1.5rem;">
-                                    <div>
-                                        <h3 style="font-size: 1.4rem; font-weight: 900; color: var(--primary);">
-                                            <%= cls.class_name %>
-                                        </h3>
-                                        <span
-                                            style="background: #f1f5f9; padding: 3px 10px; border-radius: 8px; font-size: 0.8rem; font-weight: 700; color: #64748b;">Sec:
-                                            <%= cls.section %>
-                                        </span>
-                                        <% if (typeof isSuperAdmin !=='undefined' && isSuperAdmin && cls.campus_name) {
-                                            %>
-                                            <span
-                                                style="background: #e0f2fe; color: var(--primary); padding: 3px 10px; border-radius: 8px; font-size: 0.8rem; font-weight: 700; margin-left: 5px;">
-                                                <i class="fas fa-building"></i>
-                                                <%= cls.campus_name %>
-                                            </span>
-                                            <% } %>
-                                    </div>
-                                    <% if(isMarked) { %>
-                                        <div style="text-align: right;">
-                                            <span
-                                                style="background: #10b981; color: white; padding: 5px 12px; border-radius: 12px; font-size: 0.75rem; font-weight: 800; display: block; margin-bottom: 4px;">MARKED</span>
-                                            <span style="font-size: 0.7rem; color: #10b981; font-weight: 800;">
-                                                <%= presentPercent %>% Present
-                                            </span>
-                                        </div>
-                                        <% } else { %>
-                                            <span
-                                                style="background: #f59e0b; color: white; padding: 5px 12px; border-radius: 12px; font-size: 0.75rem; font-weight: 800;">PENDING</span>
-                                            <% } %>
-                                </div>
+                <% if(isMarked) { %>
+                  <div style="text-align: right;">
+                    <span class="adm-badge adm-badge-green" style="font-size: 0.7rem; margin-bottom: 0.25rem; display: inline-block;">MARKED</span>
+                    <div style="font-size: 0.75rem; color: var(--adm-green); font-weight: 800;"><%= presentPercent %>% Present</div>
+                  </div>
+                <% } else { %>
+                  <span class="adm-badge adm-badge-amber">PENDING</span>
+                <% } %>
+              </div>
 
-                                <div style="display: flex; margin-bottom: 1.5rem; gap: 10px;">
-                                    <div
-                                        style="flex: 1; background: #f8fafc; padding: 12px; border-radius: 15px; text-align: center;">
-                                        <span
-                                            style="display: block; font-size: 1.2rem; font-weight: 900; color: var(--primary);">
-                                            <%= cls.total_students %>
-                                        </span>
-                                        <span
-                                            style="font-size: 0.7rem; color: #64748b; font-weight: 700; text-transform: uppercase;">Total
-                                            Students</span>
-                                    </div>
-                                    <div
-                                        style="flex: 1; background: rgba(16, 185, 129, 0.05); padding: 12px; border-radius: 15px; text-align: center;">
-                                        <span
-                                            style="display: block; font-size: 1.2rem; font-weight: 900; color: #10b981;">
-                                            <%= cls.present_count || 0 %>
-                                        </span>
-                                        <span
-                                            style="font-size: 0.7rem; color: #10b981; font-weight: 700; text-transform: uppercase;">Present</span>
-                                    </div>
-                                </div>
+              <!-- Stats Boxes -->
+              <div style="display: flex; gap: 0.75rem; margin-bottom: 1.5rem; flex: 1;">
+                <div style="flex: 1; background: var(--adm-bg-canvas); padding: 1rem; border-radius: var(--adm-r-sm); text-align: center; border: 1px solid var(--adm-border);">
+                  <div style="font-size: 1.2rem; font-weight: 800; color: var(--adm-text-primary);"><%= cls.total_students %></div>
+                  <div style="font-size: 0.65rem; color: var(--adm-text-muted); font-weight: 700; text-transform: uppercase;">Students</div>
+                </div>
+                <div style="flex: 1; background: var(--adm-green-bg); padding: 1rem; border-radius: var(--adm-r-sm); text-align: center; border: 1px solid rgba(16,185,129,0.1);">
+                  <div style="font-size: 1.2rem; font-weight: 800; color: var(--adm-green);"><%= cls.present_count || 0 %></div>
+                  <div style="font-size: 0.65rem; color: var(--adm-green); font-weight: 700; text-transform: uppercase;">Present</div>
+                </div>
+              </div>
 
-                                <a href="/admin/attendance?class_id=<%= cls.id %>&date=<%= selectedDate %>"
-                                    style="display: block; background: #f1f5f9; text-align: center; padding: 15px; text-decoration: none; color: var(--primary); font-weight: 800; font-size: 0.9rem; margin: 0 -1.5rem; transition: background 0.3s;"
-                                    onmouseover="this.style.background='#e2e8f0'"
-                                    onmouseout="this.style.background='#f1f5f9'">
-                                    View Detailed Report <i class="fas fa-external-link-alt"
-                                        style="margin-left: 8px; font-size: 0.8rem;"></i>
-                                </a>
-                            </div>
-                            <% }); %>
-                    </div>
+              <!-- Action Link -->
+              <a href="/admin/attendance?class_id=<%= cls.id %>&date=<%= selectedDate %>" 
+                 class="adm-btn adm-btn-ghost" 
+                 style="width: 100%; justify-content: center; background: var(--adm-indigo-bg); color: var(--adm-indigo);">
+                View Details <i class="fas fa-arrow-right" style="margin-left: 0.25rem; font-size: 0.8rem;" aria-hidden="true"></i>
+              </a>
 
-                    <% } else { %>
-                        <!-- DETAIL MODE (Class Roll - READ ONLY) -->
-                        <div class="card animate-slide-up" style="padding: 0; overflow: hidden;">
-                            <% const currentClass=classes.find(c=> c.id == selectedClass);
-                                let p=0, a=0, l=0, lv=0;
-                                students.forEach(s=> {
-                                if(s.status === 'present') p++;
-                                else if(s.status === 'absent') a++;
-                                else if(s.status === 'late') l++;
-                                else if(s.status === 'leave') lv++;
-                                });
-                                %>
-                                <div
-                                    style="background: linear-gradient(135deg, var(--primary) 0%, #1e293b 100%); padding: 2rem; color: white;">
-                                    <div style="display: flex; justify-content: space-between; align-items: flex-end;">
-                                        <div>
-                                            <div
-                                                style="background: rgba(255,255,255,0.2); padding: 5px 12px; border-radius: 10px; display: inline-block; font-size: 0.8rem; font-weight: 700; margin-bottom: 10px; backdrop-filter: blur(5px);">
-                                                Report for <%= selectedDate %>
-                                            </div>
-                                            <h3 style="font-size: 1.8rem; font-weight: 900;">
-                                                <%= currentClass ? currentClass.class_name + ' (' + currentClass.section
-                                                    + ')' : 'Attendance Log' %>
-                                            </h3>
-                                            <% if (typeof isSuperAdmin !=='undefined' && isSuperAdmin && currentClass &&
-                                                currentClass.campus_name) { %>
-                                                <div
-                                                    style="margin-top: 5px; font-size: 0.9rem; font-weight: 700; opacity: 0.9;">
-                                                    <i class="fas fa-building"></i>
-                                                    <%= currentClass.campus_name %>
-                                                </div>
-                                                <% } %>
-                                        </div>
-                                        <div style="display: flex; gap: 15px;">
-                                            <div style="text-align: center;">
-                                                <div style="font-size: 1.5rem; font-weight: 900; color: #34d399;">
-                                                    <%= p %>
-                                                </div>
-                                                <div
-                                                    style="font-size: 0.6rem; font-weight: 800; text-transform: uppercase; opacity: 0.8;">
-                                                    Present</div>
-                                            </div>
-                                            <div style="text-align: center;">
-                                                <div style="font-size: 1.5rem; font-weight: 900; color: #fb7185;">
-                                                    <%= a %>
-                                                </div>
-                                                <div
-                                                    style="font-size: 0.6rem; font-weight: 800; text-transform: uppercase; opacity: 0.8;">
-                                                    Absent</div>
-                                            </div>
-                                            <div style="text-align: center;">
-                                                <div style="font-size: 1.5rem; font-weight: 900; color: #fbbf24;">
-                                                    <%= l %>
-                                                </div>
-                                                <div
-                                                    style="font-size: 0.6rem; font-weight: 800; text-transform: uppercase; opacity: 0.8;">
-                                                    Late</div>
-                                            </div>
-                                            <div style="text-align: center;">
-                                                <div style="font-size: 1.5rem; font-weight: 900; color: #818cf8;">
-                                                    <%= lv %>
-                                                </div>
-                                                <div
-                                                    style="font-size: 0.6rem; font-weight: 800; text-transform: uppercase; opacity: 0.8;">
-                                                    Leave</div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
+            </article>
+          <% }); %>
 
-                                <div style="padding: 1rem;">
-                                    <table class="data-table" style="width: 100%; border-collapse: collapse;">
-                                        <thead>
-                                            <tr
-                                                style="background: transparent; text-align: left; border-bottom: 2px solid #f1f5f9;">
-                                                <th style="padding: 1.2rem; color: #64748b; font-weight: 800;">Roll</th>
-                                                <th style="padding: 1.2rem; color: #64748b; font-weight: 800;">Student
-                                                    Name
-                                                </th>
-                                                <th
-                                                    style="padding: 1.2rem; color: #64748b; font-weight: 800; text-align: right;">
-                                                    Status Badge</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            <% if(students.length===0) { %>
-                                                <tr>
-                                                    <td colspan="3"
-                                                        style="padding: 4rem; text-align: center; color: var(--text-muted);">
-                                                        <i class="fas fa-user-slash"
-                                                            style="font-size: 2rem; display: block; margin-bottom: 1rem; opacity: 0.3;"></i>
-                                                        No students found in this class.
-                                                    </td>
-                                                </tr>
-                                                <% } %>
-                                                    <% students.forEach(std=> {
-                                                        let bg = '#f1f5f9'; let dot = '#64748b'; let text = '#64748b';
-                                                        let label = 'Pending';
-                                                        if(std.status === 'present') {
-                                                        bg = 'rgba(16, 185, 129, 0.1)'; dot = '#10b981'; text =
-                                                        '#065f46'; label = 'Present';
-                                                        } else if(std.status === 'absent') {
-                                                        bg = 'rgba(239, 68, 68, 0.1)'; dot = '#ef4444'; text =
-                                                        '#991b1b'; label = 'Absent';
-                                                        } else if(std.status === 'late') {
-                                                        bg = 'rgba(245, 158, 11, 0.1)'; dot = '#f59e0b'; text =
-                                                        '#92400e'; label = 'Late';
-                                                        } else if(std.status === 'leave') {
-                                                        bg = 'rgba(99, 102, 241, 0.1)'; dot = '#6366f1'; text =
-                                                        '#3730a3'; label = 'Leave';
-                                                        }
-                                                        %>
-                                                        <tr style="border-bottom: 1px solid #f8fafc;">
-                                                            <td
-                                                                style="padding: 1.2rem; font-family: monospace; font-weight: 800; color: var(--primary);">
-                                                                <%= std.roll_no %>
-                                                            </td>
-                                                            <td
-                                                                style="padding: 1.2rem; font-weight: 700; color: var(--primary);">
-                                                                <%= std.full_name %>
-                                                            </td>
-                                                            <td style="padding: 1.2rem; text-align: right;">
-                                                                <span
-                                                                    style="background: <%= bg %>; color: <%= text %>; padding: 6px 15px; border-radius: 12px; font-weight: 900; font-size: 0.75rem; display: inline-flex; align-items: center; gap: 8px; text-transform: uppercase; border: 1px solid rgba(0,0,0,0.02);">
-                                                                    <span
-                                                                        style="width: 8px; height: 8px; background: <%= dot %>; border-radius: 50%;"></span>
-                                                                    <%= label %>
-                                                                </span>
-                                                            </td>
-                                                        </tr>
-                                                        <% }); %>
-                                        </tbody>
-                                    </table>
-                                </div>
-                        </div>
-                        <% } %>
-            </main>
-    </div>
+          <% if (overview.length === 0) { %>
+            <div style="grid-column: 1 / -1; padding: 4.5rem; text-align: center; color: var(--adm-text-muted); background: var(--adm-bg-surface); border-radius: var(--adm-r-lg); border: 1px dashed var(--adm-border);">
+              <i class="fas fa-layer-group" style="font-size: 2.5rem; opacity: 0.25; display: block; margin-bottom: 1rem;" aria-hidden="true"></i>
+              No classes defined for attendance tracking yet.
+            </div>
+          <% } %>
+        </div>
 
-    <%- include('../partials/footer') %>
+      <% } else { %>
+
+        <!-- DETAIL MODE (Class Roll - READ ONLY) -->
+        <div class="adm-card" style="padding: 0; overflow: hidden;">
+          
+          <% 
+            const currentClass = classes.find(c => c.id == selectedClass);
+            let p = 0, a = 0, l = 0, lv = 0;
+            students.forEach(s => {
+              if(s.status === 'present') p++;
+              else if(s.status === 'absent') a++;
+              else if(s.status === 'late') l++;
+              else if(s.status === 'leave') lv++;
+            });
+          %>
+          
+          <!-- Colored Header -->
+          <div style="background: linear-gradient(135deg, var(--adm-indigo) 0%, var(--adm-purple) 100%); padding: 2rem; color: white;">
+            <div style="display: flex; justify-content: space-between; align-items: flex-end; flex-wrap: wrap; gap: 1.5rem;">
+              <div>
+                <span class="adm-badge" style="background: rgba(255,255,255,0.2); color: white; border: none; backdrop-filter: blur(8px); margin-bottom: 0.75rem;">
+                  Report for <%= selectedDate %>
+                </span>
+                <h3 style="font-size: 1.6rem; font-weight: 800; margin: 0; text-shadow: 0 2px 4px rgba(0,0,0,0.1);">
+                  <%= currentClass ? currentClass.class_name + ' (Sec: ' + currentClass.section + ')' : 'Attendance Log' %>
+                </h3>
+                <% if (typeof isSuperAdmin !== 'undefined' && isSuperAdmin && currentClass && currentClass.campus_name) { %>
+                  <div style="margin-top: 0.5rem; font-size: 0.85rem; font-weight: 600; opacity: 0.9;">
+                    <i class="fas fa-building" aria-hidden="true"></i> <%= currentClass.campus_name %>
+                  </div>
+                <% } %>
+              </div>
+              
+              <!-- Quick Stats -->
+              <div style="display: flex; gap: 1.5rem;">
+                <div style="text-align: center;">
+                  <div style="font-size: 1.5rem; font-weight: 800; color: #6EE7B7;"><%= p %></div>
+                  <div style="font-size: 0.65rem; font-weight: 700; text-transform: uppercase; opacity: 0.9;">Present</div>
+                </div>
+                <div style="text-align: center;">
+                  <div style="font-size: 1.5rem; font-weight: 800; color: #FCA5A5;"><%= a %></div>
+                  <div style="font-size: 0.65rem; font-weight: 700; text-transform: uppercase; opacity: 0.9;">Absent</div>
+                </div>
+                <div style="text-align: center;">
+                  <div style="font-size: 1.5rem; font-weight: 800; color: #FCD34D;"><%= l %></div>
+                  <div style="font-size: 0.65rem; font-weight: 700; text-transform: uppercase; opacity: 0.9;">Late</div>
+                </div>
+                <div style="text-align: center;">
+                  <div style="font-size: 1.5rem; font-weight: 800; color: #C4B5FD;"><%= lv %></div>
+                  <div style="font-size: 0.65rem; font-weight: 700; text-transform: uppercase; opacity: 0.9;">Leave</div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Data Table -->
+          <div style="padding: 1.5rem; overflow-x: auto;">
+            <table class="adm-table" aria-label="Student Attendance Roster">
+              <thead>
+                <tr>
+                  <th scope="col" style="width: 80px;">Roll No</th>
+                  <th scope="col">Student Name</th>
+                  <th scope="col" style="text-align: right;">Status</th>
+                </tr>
+              </thead>
+              <tbody>
+                <% if(students.length === 0) { %>
+                  <tr>
+                    <td colspan="3" style="text-align: center; padding: 3rem 1rem;">
+                      <div class="adm-empty-state">
+                        <i class="fas fa-users-slash adm-empty-icon" aria-hidden="true"></i>
+                        <h3>No Roster Found</h3>
+                        <p>There are no students enrolled in this class.</p>
+                      </div>
+                    </td>
+                  </tr>
+                <% } %>
+                
+                <% students.forEach(std => {
+                  let badgeClass = '';
+                  let label = 'Pending';
+                  
+                  if(std.status === 'present') { badgeClass = 'adm-badge-green'; label = 'Present'; }
+                  else if(std.status === 'absent') { badgeClass = 'adm-badge-red'; label = 'Absent'; }
+                  else if(std.status === 'late') { badgeClass = 'adm-badge-amber'; label = 'Late'; }
+                  else if(std.status === 'leave') { badgeClass = 'adm-badge-purple'; label = 'Leave'; }
+                  else { badgeClass = 'adm-badge-blue'; label = 'Pending'; }
+                %>
+                  <tr>
+                    <td style="font-family: 'JetBrains Mono', monospace; font-weight: 600;"><%= std.roll_no %></td>
+                    <td style="font-weight: 500;"><%= std.full_name %></td>
+                    <td style="text-align: right;">
+                      <span class="adm-badge <%= badgeClass %>"><%= label %></span>
+                    </td>
+                  </tr>
+                <% }); %>
+              </tbody>
+            </table>
+          </div>
+
+        </div>
+      <% } %>
+
+    </main>
+  </div>
+
+<%- include('../partials/footer') %>

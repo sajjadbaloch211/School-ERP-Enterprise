@@ -1,0 +1,20 @@
+<!-- Dynamic Call to Action Section -->
+<section class="cta-section"
+    style="padding: 100px 5%; background: <%= theme.colors.primary || '#0f172a' %>; position: relative; overflow: hidden;">
+    <div
+        style="position: absolute; width: 300px; height: 300px; background: rgba(59, 130, 246, 0.2); border-radius: 50%; filter: blur(100px); top: -150px; right: -150px;">
+    </div>
+
+    <div class="container"
+        style="max-width: 1000px; margin: 0 auto; text-align: center; position: relative; z-index: 2;">
+        <h2 style="font-size: 3rem; font-weight: 800; color: white; margin-bottom: 2rem; line-height: 1.2;">
+            <%= content.title %>
+        </h2>
+        <% if (content.btnText) { %>
+            <a href="<%= content.btnUrl || '#' %>" class="btn btn-primary"
+                style="background: white; color: <%= theme.colors.primary %>; padding: 1.25rem 3rem; font-size: 1.2rem; border-radius: 50px; box-shadow: 0 10px 20px rgba(0,0,0,0.2);">
+                <%= content.btnText %>
+            </a>
+            <% } %>
+    </div>
+</section>

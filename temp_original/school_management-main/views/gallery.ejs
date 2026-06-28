@@ -1,0 +1,146 @@
+<%- include('partials/header') %>
+
+    <div class="container my-5">
+        <div class="row text-center mb-5">
+            <div class="col-12">
+                <h1 class="display-4 fw-bold">Our Gallery</h1>
+                <p class="lead text-muted">A glimpse into our activities.</p>
+            </div>
+        </div>
+
+        <div class="row g-4">
+            <% if (typeof gallery !=='undefined' && gallery && gallery.length> 0) { %>
+                <% gallery.forEach((item)=> { %>
+                    <div class="col-md-4 col-sm-6">
+                        <div class="card h-100 shadow-sm">
+                            <img src="<%= item.image_path || item %>" class="card-img-top"
+                                alt="<%= item.title || 'Image' %>" style="height: 250px; object-fit: cover;">
+                            <div class="card-body">
+                                <h5 class="card-title">
+                                    <%= item.title || 'School Memory' %>
+                                </h5>
+                                <p class="card-text text-muted small">
+                                    <%= item.description || '' %>
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                    <% }); %>
+                        <% } else { %>
+                            <!-- Typical simple fallback -->
+                            <div class="col-12 text-center text-muted">
+                                <p>No gallery images uploaded yet.</p>
+                            </div>
+                            <% } %>
+        </div>
+    </div>
+
+    <%- include('partials/footer') %>
+
+        <header class="hero-section"
+            style="min-height: 50vh; background-image: url('/images/classroom_girls.jpg'); align-items: center;">
+            <div class="hero-overlay"></div>
+            <div class="container hero-content text-center animate-up">
+                <h1 class="display-3 fw-bold">Our <span class="text-accent">Gallery</span></h1>
+                <p class="lead text-white-50 mx-auto" style="max-width: 600px;">
+                    A glimpse into the vibrant life at Waqar Public School.
+                </p>
+            </div>
+        </header>
+
+        <section class="section-padding bg-light">
+            <div class="container">
+                <!-- Tabs (Optional, for future categories) -->
+                <div class="text-center mb-5 animate-up">
+                    <button class="btn btn-login px-4 me-2">All Photos</button>
+                    <button class="btn btn-outline-primary px-4 me-2 rounded-pill border-2 fw-bold">Events</button>
+                    <button class="btn btn-outline-primary px-4 rounded-pill border-2 fw-bold">Academics</button>
+                </div>
+
+                <div class="row g-4">
+                    <% if (typeof gallery !=='undefined' && gallery && gallery.length> 0) { %>
+                        <% gallery.forEach((item, index)=> { %>
+                            <div class="col-lg-4 col-md-6 animate-up delay-<%= (index % 3) * 100 %>">
+                                <div class="gallery-card h-100">
+                                    <!-- Check if item has dynamic path, or use item itself if string -->
+                                    <img src="<%= item.image_path || item %>"
+                                        alt="<%= item.title || 'Gallery Image' %>">
+                                    <div class="gallery-overlay">
+                                        <div>
+                                            <h5 class="text-white fw-bold mb-1">
+                                                <%= item.title || 'School Memory' %>
+                                            </h5>
+                                            <p class="text-white-50 small mb-0">
+                                                <%= item.description || 'Capturing moments of excellence.' %>
+                                            </p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <% }); %>
+                                <% } else { %>
+                                    <!-- Fallback Static Items -->
+                                    <div class="col-lg-4 col-md-6 animate-up">
+                                        <div class="gallery-card h-100">
+                                            <img src="/images/event1.jpg" alt="Cultural Event">
+                                            <div class="gallery-overlay">
+                                                <div>
+                                                    <h5 class="text-white fw-bold mb-1">Cultural Celebration</h5>
+                                                    <p class="text-white-50 small mb-0">Celebrating our rich heritage.
+                                                    </p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-4 col-md-6 animate-up delay-100">
+                                        <div class="gallery-card h-100">
+                                            <img src="/images/student1.jpg" alt="Academics">
+                                            <div class="gallery-overlay">
+                                                <div>
+                                                    <h5 class="text-white fw-bold mb-1">Focused Learning</h5>
+                                                    <p class="text-white-50 small mb-0">Dedicated students in class.</p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-4 col-md-6 animate-up delay-200">
+                                        <div class="gallery-card h-100">
+                                            <img src="/images/award.jpg" alt="Awards">
+                                            <div class="gallery-overlay">
+                                                <div>
+                                                    <h5 class="text-white fw-bold mb-1">Annual Awards</h5>
+                                                    <p class="text-white-50 small mb-0">Recognizing excellence.</p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-4 col-md-6 animate-up">
+                                        <div class="gallery-card h-100">
+                                            <img src="/images/classroom_boys.jpg" alt="Classroom">
+                                            <div class="gallery-overlay">
+                                                <div>
+                                                    <h5 class="text-white fw-bold mb-1">Interactive Sessions</h5>
+                                                    <p class="text-white-50 small mb-0">Engaging classroom environments.
+                                                    </p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-4 col-md-6 animate-up delay-100">
+                                        <div class="gallery-card h-100">
+                                            <img src="/images/classroom_girls.jpg" alt="Girls Wing">
+                                            <div class="gallery-overlay">
+                                                <div>
+                                                    <h5 class="text-white fw-bold mb-1">Girls Wing</h5>
+                                                    <p class="text-white-50 small mb-0">Empowering future women leaders.
+                                                    </p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <% } %>
+                </div>
+            </div>
+        </section>
+
+        <%- include('partials/frontend_footer') %>

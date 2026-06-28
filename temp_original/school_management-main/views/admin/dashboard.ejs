@@ -1,0 +1,199 @@
+<%- include('../partials/header') %>
+
+    <div class="admin-layout animate-fade-in" style="margin-top: 80px;">
+        <!-- Sidebar -->
+        <!-- Sidebar -->
+        <%- include('../partials/sidebar', { active: 'dashboard' }) %>
+
+            <!-- Main Content -->
+            <main class="main-content">
+                <header
+                    style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 3rem;">
+                    <div>
+                        <h2 style="font-size: 2rem; font-weight: 800; color: var(--primary);">System Dashboard</h2>
+                        <p style="color: var(--text-muted);">Welcome back, <span
+                                style="color: var(--accent); font-weight: 600;">
+                                <%= user.full_name %>
+                            </span></p>
+                    </div>
+                    <div class="glass"
+                        style="padding: 12px 25px; border-radius: 50px; font-weight: 600; font-size: 0.9rem; color: var(--text-main);">
+                        <%= new Date().toLocaleDateString('en-US', { weekday: 'long' , year: 'numeric' , month: 'long' ,
+                            day: 'numeric' }) %>
+                    </div>
+                </header>
+
+                <% if (typeof newUser !=='undefined' && newUser) { %>
+                    <div class="card animate-scale-in"
+                        style="margin-bottom: 2rem; border-left: 6px solid #10b981; background: #ecfdf5;">
+                        <div style="display: flex; justify-content: space-between; align-items: start;">
+                            <div>
+                                <h3 style="color: #065f46; font-weight: 800; margin-bottom: 0.5rem;">
+                                    <i class="fas fa-check-circle"></i> New <%= newUser.role %> Account Created
+                                </h3>
+                                <p style="color: #064e3b; margin-bottom: 1rem;">
+                                    The account for <strong>
+                                        <%= newUser.full_name %>
+                                    </strong> is ready. Please share these credentials securely.
+                                </p>
+                                <div
+                                    style="display: flex; gap: 2rem; background: white; padding: 1rem 1.5rem; border-radius: 12px; border: 1px solid #d1fae5;">
+                                    <div>
+                                        <small
+                                            style="display: block; color: #6b7280; font-weight: 700; text-transform: uppercase; font-size: 0.7rem;">Username</small>
+                                        <span
+                                            style="font-weight: 800; font-size: 1.1rem; color: #059669; font-family: monospace;">
+                                            <%= newUser.username %>
+                                        </span>
+                                    </div>
+                                    <div>
+                                        <small
+                                            style="display: block; color: #6b7280; font-weight: 700; text-transform: uppercase; font-size: 0.7rem;">Password</small>
+                                        <span
+                                            style="font-weight: 800; font-size: 1.1rem; color: #059669; font-family: monospace;">
+                                            <%= newUser.password %>
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                            <button onclick="this.parentElement.parentElement.style.display='none'"
+                                style="background: none; border: none; font-size: 1.2rem; cursor: pointer; color: #065f46;">
+                                <i class="fas fa-times"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <% } %>
+
+                        <div class="stat-group animate-slide-up">
+                            <div class="stat-card card">
+                                <div class="stat-icon"
+                                    style="background: rgba(59, 130, 246, 0.1); color: var(--accent);">
+                                    <i class="fas fa-user-graduate"></i>
+                                </div>
+                                <div>
+                                    <p
+                                        style="color: var(--text-muted); font-size: 0.9rem; font-weight: 600; text-transform: uppercase; letter-spacing: 1px;">
+                                        Students</p>
+                                    <h3 style="font-size: 2rem; font-weight: 800; color: var(--primary);">
+                                        <%= total_students %>
+                                    </h3>
+                                </div>
+                            </div>
+
+                            <div class="stat-card card">
+                                <div class="stat-icon"
+                                    style="background: rgba(16, 185, 129, 0.1); color: var(--success);">
+                                    <i class="fas fa-chalkboard-teacher"></i>
+                                </div>
+                                <div>
+                                    <p
+                                        style="color: var(--text-muted); font-size: 0.9rem; font-weight: 600; text-transform: uppercase; letter-spacing: 1px;">
+                                        Teachers</p>
+                                    <h3 style="font-size: 2rem; font-weight: 800; color: var(--primary);">
+                                        <%= total_teachers %>
+                                    </h3>
+                                </div>
+                            </div>
+
+                            <div class="stat-card card">
+                                <div class="stat-icon"
+                                    style="background: rgba(239, 68, 68, 0.1); color: var(--danger);">
+                                    <i class="fas fa-sack-dollar"></i>
+                                </div>
+                                <div>
+                                    <p
+                                        style="color: var(--text-muted); font-size: 0.9rem; font-weight: 600; text-transform: uppercase; letter-spacing: 1px;">
+                                        Unpaid Fees</p>
+                                    <h3 style="font-size: 2rem; font-weight: 800; color: var(--primary);">Rs. <%=
+                                            total_fees_pending %>
+                                    </h3>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Quick Access Section -->
+                        <div class="animate-slide-up" style="animation-delay: 0.2s;">
+                            <h3 style="margin-bottom: 2rem; font-weight: 800; color: var(--primary);">Administrative
+                                Controls</h3>
+                            <div class="grid" style="grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));">
+                                <a href="/admin/students" class="card"
+                                    style="text-decoration: none; display: flex; align-items: center; gap: 15px; padding: 1.5rem;">
+                                    <span
+                                        style="width: 45px; height: 45px; border-radius: 12px; background: #eff6ff; color: #3b82f6; display: flex; align-items: center; justify-content: center;"><i
+                                            class="fas fa-plus"></i></span>
+                                    <span style="font-weight: 700; color: var(--text-main);">Add Student</span>
+                                </a>
+                                <a href="/admin/fees" class="card"
+                                    style="text-decoration: none; display: flex; align-items: center; gap: 15px; padding: 1.5rem;">
+                                    <span
+                                        style="width: 45px; height: 45px; border-radius: 12px; background: #ecfdf5; color: #10b981; display: flex; align-items: center; justify-content: center;"><i
+                                            class="fas fa-receipt"></i></span>
+                                    <span style="font-weight: 700; color: var(--text-main);">Process Fees</span>
+                                </a>
+                                <a href="/admin/notices" class="card"
+                                    style="text-decoration: none; display: flex; align-items: center; gap: 15px; padding: 1.5rem;">
+                                    <span
+                                        style="width: 45px; height: 45px; border-radius: 12px; background: #fffbeb; color: #f59e0b; display: flex; align-items: center; justify-content: center;"><i
+                                            class="fas fa-bullhorn"></i></span>
+                                    <span style="font-weight: 700; color: var(--text-main);">Post Notice</span>
+                                </a>
+                                <a href="/admin/library/add" class="card"
+                                    style="text-decoration: none; display: flex; align-items: center; gap: 15px; padding: 1.5rem;">
+                                    <span
+                                        style="width: 45px; height: 45px; border-radius: 12px; background: #f0fdf4; color: #16a34a; display: flex; align-items: center; justify-content: center;"><i
+                                            class="fas fa-book-medical"></i></span>
+                                    <span style="font-weight: 700; color: var(--text-main);">Upload Resource</span>
+                                </a>
+                                <a href="/admin/email" class="card"
+                                    style="text-decoration: none; display: flex; align-items: center; gap: 15px; padding: 1.5rem;">
+                                    <span
+                                        style="width: 45px; height: 45px; border-radius: 12px; background: #eef2ff; color: #6366f1; display: flex; align-items: center; justify-content: center;"><i
+                                            class="fas fa-envelope"></i></span>
+                                    <span style="font-weight: 700; color: var(--text-main);">Send Email</span>
+                                </a>
+                            </div>
+                        </div>
+
+                        <!-- 📱 Mobile Quick Login Section -->
+                        <div class="animate-slide-up"
+                            style="animation-delay: 0.3s; margin-top: 3rem; margin-bottom: 3rem;">
+                            <h3 style="margin-bottom: 1.5rem; font-weight: 800; color: var(--primary);">Mobile Portal
+                                Access</h3>
+                            <div class="card glass"
+                                style="display: flex; align-items: center; gap: 2rem; padding: 2rem; border-radius: 24px; border-left: 6px solid var(--accent);">
+                                <div
+                                    style="background: white; padding: 10px; border-radius: 16px; box-shadow: 0 10px 20px rgba(0,0,0,0.1);">
+                                    <% if (typeof qrCode !=='undefined' && qrCode) { %>
+                                        <img src="<%= qrCode %>" alt="Login QR Code"
+                                            style="width: 150px; height: 150px; display: block;">
+                                        <% } else { %>
+                                            <div
+                                                style="width: 150px; height: 150px; display: flex; align-items: center; justify-content: center; background: #f1f5f9; color: var(--text-muted); font-size: 0.8rem; text-align: center;">
+                                                QR Code Error</div>
+                                            <% } %>
+                                </div>
+                                <div style="flex: 1;">
+                                    <h4
+                                        style="font-weight: 800; color: var(--text-main); margin-bottom: 0.5rem; font-size: 1.2rem;">
+                                        Scan to Login on Mobile</h4>
+                                    <p style="color: var(--text-muted); line-height: 1.6; margin-bottom: 1rem;">Scanning
+                                        this QR code will open the login page on your mobile device with the current
+                                        campus code (<strong>
+                                            <%= typeof campus !=='undefined' && campus ? campus.campus_code : 'MAIN' %>
+                                        </strong>) already filled in.</p>
+                                    <div
+                                        style="display: flex; gap: 10px; align-items: center; background: #f8fafc; padding: 10px 15px; border-radius: 10px; border: 1px solid #e2e8f0; font-family: monospace; font-size: 0.85rem; color: var(--primary);">
+                                        <i class="fas fa-link"></i>
+                                        <span style="overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">
+                                            <%= loginUrl %>
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+            </main>
+    </div>
+
+    </body>
+
+    </html>

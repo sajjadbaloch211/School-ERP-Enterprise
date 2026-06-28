@@ -1,0 +1,141 @@
+<%- include('../partials/header') %>
+
+    <div class="admin-layout animate-fade-in" style="margin-top: 80px;">
+        <!-- Sidebar -->
+        <!-- Sidebar -->
+        <%- include('../partials/sidebar', { active: 'notices' }) %>
+
+            <!-- Main Content -->
+            <main class="main-content">
+                <header
+                    style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 3rem;">
+                    <div>
+                        <h2 style="font-size: 2rem; font-weight: 800; color: var(--primary);">Notice Board</h2>
+                        <p style="color: var(--text-muted);">Publish announcements to the community</p>
+                    </div>
+                    <button class="btn btn-primary" onclick="document.getElementById('addModal').style.display='block'">
+                        <i class="fas fa-paper-plane"></i> Publish New Notice
+                    </button>
+                </header>
+
+                <div class="animate-slide-up" style="display: flex; flex-direction: column; gap: 1.5rem;">
+                    <% notices.forEach(notice=> { %>
+                        <div class="card" style="padding: 2.5rem; position: relative; border-radius: 24px;">
+                            <div
+                                style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 1.5rem;">
+                                <div>
+                                    <h3
+                                        style="font-weight: 800; color: var(--primary); font-size: 1.4rem; margin-bottom: 0.5rem;">
+                                        <%= notice.title %>
+                                    </h3>
+                                    <% if (typeof isSuperAdmin !=='undefined' && isSuperAdmin && notice.campus_name) {
+                                        %>
+                                        <div style="margin-bottom: 0.5rem;">
+                                            <span
+                                                style="background: #e0f2fe; color: var(--primary); padding: 4px 10px; border-radius: 8px; font-size: 0.8rem; font-weight: 600;">
+                                                <i class="fas fa-building"></i>
+                                                <%= notice.campus_name %>
+                                            </span>
+                                        </div>
+                                        <% } %>
+                                            <p style="color: var(--text-muted); font-size: 0.85rem; font-weight: 600;">
+                                                <i class="far fa-calendar-alt"></i>
+                                                <%= new Date(notice.created_at).toLocaleString() %>
+                                            </p>
+                                </div>
+                                <a href="/admin/notices/delete/<%= notice.id %>"
+                                    style="color: var(--danger); background: #fff1f2; width: 40px; height: 40px; border-radius: 12px; display: flex; align-items: center; justify-content: center; text-decoration: none;"
+                                    onclick="return confirm('Delete this notice permanently?')">
+                                    <i class="fas fa-trash"></i>
+                                </a>
+                            </div>
+                            <div style="color: var(--text-main); line-height: 1.8; font-size: 1.05rem;">
+                                <%= notice.content %>
+                            </div>
+                            <% if (notice.attachment_path) { %>
+                                <div
+                                    style="margin-top: 1.5rem; padding: 1rem; background: #f8fafc; border-radius: 12px; border: 1px dashed #cbd5e1;">
+                                    <div style="display: flex; align-items: center; gap: 12px;">
+                                        <div
+                                            style="width: 40px; height: 40px; background: var(--accent); color: white; border-radius: 10px; display: flex; align-items: center; justify-content: center;">
+                                            <i
+                                                class="fas <%= notice.attachment_path.endsWith('.pdf') ? 'fa-file-pdf' : 'fa-image' %>"></i>
+                                        </div>
+                                        <div style="flex: 1;">
+                                            <p
+                                                style="margin: 0; font-weight: 700; color: var(--primary); font-size: 0.9rem;">
+                                                Attachment Available</p>
+                                            <p style="margin: 0; font-size: 0.75rem; color: var(--text-muted);">Click to
+                                                view or download</p>
+                                        </div>
+                                        <a href="<%= notice.attachment_path %>" target="_blank" download
+                                            style="background: var(--accent); color: white; padding: 8px 16px; border-radius: 8px; text-decoration: none; font-weight: 700; font-size: 0.85rem;">
+                                            <i class="fas fa-download"></i> Download
+                                        </a>
+                                    </div>
+                                </div>
+                                <% } %>
+                                    <div
+                                        style="margin-top: 2rem; padding-top: 1.5rem; border-top: 1px solid #f1f5f9; display: flex; gap: 15px;">
+                                        <span
+                                            style="padding: 5px 12px; background: #f1f5f9; color: var(--text-muted); border-radius: 6px; font-size: 0.75rem; font-weight: 700; text-transform: uppercase;"><i
+                                                class="fas fa-tag"></i> Announcement</span>
+                                    </div>
+                        </div>
+                        <% }) %>
+                </div>
+            </main>
+    </div>
+
+    <!-- Modern Add Modal -->
+    <div id="addModal" class="modal glass"
+        style="display: none; position: fixed; inset: 0; z-index: 2000; background: rgba(15, 23, 42, 0.4); backdrop-filter: blur(8px); flex-items: center; justify-content: center;">
+        <div class="animate-slide-up"
+            style="background: white; width: 100%; max-width: 600px; margin: 40px auto; border-radius: 24px; padding: 3rem; position: relative; box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);">
+            <button onclick="document.getElementById('addModal').style.display='none'"
+                style="position: absolute; right: 2rem; top: 2rem; background: #f8fafc; border: none; width: 40px; height: 40px; border-radius: 50%; cursor: pointer;"><i
+                    class="fas fa-times"></i></button>
+            <h2 style="font-weight: 800; color: var(--primary); margin-bottom: 0.5rem;">Create Announcement</h2>
+            <p style="color: var(--text-muted); margin-bottom: 2.5rem;">Broadcast a new notice to all students and
+                staff.</p>
+
+            <form action="/admin/notices/add" method="POST" enctype="multipart/form-data">
+                <input type="hidden" name="_csrf" value="<%= typeof csrfToken !== 'undefined' ? csrfToken : '' %>">
+                <div style="margin-bottom: 1.5rem;">
+                    <label style="display: block; font-weight: 700; margin-bottom: 8px; font-size: 0.9rem;">Notice
+                        Title</label>
+                    <input type="text" name="title" required placeholder="e.g. Winter Vacation Schedule"
+                        style="width: 100%; padding: 12px 16px; border-radius: 12px; border: 1px solid #e2e8f0; background: #f8fafc;">
+                </div>
+                <div style="margin-bottom: 1.5rem;">
+                    <label style="display: block; font-weight: 700; margin-bottom: 8px; font-size: 0.9rem;">Announcement
+                        Content</label>
+                    <textarea name="content" required rows="6" placeholder="Write the full details here..."
+                        style="width: 100%; padding: 12px 16px; border-radius: 12px; border: 1px solid #e2e8f0; background: #f8fafc; resize: vertical;"></textarea>
+                </div>
+                <div style="margin-bottom: 2rem;">
+                    <label style="display: block; font-weight: 700; margin-bottom: 8px; font-size: 0.9rem;">
+                        <i class="fas fa-paperclip"></i> Attach File (Optional)
+                    </label>
+                    <p style="font-size: 0.8rem; color: var(--text-muted); margin-bottom: 10px;">Upload PDF, Image (JPG,
+                        PNG) - Max 10MB</p>
+                    <input type="file" name="attachment" accept=".pdf,.jpg,.jpeg,.png,.gif"
+                        style="width: 100%; padding: 12px 16px; border-radius: 12px; border: 1px solid #e2e8f0; background: #f8fafc; cursor: pointer;">
+                </div>
+                <button type="submit" class="btn btn-primary" style="width: 100%; padding: 15px;">Publish to
+                    Board</button>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        window.onclick = function (event) {
+            let modal = document.getElementById('addModal');
+            if (event.target == modal) {
+                modal.style.display = "none";
+            }
+        }
+    </script>
+    </body>
+
+    </html>

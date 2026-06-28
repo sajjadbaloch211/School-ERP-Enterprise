@@ -1,65 +1,61 @@
 <%- include('../../partials/header') %>
-    <div class="admin-layout animate-fade-in" style="margin-top: 80px;">
-        <%- include('../../partials/sidebar', { active: 'cms' }) %>
+<div class="adm-layout">
+    <%- include('../../partials/sidebar', { active: 'cms' }) %>
 
-            <main class="main-content">
-                <div style="margin-bottom: 2rem;">
-                    <a href="/admin/cms/pages"
-                        style="color: var(--text-muted); text-decoration: none; font-weight: 600;">
-                        <i class="fas fa-arrow-left"></i> Back to Dashboard
-                    </a>
-                    <h1 style="font-size: 2rem; color: var(--primary); font-weight: 800; margin-top: 1rem;">Global
-                        Settings
-                    </h1>
+    <main class="adm-main" role="main" aria-label="Global Settings">
+        <div style="margin-bottom: 2rem;">
+            <a href="/admin/cms/pages" style="color: var(--adm-text-muted); text-decoration: none; font-weight: 500; font-size: 0.9rem; display: inline-flex; align-items: center; gap: 0.5rem; transition: var(--adm-t-fast);" onmouseover="this.style.color='var(--adm-indigo)';" onmouseout="this.style.color='var(--adm-text-muted)';">
+                <i class="fas fa-arrow-left"></i> Back to Dashboard
+            </a>
+            <h1 class="adm-page-title" style="margin-top: 1rem;">Global Settings</h1>
+        </div>
+
+        <div class="adm-card" style="padding: 2.5rem; max-width: 800px;">
+            <form action="/admin/cms/settings/update" method="POST" enctype="multipart/form-data">
+                <input type="hidden" name="_csrf" value="<%= locals.csrfToken %>">
+
+                <div class="adm-form-group">
+                    <label class="adm-form-label">Site Name</label>
+                    <input type="text" name="site_name" class="adm-input" value="<%= settings.site_name || '' %>" required>
                 </div>
 
-                <div class="card" style="padding: 2rem;">
-                    <form action="/admin/cms/settings/update" method="POST" enctype="multipart/form-data">
-                        <input type="hidden" name="_csrf" value="<%= locals.csrfToken %>">
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem;">
+                    <div class="adm-form-group">
+                        <label class="adm-form-label">Contact Email</label>
+                        <input type="email" name="contact_email" class="adm-input" value="<%= settings.contact_email || '' %>">
+                    </div>
 
-                        <div class="form-group">
-                            <label>Site Name</label>
-                            <input type="text" name="site_name" class="form-control"
-                                value="<%= settings.site_name || '' %>" required>
-                        </div>
-
-                        <div class="form-group">
-                            <label>Contact Email</label>
-                            <input type="email" name="contact_email" class="form-control"
-                                value="<%= settings.contact_email || '' %>">
-                        </div>
-
-                        <div class="form-group">
-                            <label>Contact Phone</label>
-                            <input type="text" name="contact_phone" class="form-control"
-                                value="<%= settings.contact_phone || '' %>">
-                        </div>
-
-                        <div class="form-group">
-                            <label>School Address</label>
-                            <textarea name="address" class="form-control"
-                                rows="2"><%= settings.address || '' %></textarea>
-                        </div>
-
-                        <div class="form-group">
-                            <label>School Logo</label>
-                            <% if (settings.site_logo) { %>
-                                <div
-                                    style="margin-bottom: 15px; background: #f8fafc; padding: 10px; border-radius: 8px; display: inline-block;">
-                                    <img src="<%= settings.site_logo %>" style="height: 60px;">
-                                </div>
-                                <% } %>
-                                    <input type="file" name="site_logo" class="form-control" accept="image/*">
-                                    <small style="color: var(--text-muted);">Leave empty to keep current logo</small>
-                        </div>
-
-                        <button type="submit" class="btn-primary" style="width: 100%; margin-top: 2rem;">Update Global
-                            Settings</button>
-                    </form>
+                    <div class="adm-form-group">
+                        <label class="adm-form-label">Contact Phone</label>
+                        <input type="text" name="contact_phone" class="adm-input" value="<%= settings.contact_phone || '' %>">
+                    </div>
                 </div>
-            </main>
 
-    </div>
-    </body>
+                <div class="adm-form-group">
+                    <label class="adm-form-label">School Address</label>
+                    <textarea name="address" class="adm-input" rows="3"><%= settings.address || '' %></textarea>
+                </div>
 
-    </html>
+                <div class="adm-form-group">
+                    <label class="adm-form-label">School Logo</label>
+                    <div style="background: var(--adm-bg-canvas); padding: 1.5rem; border-radius: var(--adm-r-md); border: 1px dashed var(--adm-border);">
+                        <% if (settings.site_logo) { %>
+                            <div style="margin-bottom: 15px; display: inline-block;">
+                                <img src="<%= settings.site_logo %>" style="height: 60px; border-radius: 4px; box-shadow: var(--adm-shadow-sm);">
+                            </div>
+                        <% } %>
+                        <input type="file" name="site_logo" class="adm-input" accept="image/*" style="border: none; padding: 0;">
+                        <small style="display: block; margin-top: 0.5rem; color: var(--adm-text-muted);">Leave empty to keep current logo</small>
+                    </div>
+                </div>
+
+                <div style="margin-top: 2.5rem; display: flex; justify-content: flex-end;">
+                    <button type="submit" class="adm-btn adm-btn-primary">
+                        <i class="fas fa-save" style="margin-right: 0.5rem;"></i> Update Global Settings
+                    </button>
+                </div>
+            </form>
+        </div>
+    </main>
+</div>
+<%- include('../../partials/footer') %>

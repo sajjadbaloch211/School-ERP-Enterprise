@@ -1,133 +1,150 @@
 <%- include('../partials/header') %>
 
-    <div class="admin-layout animate-fade-in" style="margin-top: 80px;">
-        <!-- Sidebar -->
-        <%- include('../partials/sidebar', { active: 'exams' }) %>
+  <!-- ════════════════════════════════════════════════════════════
+       ADMIN LAYOUT
+       ════════════════════════════════════════════════════════════ -->
+  <div class="adm-layout">
 
-            <main class="main-content">
-                <header style="margin-bottom: 3rem;">
-                    <div>
-                        <a href="/admin/exams"
-                            style="color: var(--text-muted); font-weight: 600; text-decoration: none; display: flex; align-items: center; gap: 5px; margin-bottom: 10px;">
-                            <i class="fas fa-arrow-left"></i> Back to Exams
-                        </a>
-                        <h2 style="font-size: 2rem; font-weight: 800; color: var(--primary);">
-                            <%= exam.exam_name %> Results
-                        </h2>
-                        <p style="color: var(--text-muted);">View student performance by class</p>
-                    </div>
-                </header>
+    <!-- Sidebar -->
+    <%- include('../partials/sidebar', { active: 'exams' }) %>
 
-                <% if(viewMode==='overview' ) { %>
-                    <!-- CLASS OVERVIEW GRID (Simplified) -->
-                    <div class="grid"
-                        style="grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 1.5rem;">
-                        <% overview.forEach(cls=> {
-                            const hasResults = cls.results_count > 0;
-                            %>
-                            <a href="/admin/exams/<%= exam.id %>/results?class_id=<%= cls.id %>"
-                                class="card animate-slide-up"
-                                style="text-decoration: none; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 2.5rem; transition: transform 0.2s, box-shadow 0.2s; cursor: pointer;">
+    <!-- ══ MAIN CONTENT ══════════════════════════════════════════ -->
+    <main class="adm-main" role="main" aria-label="Exam Results">
 
-                                <div
-                                    style="width: 60px; height: 60px; background: var(--bg-light); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin-bottom: 1rem;">
-                                    <i class="fas fa-users" style="font-size: 1.5rem; color: var(--primary);"></i>
-                                </div>
+      <!-- ── Page Header ── -->
+      <div class="adm-page-header" style="flex-direction: column; align-items: flex-start; gap: 0.5rem;">
+        <a href="/admin/exams" class="adm-btn adm-btn-ghost" style="padding: 0; background: transparent; color: var(--adm-text-muted); font-size: 0.9rem; margin-bottom: 0.25rem;">
+          <i class="fas fa-arrow-left" aria-hidden="true" style="margin-right: 0.5rem;"></i> Back to Exams
+        </a>
+        <div>
+          <h1 class="adm-page-title"><%= exam.exam_name %> Results</h1>
+          <p class="adm-page-subtitle">View student performance by class and evaluate outcomes</p>
+        </div>
+      </div>
 
-                                <h3
-                                    style="font-size: 1.5rem; font-weight: 800; color: var(--primary); margin-bottom: 0.5rem;">
-                                    <%= cls.class_name %>
-                                </h3>
+      <!-- ── Dynamic Content: Overview or Detail ── -->
+      <% if (viewMode === 'overview') { %>
 
-                                <% if(hasResults) { %>
-                                    <span
-                                        style="background: #ecfdf5; color: #10b981; padding: 4px 12px; border-radius: 20px; font-size: 0.8rem; font-weight: 700;">
-                                        View Results
-                                    </span>
-                                    <% } else { %>
-                                        <span
-                                            style="background: #f1f5f9; color: var(--text-muted); padding: 4px 12px; border-radius: 20px; font-size: 0.8rem; font-weight: 600;">
-                                            No Results
-                                        </span>
-                                        <% } %>
-                            </a>
-                            <% }); %>
-                    </div>
+        <!-- OVERVIEW MODE (Class Grid) -->
+        <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 1.5rem;">
+          <% overview.forEach(cls => {
+            const hasResults = cls.results_count > 0;
+          %>
+            <a href="/admin/exams/<%= exam.id %>/results?class_id=<%= cls.id %>" class="adm-card" style="text-decoration: none; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 2.5rem 2rem; transition: transform 0.2s ease, box-shadow 0.2s ease;">
+              
+              <div class="adm-avatar" style="width: 64px; height: 64px; font-size: 1.5rem; background: var(--adm-indigo-bg); color: var(--adm-indigo); margin-bottom: 1.25rem;">
+                <i class="fas fa-users" aria-hidden="true"></i>
+              </div>
+              
+              <h3 style="font-size: 1.4rem; font-weight: 800; color: var(--adm-text-primary); margin-bottom: 0.75rem; text-align: center;">
+                <%= cls.class_name %>
+              </h3>
 
-                    <% } else { %>
-                        <!-- DETAIL VIEW (Results Sheet) -->
-                        <div class="card animate-slide-up">
-                            <div
-                                style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
-                                <div>
-                                    <h3 style="font-weight: 800; color: var(--primary);">
-                                        <%= currentClass.class_name %> (<%= currentClass.section %>)
-                                    </h3>
-                                    <p style="color: var(--text-muted);">Result Sheet</p>
-                                </div>
-                                <a href="/admin/exams/<%= exam.id %>/results" class="btn"
-                                    style="background: #f1f5f9; color: var(--text-main); font-weight: 600;">
-                                    <i class="fas fa-th"></i> View All Classes
-                                </a>
-                            </div>
+              <% if(hasResults) { %>
+                <span class="adm-badge adm-badge-green">
+                  View Results <i class="fas fa-arrow-right" aria-hidden="true" style="margin-left: 0.25rem;"></i>
+                </span>
+              <% } else { %>
+                <span class="adm-badge" style="background: var(--adm-bg-elevated); color: var(--adm-text-muted); border: 1px solid var(--adm-border);">
+                  No Results
+                </span>
+              <% } %>
 
-                            <table class="data-table" style="width: 100%; border-collapse: collapse;">
-                                <thead>
-                                    <tr style="background: var(--bg-light); text-align: left;">
-                                        <th style="padding: 1rem; border-radius: 12px 0 0 12px;">Roll No</th>
-                                        <th style="padding: 1rem;">Student Name</th>
-                                        <th style="padding: 1rem;">Subject</th>
-                                        <th style="padding: 1rem;">Marks Obtained</th>
-                                        <th style="padding: 1rem;">Total Marks</th>
-                                        <th style="padding: 1rem;">Grade</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <% if(results.length===0) { %>
-                                        <tr>
-                                            <td colspan="6"
-                                                style="padding: 3rem; text-align: center; color: var(--text-muted);">
-                                                No results uploaded for this class yet.
-                                            </td>
-                                        </tr>
-                                        <% } %>
-                                            <% results.forEach(res=> { %>
-                                                <% if(res.marks_obtained !==null) { let bg='#f8fafc' ; let
-                                                    color='#64748b' ; if(res.grade==='A+' || res.grade==='A' ) {
-                                                    bg='#ecfdf5' ; color='#10b981' ; } else if(res.grade==='F' ) {
-                                                    bg='#fef2f2' ; color='#ef4444' ; } %>
-                                                    <tr style="border-bottom: 1px solid #f1f5f9;">
-                                                        <td
-                                                            style="padding: 1rem; font-family: monospace; font-weight: 600;">
-                                                            <%= res.roll_no %>
-                                                        </td>
-                                                        <td style="padding: 1rem; font-weight: 700;">
-                                                            <%= res.full_name %>
-                                                        </td>
-                                                        <td style="padding: 1rem;">
-                                                            <%= res.subject %>
-                                                        </td>
-                                                        <td style="padding: 1rem; font-weight: 700;">
-                                                            <%= res.marks_obtained %>
-                                                        </td>
-                                                        <td style="padding: 1rem; color: var(--text-muted);">
-                                                            <%= res.total_marks %>
-                                                        </td>
-                                                        <td style="padding: 1rem;">
-                                                            <span
-                                                                style="background: <%= bg %>; color: <%= color %>; padding: 4px 12px; border-radius: 20px; font-weight: 800; font-size: 0.85rem;">
-                                                                <%= res.grade %>
-                                                            </span>
-                                                        </td>
-                                                    </tr>
-                                                    <% } %>
-                                                        <% }); %>
-                                </tbody>
-                            </table>
-                        </div>
-                        <% } %>
+            </a>
+          <% }); %>
+          
+          <% if (overview.length === 0) { %>
+            <div style="grid-column: 1 / -1; padding: 4rem 1rem; text-align: center; background: var(--adm-bg-surface); border: 1px dashed var(--adm-border); border-radius: var(--adm-r-lg);">
+              <i class="fas fa-layer-group" style="font-size: 2.5rem; color: var(--adm-text-muted); opacity: 0.3; margin-bottom: 1rem;" aria-hidden="true"></i>
+              <h3 style="color: var(--adm-text-muted); font-weight: 600;">No Classes Configured</h3>
+            </div>
+          <% } %>
+        </div>
 
-            </main>
-    </div>
+      <% } else { %>
 
-    <%- include('../partials/footer') %>
+        <!-- DETAIL VIEW (Results Sheet) -->
+        <div class="adm-card" style="padding: 0; overflow: hidden;">
+          
+          <!-- Header Bar -->
+          <div style="display: flex; justify-content: space-between; align-items: center; padding: 1.5rem; border-bottom: 1px solid var(--adm-border); flex-wrap: wrap; gap: 1rem;">
+            <div>
+              <h2 style="font-size: 1.3rem; font-weight: 800; color: var(--adm-text-primary); margin: 0;">
+                <%= currentClass.class_name %> (Sec: <%= currentClass.section %>)
+              </h2>
+              <p style="color: var(--adm-text-muted); font-weight: 600; font-size: 0.85rem; margin-top: 0.25rem;">Result Sheet</p>
+            </div>
+            <a href="/admin/exams/<%= exam.id %>/results" class="adm-btn adm-btn-ghost" style="background: var(--adm-bg-elevated);">
+              <i class="fas fa-th" aria-hidden="true"></i> View All Classes
+            </a>
+          </div>
+
+          <!-- Data Table -->
+          <div style="overflow-x: auto;">
+            <table class="adm-table" aria-label="Student Exam Results">
+              <thead>
+                <tr>
+                  <th scope="col" style="width: 80px;">Roll No</th>
+                  <th scope="col">Student Name</th>
+                  <th scope="col">Subject</th>
+                  <th scope="col">Marks Obtained</th>
+                  <th scope="col">Total Marks</th>
+                  <th scope="col" style="text-align: right;">Grade</th>
+                </tr>
+              </thead>
+              <tbody>
+                <% if (results.length === 0) { %>
+                  <tr>
+                    <td colspan="6" style="padding: 4rem 1rem; text-align: center;">
+                      <div class="adm-empty-state">
+                        <i class="fas fa-clipboard-list adm-empty-icon" aria-hidden="true"></i>
+                        <h3>No Results Uploaded</h3>
+                        <p>There are no grades recorded for this class yet.</p>
+                      </div>
+                    </td>
+                  </tr>
+                <% } %>
+                
+                <% results.forEach(res => { %>
+                  <% if(res.marks_obtained !== null) { 
+                      let badgeClass = 'adm-badge-blue';
+                      if(['A+', 'A'].includes(res.grade)) badgeClass = 'adm-badge-green';
+                      else if(['F'].includes(res.grade)) badgeClass = 'adm-badge-red';
+                      else if(['B+', 'B'].includes(res.grade)) badgeClass = 'adm-badge-purple';
+                      else if(['C', 'D'].includes(res.grade)) badgeClass = 'adm-badge-amber';
+                  %>
+                    <tr>
+                      <td style="font-family: 'JetBrains Mono', monospace; font-weight: 600; color: var(--adm-text-primary);">
+                        <%= res.roll_no %>
+                      </td>
+                      <td style="font-weight: 700; color: var(--adm-text-primary);">
+                        <%= res.full_name %>
+                      </td>
+                      <td style="font-weight: 600; color: var(--adm-text-muted);">
+                        <%= res.subject %>
+                      </td>
+                      <td style="font-weight: 800; color: var(--adm-text-primary); font-size: 1.1rem;">
+                        <%= res.marks_obtained %>
+                      </td>
+                      <td style="font-weight: 600; color: var(--adm-text-muted);">
+                        <%= res.total_marks %>
+                      </td>
+                      <td style="text-align: right;">
+                        <span class="adm-badge <%= badgeClass %>" style="font-size: 0.85rem; font-weight: 800; padding: 0.4rem 0.8rem;">
+                          <%= res.grade %>
+                        </span>
+                      </td>
+                    </tr>
+                  <% } %>
+                <% }); %>
+              </tbody>
+            </table>
+          </div>
+
+        </div>
+      <% } %>
+
+    </main>
+  </div>
+
+<%- include('../partials/footer') %>

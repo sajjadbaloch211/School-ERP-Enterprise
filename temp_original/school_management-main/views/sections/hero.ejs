@@ -1,0 +1,44 @@
+<!-- Dynamic Hero Section -->
+<section class="dynamic-hero"
+    style="position: relative; min-height: 80vh; display: flex; align-items: center; background: <%= content.backgroundColor || 'linear-gradient(135deg, #0f172a 0%, #1e293b 100%)' %>; color: white; padding: 100px 5%;">
+    <div class="container" style="max-width: 1400px; margin: 0 auto; width: 100%;">
+        <div
+            style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 4rem; align-items: center;">
+            <div class="hero-content">
+                <% if(content.badge) { %>
+                    <div
+                        style="display: inline-block; background: rgba(255,255,255,0.1); padding: 8px 20px; border-radius: 50px; margin-bottom: 2rem; font-weight: 700; border: 1px solid rgba(255,255,255,0.2);">
+                        <%= content.badge %>
+                    </div>
+                    <% } %>
+                        <h1
+                            style="font-size: clamp(2.5rem, 5vw, 4.5rem); font-weight: 900; line-height: 1.1; margin-bottom: 1.5rem;">
+                            <%= content.title %>
+                        </h1>
+                        <p style="font-size: 1.25rem; line-height: 1.6; margin-bottom: 2.5rem; opacity: 0.9;">
+                            <%= content.subtitle %>
+                        </p>
+                        <div style="display: flex; gap: 1rem; flex-wrap: wrap;">
+                            <% if(content.primaryBtnText) { %>
+                                <a href="<%= content.primaryBtnUrl || '#' %>" class="btn"
+                                    style="background: white; color: #0f172a; padding: 15px 35px; border-radius: 50px; font-weight: 700; text-decoration: none;">
+                                    <%= content.primaryBtnText %>
+                                </a>
+                                <% } %>
+                                    <% if(content.secondaryBtnText) { %>
+                                        <a href="<%= content.secondaryBtnUrl || '#' %>" class="btn-outline"
+                                            style="border: 2px solid rgba(255,255,255,0.3); color: white; padding: 15px 35px; border-radius: 50px; font-weight: 700; text-decoration: none;">
+                                            <%= content.secondaryBtnText %>
+                                        </a>
+                                        <% } %>
+                        </div>
+            </div>
+            <% if(content.image) { %>
+                <div class="hero-image" style="position: relative;">
+                    <img src="<%= content.image %>" alt="Hero Image"
+                        style="width: 100%; border-radius: 30px; box-shadow: 0 30px 60px rgba(0,0,0,0.3);">
+                </div>
+                <% } %>
+        </div>
+    </div>
+</section>

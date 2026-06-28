@@ -1,0 +1,151 @@
+<aside class="sidebar glass" id="adminSidebar"
+    style="margin: 20px; border-radius: 24px; border: 1px solid rgba(0,0,0,0.05); box-shadow: var(--card-shadow);">
+
+    <!-- Mobile Close Button -->
+    <button class="sidebar-close-btn" id="sidebarCloseBtn" aria-label="Close sidebar">
+        <i class="fas fa-times"></i>
+    </button>
+
+    <div style="margin-bottom: 3rem; text-align: center;">
+        <div
+            style="width: 80px; height: 80px; background: white; border-radius: 20px; display: flex; align-items: center; justify-content: center; margin: 0 auto 1.5rem; border: 2px solid #eee; overflow: hidden; padding: 5px;">
+            <img src="/images/waqar.png" alt="Logo" style="width: 100%; height: 100%; object-fit: contain;">
+        </div>
+        <h3 style="color: var(--primary); font-weight: 800;">
+            <%= typeof campus !=='undefined' && campus ? campus.campus_name : 'Admin Panel' %>
+        </h3>
+        <% if(typeof campus !=='undefined' && campus) { %>
+            <small style="color: var(--text-muted); display: block; margin-top: -5px; font-weight: 600;">
+                <%= campus.campus_code %>
+            </small>
+            <% } %>
+    </div>
+    <ul class="sidebar-nav">
+        <li><a href="/admin/dashboard"
+                class="<%= typeof active !== 'undefined' && active === 'dashboard' ? 'active' : '' %>"><i
+                    class="fas fa-th-large"></i> Dashboard</a></li>
+        <li><a href="/admin/students"
+                class="<%= typeof active !== 'undefined' && active === 'students' ? 'active' : '' %>"><i
+                    class="fas fa-user-graduate"></i> Students</a></li>
+        <li><a href="/admin/teachers"
+                class="<%= typeof active !== 'undefined' && active === 'teachers' ? 'active' : '' %>"><i
+                    class="fas fa-chalkboard-teacher"></i> Teachers</a></li>
+        <li><a href="/admin/classes"
+                class="<%= typeof active !== 'undefined' && active === 'classes' ? 'active' : '' %>"><i
+                    class="fas fa-school"></i> Classes</a></li>
+        <li><a href="/admin/fees" class="<%= typeof active !== 'undefined' && active === 'fees' ? 'active' : '' %>"><i
+                    class="fas fa-file-invoice-dollar"></i> Fees</a></li>
+        <li><a href="/admin/payroll"
+                class="<%= typeof active !== 'undefined' && active === 'payroll' ? 'active' : '' %>"><i
+                    class="fas fa-money-bill-wave"></i> Staff Payroll</a></li>
+        <li><a href="/admin/timetable"
+                class="<%= typeof active !== 'undefined' && active === 'timetable' ? 'active' : '' %>"><i
+                    class="fas fa-calendar-alt"></i> Timetable</a></li>
+        <li><a href="/admin/attendance"
+                class="<%= typeof active !== 'undefined' && active === 'attendance' ? 'active' : '' %>"><i
+                    class="fas fa-calendar-check"></i> Attendance</a></li>
+        <li><a href="/admin/exams" class="<%= typeof active !== 'undefined' && active === 'exams' ? 'active' : '' %>"><i
+                    class="fas fa-clipboard-list"></i> Exams</a></li>
+        <li><a href="/admin/notices"
+                class="<%= typeof active !== 'undefined' && active === 'notices' ? 'active' : '' %>"><i
+                    class="fas fa-bullhorn"></i> Notices</a></li>
+        <li><a href="/admin/email" class="<%= typeof active !== 'undefined' && active === 'email' ? 'active' : '' %>"><i
+                    class="fas fa-envelope"></i> Email</a></li>
+        <li><a href="/admin/library"
+                class="<%= typeof active !== 'undefined' && active === 'library' ? 'active' : '' %>"><i
+                    class="fas fa-book-reader"></i> E-Library</a></li>
+
+
+
+        <!-- Website Management (Restored) -->
+        <li class="sidebar-header"
+            style="margin-top: 15px; padding-left: 20px; font-size: 0.75rem; color: #aaa; text-transform: uppercase; letter-spacing: 1px; font-weight: 700;">
+            Website Control</li>
+        <li><a href="/admin/cms/settings"
+                class="<%= typeof active !== 'undefined' && active === 'cms_settings' ? 'active' : '' %>"><i
+                    class="fas fa-cogs"></i> General Settings</a></li>
+        <li><a href="/admin/cms/theme"
+                class="<%= typeof active !== 'undefined' && active === 'cms_theme' ? 'active' : '' %>"><i
+                    class="fas fa-palette"></i> Theme & Colors</a></li>
+        <li><a href="/admin/cms/pages"
+                class="<%= typeof active !== 'undefined' && active === 'cms_pages' ? 'active' : '' %>"><i
+                    class="fas fa-columns"></i> Page Builder</a></li>
+        <li><a href="/admin/cms/menus"
+                class="<%= typeof active !== 'undefined' && active === 'cms_menus' ? 'active' : '' %>"><i
+                    class="fas fa-compass"></i> Menu Manager</a></li>
+
+        <li><a href="/admin/audit-logs"
+                class="<%= typeof active !== 'undefined' && active === 'audit-logs' ? 'active' : '' %>"
+                style="<%= typeof active !== 'undefined' && active === 'audit-logs' ? '' : 'color: #f59e0b;' %>"><i
+                    class="fas fa-shield-alt"></i> Security & Audits</a></li>
+        <% if (user && user.role==='admin' ) { %>
+            <li><a href="/admin/mfa-setup"
+                    class="<%= typeof active !== 'undefined' && active === 'mfa' ? 'active' : '' %>"
+                    style="<%= typeof active !== 'undefined' && active === 'mfa' ? '' : 'color: #10b981;' %>"><i
+                        class="fas fa-fingerprint"></i> 2FA Security <%= user.mfa_enabled ? '✅' : '🔒' %></a>
+            </li>
+            <% } %>
+                <li><a href="/admin/campuses"
+                        class="<%= typeof active !== 'undefined' && active === 'campuses' ? 'active' : '' %>"
+                        style="<%= typeof active !== 'undefined' && active === 'campuses' ? '' : 'color: #6366f1;' %>"><i
+                            class="fas fa-university"></i> Campuses</a></li>
+                <li style="margin-top: 2rem;"><a href="/logout" style="color: var(--danger);"><i
+                            class="fas fa-sign-out-alt"></i> Logout System</a></li>
+    </ul>
+</aside>
+
+<!-- Mobile Sidebar Toggle Script -->
+<script>
+    (function () {
+        const sidebar = document.getElementById('adminSidebar');
+        const overlay = document.getElementById('sidebarOverlay');
+        const toggleBtn = document.getElementById('sidebarToggle');
+        const closeBtn = document.getElementById('sidebarCloseBtn');
+
+        function openSidebar() {
+            if (sidebar && overlay) {
+                sidebar.classList.add('active');
+                overlay.classList.add('active');
+                document.body.style.overflow = 'hidden'; // Prevent body scroll
+            }
+        }
+
+        function closeSidebar() {
+            if (sidebar && overlay) {
+                sidebar.classList.remove('active');
+                overlay.classList.remove('active');
+                document.body.style.overflow = ''; // Restore body scroll
+            }
+        }
+
+        // Toggle button click
+        if (toggleBtn) {
+            toggleBtn.addEventListener('click', openSidebar);
+        }
+
+        // Close button click
+        if (closeBtn) {
+            closeBtn.addEventListener('click', closeSidebar);
+        }
+
+        // Overlay click
+        if (overlay) {
+            overlay.addEventListener('click', closeSidebar);
+        }
+
+        // Keyboard support (ESC key)
+        document.addEventListener('keydown', function (e) {
+            if (e.key === 'Escape' && sidebar && sidebar.classList.contains('active')) {
+                closeSidebar();
+            }
+        });
+
+        // Close sidebar when clicking any link (mobile only)
+        if (sidebar && window.innerWidth <= 768) {
+            const sidebarLinks = sidebar.querySelectorAll('a');
+            sidebarLinks.forEach(link => {
+                link.addEventListener('click', closeSidebar);
+            });
+        }
+    })();
+</script>

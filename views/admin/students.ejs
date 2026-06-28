@@ -1,510 +1,481 @@
 <%- include('../partials/header') %>
 
-    <div class="admin-layout animate-fade-in" style="margin-top: 80px;">
-        <!-- Sidebar -->
-        <!-- Sidebar -->
-        <%- include('../partials/sidebar', { active: 'students' }) %>
+  <!-- ════════════════════════════════════════════════════════════
+       ADMIN LAYOUT
+       ════════════════════════════════════════════════════════════ -->
+  <div class="adm-layout">
 
-            <!-- Main Content -->
-            <main class="main-content">
-                <!-- Success/Error Messages -->
-                <script>
-                    // Get URL parameters
-                    const urlParams = new URLSearchParams(window.location.search);
-                    const successMsg = urlParams.get('success');
-                    const errorMsg = urlParams.get('error');
-                    const errorsMsg = urlParams.get('errors');
+    <!-- Sidebar -->
+    <%- include('../partials/sidebar', { active: 'students' }) %>
 
-                    // Display success message
-                    if (successMsg) {
-                        const banner = document.createElement('div');
-                        banner.style.cssText = 'background: #ecfdf5; border: 2px solid #10b981; color: #065f46; padding: 1rem 1.5rem; border-radius: 12px; margin-bottom: 2rem; display: flex; align-items: center; gap: 12px; font-weight: 600;';
-                        banner.innerHTML = `<i class="fas fa-check-circle" style="color: #10b981; font-size: 1.2rem;"></i> ${decodeURIComponent(successMsg)}`;
-                        document.currentScript.parentElement.appendChild(banner);
+    <!-- ══ MAIN CONTENT ══════════════════════════════════════════ -->
+    <main class="adm-main" role="main" aria-label="Students portal">
 
-                        // Auto-hide after 5 seconds
-                        setTimeout(() => banner.style.display = 'none', 8000);
-                    }
+      <!-- Success/Error Messages -->
+      <script>
+        (function() {
+          const urlParams = new URLSearchParams(window.location.search);
+          const successMsg = urlParams.get('success');
+          const errorMsg = urlParams.get('error');
+          const errorsMsg = urlParams.get('errors');
 
-                    // Display error message
-                    if (errorMsg) {
-                        const banner = document.createElement('div');
-                        banner.style.cssText = 'background: #fef2f2; border: 2px solid #ef4444; color: #991b1b; padding: 1rem 1.5rem; border-radius: 12px; margin-bottom: 2rem; display: flex; align-items: center; gap: 12px; font-weight: 600;';
-                        banner.innerHTML = `<i class="fas fa-exclamation-triangle" style="color: #ef4444; font-size: 1.2rem;"></i> ${decodeURIComponent(errorMsg)}`;
-                        document.currentScript.parentElement.appendChild(banner);
-                    }
+          // Display success message
+          if (successMsg) {
+            const banner = document.createElement('div');
+            banner.className = 'adm-banner adm-banner-success';
+            banner.setAttribute('role', 'alert');
+            banner.setAttribute('aria-live', 'polite');
+            banner.innerHTML = `
+              <i class="fas fa-check-circle adm-banner-icon" aria-hidden="true"></i>
+              <div class="adm-banner-content">
+                <div class="adm-banner-body">${decodeURIComponent(successMsg)}</div>
+              </div>
+              <button class="adm-banner-close" aria-label="Dismiss notification" type="button">
+                <i class="fas fa-times" aria-hidden="true"></i>
+              </button>
+            `;
+            document.currentScript.parentElement.appendChild(banner);
+            setTimeout(() => {
+              banner.style.transition = 'opacity 0.25s, transform 0.25s';
+              banner.style.opacity = '0';
+              banner.style.transform = 'translateY(-8px)';
+              setTimeout(() => banner.remove(), 260);
+            }, 6000);
+          }
 
-                    // Display detailed errors
-                    if (errorsMsg) {
-                        const banner = document.createElement('div');
-                        banner.style.cssText = 'background: #fffbeb; border: 2px solid #f59e0b; color: #92400e; padding: 1rem 1.5rem; border-radius: 12px; margin-bottom: 2rem; font-weight: 600;';
-                        const errorsList = decodeURIComponent(errorsMsg).split(' | ');
-                        banner.innerHTML = `
-                            <div style="display: flex; align-items: start; gap: 12px;">
-                                <i class="fas fa-info-circle" style="color: #f59e0b; font-size: 1.2rem; margin-top: 2px;"></i>
-                                <div>
-                                    <strong>Import Errors:</strong>
-                                    <ul style="margin: 8px 0 0 0; padding-left: 20px; font-weight: 500;">
-                                        ${errorsList.map(err => `<li>${err}</li>`).join('')}
-                                    </ul>
-                                </div>
-                            </div>
-                        `;
-                        document.currentScript.parentElement.appendChild(banner);
-                    }
-                </script>
+          // Display error message
+          if (errorMsg) {
+            const banner = document.createElement('div');
+            banner.className = 'adm-banner adm-banner-danger';
+            banner.setAttribute('role', 'alert');
+            banner.setAttribute('aria-live', 'assertive');
+            banner.innerHTML = `
+              <i class="fas fa-exclamation-triangle adm-banner-icon" aria-hidden="true"></i>
+              <div class="adm-banner-content">
+                <div class="adm-banner-body">${decodeURIComponent(errorMsg)}</div>
+              </div>
+              <button class="adm-banner-close" aria-label="Dismiss notification" type="button">
+                <i class="fas fa-times" aria-hidden="true"></i>
+              </button>
+            `;
+            document.currentScript.parentElement.appendChild(banner);
+          }
 
-                <header
-                    style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 3rem; flex-wrap: wrap; gap: 20px;">
-                    <div>
-                        <% if (viewMode==='classes' ) { %>
-                            <h2 style="font-size: 2rem; font-weight: 800; color: var(--primary);">Class Blocks</h2>
-                            <p style="color: var(--text-muted);">Select a class block to view its students</p>
-                            <% } else { %>
-                                <h2 style="font-size: 2rem; font-weight: 800; color: var(--primary);">
-                                    <%= currentClass.class_name %> <span
-                                            style="font-weight:400; font-size:1.5rem; opacity:0.7;">
-                                            <%= currentClass.section %>
-                                        </span>
-                                </h2>
-                                <p style="color: var(--text-muted);">
-                                    <% if(currentClass.class_name==='Search Results' ) { %>
-                                        Found <%= students.length %> matches across all classes
-                                            <% } else { %>
-                                                Viewing students in this specific block
-                                                <% } %>
-                                </p>
-                                <% } %>
-                    </div>
-
-                    <!-- Global Search Bar -->
-                    <div style="flex-grow: 1; max-width: 400px; margin: 0 20px;">
-                        <form action="/admin/students" method="GET" style="position: relative;">
-                            <i class="fas fa-search"
-                                style="position: absolute; left: 15px; top: 50%; transform: translateY(-50%); color: var(--text-muted);"></i>
-                            <input type="text" name="search" placeholder="Global Search (Name or ID)..."
-                                style="width: 100%; padding: 12px 15px 12px 45px; border-radius: 50px; border: 1px solid #cbd5e1; background: white; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05); transition: all 0.3s;"
-                                onfocus="this.style.borderColor = 'var(--accent)';"
-                                onblur="this.style.borderColor = '#cbd5e1';">
-                        </form>
-                    </div>
-
-                    <div style="display: flex; gap: 10px; align-items: center;">
-                        <% if (viewMode==='students' ) { %>
-                            <a href="/admin/students" class="btn"
-                                style="color: var(--text-muted); font-weight: 600; margin-right: 1rem; text-decoration: none;"><i
-                                    class="fas fa-arrow-left"></i> Back to Blocks</a>
-                            <% } %>
-
-                                <button class="btn"
-                                    onclick="document.getElementById('importModal').style.display='flex'"
-                                    style="background: #f1f5f9; color: var(--primary); padding: 12px 20px; border-radius: 12px; font-weight: 700; display: flex; align-items: center; gap: 8px; border: none; cursor: pointer;">
-                                    <i class="fas fa-file-import"></i> Import CSV
-                                </button>
-
-                                <button class="btn btn-primary"
-                                    onclick="document.getElementById('addModal').style.display='flex'"
-                                    style="padding: 12px 20px; border-radius: 12px; font-weight: 700; display: flex; align-items: center; gap: 8px; border: none; cursor: pointer;">
-                                    <i class="fas fa-plus"></i> Add Student
-                                </button>
-                    </div>
-                </header>
-
-                <% if (viewMode==='classes' ) { %>
-                    <!-- Step 1: Grid of Class Blocks -->
-                    <div class="grid animate-slide-up"
-                        style="grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 2rem;">
-                        <% classes.forEach(cls=> { %>
-                            <a href="/admin/students?class_id=<%= cls.id %>" class="card hover-scale"
-                                style="padding: 2.5rem; text-decoration: none; text-align: center; border-radius: 24px; border: 2px solid transparent; transition: all 0.3s ease;">
-                                <div
-                                    style="width: 70px; height: 70px; background: rgba(59, 130, 246, 0.1); color: var(--accent); border-radius: 20px; display: flex; align-items: center; justify-content: center; font-size: 2rem; margin: 0 auto 1.5rem;">
-                                    <i class="fas fa-school"></i>
-                                </div>
-                                <h3 style="font-weight: 800; color: var(--primary); margin-bottom: 0.5rem;">
-                                    <%= cls.class_name %>
-                                </h3>
-                                <p
-                                    style="color: var(--text-muted); font-weight: 700; font-size: 0.9rem; text-transform: uppercase; letter-spacing: 1px;">
-                                    Section: <%= cls.section %>
-                                </p>
-                                <% if (typeof isSuperAdmin !=='undefined' && isSuperAdmin && cls.campus_name) { %>
-                                    <span
-                                        style="background: #e0f2fe; color: var(--primary); padding: 4px 10px; border-radius: 8px; font-size: 0.8rem; font-weight: 600; margin-top: 5px; display: inline-block;">
-                                        <%= cls.campus_name %>
-                                    </span>
-                                    <% } %>
-                                        <div
-                                            style="margin-top: 1.5rem; padding-top: 1.5rem; border-top: 1px solid #f1f5f9; display: flex; justify-content: center; align-items: center; gap: 10px;">
-                                            <span
-                                                style="background: var(--accent); color: white; padding: 4px 12px; border-radius: 50px; font-size: 0.75rem; font-weight: 800;">
-                                                <%= cls.student_count %> Students
-                                            </span>
-                                            <span
-                                                style="color: var(--text-muted); font-size: 0.8rem; font-weight: 600;">Open
-                                                Block
-                                                <i class="fas fa-chevron-right" style="font-size: 0.7rem;"></i></span>
-                                        </div>
-                            </a>
-                            <% }) %>
-                    </div>
-                    <% } else { %>
-                        <!-- Step 2: Student List for Selected Class -->
-                        <div class="card animate-slide-up" style="padding: 0; overflow: hidden; border-radius: 24px;">
-                            <div
-                                style="padding: 1.5rem 2rem; background: #f8fafc; border-bottom: 1px solid #edf2f7; display: flex; justify-content: space-between; align-items: center;">
-                                <h4 style="font-weight: 800; color: var(--primary); margin: 0;">Class Member List</h4>
-
-                                <!-- Search Bar -->
-                                <div style="position: relative; width: 300px; margin: 0 15px;">
-                                    <i class="fas fa-search"
-                                        style="position: absolute; left: 15px; top: 50%; transform: translateY(-50%); color: var(--text-muted);"></i>
-                                    <input type="text" id="studentSearch" placeholder="Search students..."
-                                        style="width: 100%; padding: 8px 15px 8px 40px; border-radius: 50px; border: 1px solid #e2e8f0; background: #f8fafc; font-size: 0.9rem;"
-                                        onkeyup="filterTable('studentSearch', 'studentTableBody')">
-                                </div>
-
-                                <span class="glass"
-                                    style="padding: 5px 15px; border-radius: 50px; font-size: 0.8rem; font-weight: 700; color: var(--accent);">
-                                    <%= students.length %> Enrolled
-                                </span>
-                            </div>
-                            <div style="overflow-x: auto;">
-                                <table style="width: 100%; border-collapse: collapse; text-align: left;">
-                                    <thead>
-                                        <tr style="background: #f8fafc;">
-                                            <th
-                                                style="padding: 1.2rem 2rem; color: var(--text-muted); font-weight: 600; font-size: 0.85rem; text-transform: uppercase;">
-                                                Roll No</th>
-                                            <% if (typeof isSuperAdmin !=='undefined' && isSuperAdmin) { %>
-                                                <th
-                                                    style="padding: 1.2rem 2rem; color: var(--text-muted); font-weight: 600; font-size: 0.85rem; text-transform: uppercase;">
-                                                    Campus</th>
-                                                <% } %>
-                                                    <th
-                                                        style="padding: 1.2rem 2rem; color: var(--text-muted); font-weight: 600; font-size: 0.85rem; text-transform: uppercase;">
-                                                        Student Name</th>
-                                                    <th
-                                                        style="padding: 1.2rem 2rem; color: var(--text-muted); font-weight: 600; font-size: 0.85rem; text-transform: uppercase;">
-                                                        Father Name</th>
-                                                    <th
-                                                        style="padding: 1.2rem 2rem; color: var(--text-muted); font-weight: 600; font-size: 0.85rem; text-transform: uppercase;">
-                                                        User ID</th>
-                                                    <th
-                                                        style="padding: 1.2rem 2rem; color: var(--text-muted); font-weight: 600; font-size: 0.85rem; text-transform: uppercase;">
-                                                        Status</th>
-                                                    <th
-                                                        style="padding: 1.2rem 2rem; color: var(--text-muted); font-weight: 600; font-size: 0.85rem; text-transform: uppercase;">
-                                                        Credentials</th>
-                                                    <th
-                                                        style="padding: 1.2rem 2rem; color: var(--text-muted); font-weight: 600; font-size: 0.85rem; text-transform: uppercase;">
-                                                        Actions</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody id="studentTableBody">
-                                        <% students.forEach(student=> { %>
-                                            <tr style="border-bottom: 1px solid #f1f5f9;">
-                                                <td
-                                                    style="padding: 1.2rem 2rem; font-weight: 800; color: var(--accent);">
-                                                    <%= student.roll_no %>
-                                                </td>
-                                                <% if (typeof isSuperAdmin !=='undefined' && isSuperAdmin) { %>
-                                                    <td style="padding: 1.2rem 2rem;">
-                                                        <span class="badge badge-sm badge-info"
-                                                            style="background: #e0f2fe; color: var(--primary); padding: 4px 10px; border-radius: 8px; font-weight: 600; font-size: 0.8rem;">
-                                                            <%= student.campus_name || '-' %>
-                                                        </span>
-                                                    </td>
-                                                    <% } %>
-                                                        <td style="padding: 1.2rem 2rem;">
-                                                            <div style="display: flex; align-items: center; gap: 12px;">
-                                                                <div
-                                                                    style="width: 40px; height: 40px; border-radius: 12px; background: #e2e8f0; display: flex; align-items: center; justify-content: center; font-weight: 800; color: var(--primary);">
-                                                                    <%= student.full_name.charAt(0) %>
-                                                                </div>
-                                                                <div>
-                                                                    <p
-                                                                        style="font-weight: 700; color: var(--primary); margin: 0;">
-                                                                        <%= student.full_name %>
-                                                                    </p>
-                                                                </div>
-                                                            </div>
-                                                        </td>
-                                                        <td
-                                                            style="padding: 1.2rem 2rem; font-weight: 600; color: var(--text-main);">
-                                                            <%= student.father_name || 'N/A' %>
-                                                        </td>
-                                                        <td style="padding: 1.2rem 2rem;">
-                                                            <span
-                                                                style="background: #f1f5f9; padding: 4px 10px; border-radius: 6px; font-family: monospace; font-weight: 600; color: var(--primary);">
-                                                                @<%= student.username %>
-                                                            </span>
-                                                        </td>
-                                                        <td style="padding: 1.2rem 2rem;">
-                                                            <span
-                                                                style="padding: 4px 10px; background: #ecfdf5; color: #10b981; border-radius: 50px; font-size: 0.75rem; font-weight: 800;">ACTIVE</span>
-                                                        </td>
-                                                        <td style="padding: 1.2rem 2rem;">
-                                                            <button
-                                                                onclick="openCredsModal('<%= student.user_id %>', '<%= student.username %>')"
-                                                                class="btn"
-                                                                style="background: #e0f2fe; color: var(--primary); padding: 6px 12px; border-radius: 8px; font-weight: 700; font-size: 0.8rem; border: none; cursor: pointer;">
-                                                                <i class="fas fa-key"></i> Reset
-                                                            </button>
-                                                        </td>
-                                                        <td style="padding: 1.2rem 2rem;">
-                                                            <a href="/admin/students/delete/<%= student.id %>"
-                                                                style="color: var(--danger); background: #fef2f2; width: 35px; height: 35px; border-radius: 10px; display: inline-flex; align-items: center; justify-content: center; text-decoration: none;"
-                                                                onclick="return confirm('Remove student from this block?')">
-                                                                <i class="fas fa-trash"></i>
-                                                            </a>
-                                                        </td>
-                                            </tr>
-                                            <% }) %>
-                                                <% if (students.length===0) { %>
-                                                    <tr>
-                                                        <td colspan="5"
-                                                            style="padding: 4rem; text-align: center; color: var(--text-muted);">
-                                                            <i class="fas fa-user-slash"
-                                                                style="font-size: 3rem; opacity: 0.2; display: block; margin-bottom: 1rem;"></i>
-                                                            This block is currently empty.
-                                                        </td>
-                                                    </tr>
-                                                    <% } %>
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
-                        <% } %>
-            </main>
-    </div>
-
-    <!-- Add Modal -->
-    <div id="addModal" class="modal glass"
-        style="display: none; position: fixed; inset: 0; z-index: 2000; background: rgba(15, 23, 42, 0.4); backdrop-filter: blur(8px); align-items: center; justify-content: center; overflow-y: auto; padding: 2rem 1rem;">
-        <div class="animate-slide-up"
-            style="background: white; width: 100%; max-width: 600px; margin: auto; border-radius: 24px; padding: 2.5rem; position: relative;">
-            <button onclick="document.getElementById('addModal').style.display='none'"
-                style="position: absolute; right: 2rem; top: 2rem; background: #f8fafc; border: none; width: 40px; height: 40px; border-radius: 50%; cursor: pointer;"><i
-                    class="fas fa-times"></i></button>
-            <h2 style="font-weight: 800; color: var(--primary); margin-bottom: 0.5rem;">Register New Student</h2>
-            <p style="color: var(--text-muted); margin-bottom: 2.5rem;">The student will be automatically added to the
-                selected block.</p>
-
-            <form action="/admin/students/add" method="POST"
-                style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem;">
-                <!-- 🔒 CSRF Protection -->
-                <% if (typeof csrfToken !=='undefined' && csrfToken) { %>
-                    <input type="hidden" name="_csrf" value="<%= csrfToken %>">
-                    <% } %>
-                        <div style="grid-column: span 2;">
-                            <label style="display: block; font-weight: 700; margin-bottom: 8px; font-size: 0.9rem;">Full
-                                Name</label>
-                            <input type="text" name="full_name" required
-                                style="width: 100%; padding: 12px 16px; border-radius: 12px; border: 1px solid #e2e8f0; background: #f8fafc;">
-                        </div>
-                        <div>
-                            <label
-                                style="display: block; font-weight: 700; margin-bottom: 8px; font-size: 0.9rem;">Username</label>
-                            <input type="text" name="username" required
-                                style="width: 100%; padding: 12px 16px; border-radius: 12px; border: 1px solid #e2e8f0; background: #f8fafc;">
-                        </div>
-                        <div>
-                            <label
-                                style="display: block; font-weight: 700; margin-bottom: 8px; font-size: 0.9rem;">Password</label>
-                            <input type="password" name="password" required
-                                style="width: 100%; padding: 12px 16px; border-radius: 12px; border: 1px solid #e2e8f0; background: #f8fafc;">
-                        </div>
-                        <div>
-                            <label style="display: block; font-weight: 700; margin-bottom: 8px; font-size: 0.9rem;">Roll
-                                No</label>
-                            <input type="text" name="roll_no" required
-                                style="width: 100%; padding: 12px 16px; border-radius: 12px; border: 1px solid #e2e8f0; background: #f8fafc;">
-                        </div>
-                        <div>
-                            <label
-                                style="display: block; font-weight: 700; margin-bottom: 8px; font-size: 0.9rem;">Assign
-                                to
-                                Block</label>
-                            <select name="class_id" required
-                                style="width: 100%; padding: 12px 16px; border-radius: 12px; border: 1px solid #e2e8f0; background: #f8fafc;">
-                                <% classes.forEach(cls=> { %>
-                                    <option value="<%= cls.id %>" <%=(typeof selectedClass !=='undefined' &&
-                                        selectedClass==cls.id) ? 'selected' : '' %>>
-                                        <%= cls.class_name %> - <%= cls.section %>
-                                    </option>
-                                    <% }) %>
-                            </select>
-                        </div>
-                        <div style="grid-column: span 2;">
-                            <label
-                                style="display: block; font-weight: 700; margin-bottom: 8px; font-size: 0.9rem;">Father's
-                                Name</label>
-                            <input type="text" name="father_name" required
-                                style="width: 100%; padding: 12px 16px; border-radius: 12px; border: 1px solid #e2e8f0; background: #f8fafc;">
-                        </div>
-                        <div>
-                            <label
-                                style="display: block; font-weight: 700; margin-bottom: 8px; font-size: 0.9rem;">Contact
-                                Number</label>
-                            <input type="tel" name="phone" placeholder="03XX-XXXXXXX"
-                                style="width: 100%; padding: 12px 16px; border-radius: 12px; border: 1px solid #e2e8f0; background: #f8fafc;">
-                        </div>
-                        <div>
-                            <label
-                                style="display: block; font-weight: 700; margin-bottom: 8px; font-size: 0.9rem;">Email
-                                Address</label>
-                            <input type="email" name="email"
-                                style="width: 100%; padding: 12px 16px; border-radius: 12px; border: 1px solid #e2e8f0; background: #f8fafc;">
-                        </div>
-                        <div style="grid-column: span 2;">
-                            <label style="display: block; font-weight: 700; margin-bottom: 8px; font-size: 0.9rem;">Home
-                                Address</label>
-                            <textarea name="address" rows="2"
-                                style="width: 100%; padding: 12px 16px; border-radius: 12px; border: 1px solid #e2e8f0; background: #f8fafc; resize: vertical;"></textarea>
-                        </div>
-                        <div style="grid-column: span 2;">
-                            <button type="submit" class="btn btn-primary" style="width: 100%; padding: 15px;">Securely
-                                Register
-                                Student</button>
-                        </div>
-            </form>
-        </div>
-    </div>
-
-    <!-- Import Modal -->
-    <div id="importModal" class="modal glass"
-        style="display: none; position: fixed; inset: 0; z-index: 2000; background: rgba(15, 23, 42, 0.4); backdrop-filter: blur(8px); align-items: center; justify-content: center; overflow-y: auto; padding: 2rem 1rem;">
-        <div class="animate-slide-up"
-            style="background: white; width: 100%; max-width: 500px; margin: auto; border-radius: 24px; padding: 2.5rem; position: relative;">
-            <button onclick="document.getElementById('importModal').style.display='none'"
-                style="position: absolute; right: 2rem; top: 2rem; background: #f8fafc; border: none; width: 40px; height: 40px; border-radius: 50%; cursor: pointer;"><i
-                    class="fas fa-times"></i></button>
-            <h2 style="font-weight: 800; color: var(--primary); margin-bottom: 0.5rem;">Bulk Student Import</h2>
-            <p style="color: var(--text-muted); margin-bottom: 2rem;">Upload a CSV file to add multiple students at
-                once.</p>
-
-            <div
-                style="background: #f0f9ff; padding: 1.5rem; border-radius: 15px; margin-bottom: 2rem; border: 1px solid #bae6fd;">
-                <p style="font-size: 0.85rem; color: #0369a1; margin-bottom: 10px; font-weight: 600;">
-                    <i class="fas fa-info-circle"></i> CSV Requirements:
-                </p>
-                <ul style="font-size: 0.8rem; color: #0c4a6e; padding-left: 20px; list-style-type: decimal;">
-                    <li>Required: full_name, username, password, class_name, section</li>
-                    <li>Optional: roll_no, father_name, phone, email</li>
-                    <li>Username must be unique (use numbers or short codes)</li>
-                    <li>Class Name & Section must exist in your campus database</li>
-                </ul>
-                <a href="/admin/students/import/template"
-                    style="display: inline-block; margin-top: 15px; font-size: 0.85rem; font-weight: 700; color: #0284c7; text-decoration: none;">
-                    <i class="fas fa-download"></i> Download Template CSV
-                </a>
-            </div>
-
-            <form action="/admin/students/import/csv" method="POST" enctype="multipart/form-data">
-                <!-- 🔒 CSRF Protection -->
-                <% if (typeof csrfToken !=='undefined' && csrfToken) { %>
-                    <input type="hidden" name="_csrf" value="<%= csrfToken %>">
-                    <% } %>
-                        <div style="margin-bottom: 2rem;">
-                            <label
-                                style="display: block; font-weight: 700; margin-bottom: 10px; font-size: 0.9rem;">Select
-                                CSV
-                                File</label>
-                            <input type="file" name="csvFile" accept=".csv" required
-                                style="width: 100%; padding: 15px; border: 2px dashed #e2e8f0; border-radius: 15px; background: #f8fafc; cursor: pointer;">
-                        </div>
-                        <button type="submit" class="btn btn-primary" style="width: 100%; padding: 15px;">Start Bulk
-                            Import</button>
-            </form>
-        </div>
-    </div>
-
-    <!-- Credentials Modal -->
-    <div id="credsModal" class="modal glass"
-        style="display: none; position: fixed; inset: 0; z-index: 2000; background: rgba(15, 23, 42, 0.4); backdrop-filter: blur(8px); align-items: center; justify-content: center; overflow-y: auto; padding: 2rem 1rem;">
-        <div class="animate-slide-up"
-            style="background: white; width: 100%; max-width: 400px; margin: auto; border-radius: 24px; padding: 2.5rem; position: relative; box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);">
-            <button onclick="document.getElementById('credsModal').style.display='none'"
-                style="position: absolute; right: 1.5rem; top: 1.5rem; background: #f8fafc; border: none; width: 35px; height: 35px; border-radius: 50%; cursor: pointer;"><i
-                    class="fas fa-times"></i></button>
-
-            <div style="text-align: center; margin-bottom: 2rem;">
-                <div
-                    style="width: 60px; height: 60px; background: #e0f2fe; color: var(--primary); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.5rem; margin: 0 auto 1rem;">
-                    <i class="fas fa-key"></i>
+          // Display detailed errors
+          if (errorsMsg) {
+            const banner = document.createElement('div');
+            banner.className = 'adm-banner adm-banner-warning';
+            banner.setAttribute('role', 'alert');
+            banner.setAttribute('aria-live', 'polite');
+            const errorsList = decodeURIComponent(errorsMsg).split(' | ');
+            banner.innerHTML = `
+              <i class="fas fa-info-circle adm-banner-icon" aria-hidden="true"></i>
+              <div class="adm-banner-content">
+                <div class="adm-banner-title">Import Errors:</div>
+                <div class="adm-banner-body">
+                  <ul style="margin: 0.5rem 0 0 0; padding-left: 1.25rem;">
+                    ${errorsList.map(err => `<li>${err}</li>`).join('')}
+                  </ul>
                 </div>
-                <h3 style="font-weight: 800; color: var(--primary);">Manage Credentials</h3>
-                <p style="color: var(--text-muted); font-size: 0.9rem;">Reset password for <span id="credsUsername"
-                        style="font-weight: 700; color: var(--text-main);"></span></p>
-            </div>
+              </div>
+              <button class="adm-banner-close" aria-label="Dismiss notification" type="button">
+                <i class="fas fa-times" aria-hidden="true"></i>
+              </button>
+            `;
+            document.currentScript.parentElement.appendChild(banner);
+          }
+        })();
+      </script>
 
-            <form action="/admin/users/reset-password" method="POST">
-                <input type="hidden" name="_csrf" value="<%= typeof csrfToken !== 'undefined' ? csrfToken : '' %>">
-                <input type="hidden" name="user_id" id="credsUserId">
-                <input type="hidden" name="return_url" value="/admin/students">
-
-                <div style="margin-bottom: 1.5rem;">
-                    <label style="display: block; font-weight: 700; margin-bottom: 8px; font-size: 0.9rem;">New
-                        Password</label>
-                    <input type="text" name="new_password" required placeholder="Enter new password"
-                        style="width: 100%; padding: 12px 16px; border-radius: 12px; border: 1px solid #e2e8f0; background: #f8fafc; font-weight: 600;">
-                </div>
-
-                <button type="submit" class="btn btn-primary" style="width: 100%; padding: 12px;">Update
-                    Password</button>
-            </form>
+      <!-- ── Page Header ── -->
+      <div class="adm-page-header">
+        <div>
+          <% if (viewMode === 'classes') { %>
+            <h1 class="adm-page-title">Class Blocks</h1>
+            <p class="adm-page-subtitle">Select a class block to view enrolled students</p>
+          <% } else { %>
+            <h1 class="adm-page-title">
+              <%= currentClass.class_name %> <span style="font-weight:400; opacity:0.65;"><%= currentClass.section %></span>
+            </h1>
+            <p class="adm-page-subtitle">
+              <% if (currentClass.class_name === 'Search Results') { %>
+                Found <%= students.length %> matches across all classes
+              <% } else { %>
+                Viewing class members in this specific block
+              <% } %>
+            </p>
+          <% } %>
         </div>
+
+        <div style="display: flex; gap: 0.5rem; align-items: center; flex-wrap: wrap;">
+          <% if (viewMode === 'students') { %>
+            <a href="/admin/students" class="adm-btn adm-btn-ghost" aria-label="Back to class blocks">
+              <i class="fas fa-arrow-left" aria-hidden="true"></i> Back to Blocks
+            </a>
+          <% } %>
+
+          <button class="adm-btn adm-btn-ghost" onclick="window.openModal('importModal')" type="button">
+            <i class="fas fa-file-import" aria-hidden="true"></i> Import CSV
+          </button>
+
+          <button class="adm-btn adm-btn-primary" onclick="window.openModal('addModal')" type="button">
+            <i class="fas fa-plus" aria-hidden="true"></i> Add Student
+          </button>
+        </div>
+      </div>
+
+      <!-- ── Global Search (Redirects to Search View Mode) ── -->
+      <% if (viewMode === 'classes') { %>
+        <div style="max-width: 480px; margin-bottom: 2rem;">
+          <form action="/admin/students" method="GET" style="position: relative;" role="search">
+            <i class="fas fa-search adm-topbar-search-icon" aria-hidden="true"></i>
+            <input 
+              type="search" 
+              name="search" 
+              placeholder="Global Search (Name or ID)..." 
+              aria-label="Global search students"
+              style="width:100%; padding: 0.75rem 1rem 0.75rem 2.5rem; border-radius: var(--adm-r-full); border: 1px solid var(--adm-border); background: var(--adm-bg-surface); color: var(--adm-text-primary); font-family: inherit; font-size: 0.875rem;"
+            >
+          </form>
+        </div>
+      <% } %>
+
+      <!-- ══════════════════════════════════════════════════════════
+           VIEW MODE: CLASSES GRID
+           ══════════════════════════════════════════════════════════ -->
+      <% if (viewMode === 'classes') { %>
+        <div class="adm-class-grid">
+          <% classes.forEach(cls => { %>
+            <a href="/admin/students?class_id=<%= cls.id %>" class="adm-class-card" aria-label="View <%= cls.class_name %> section <%= cls.section %>">
+              <div class="adm-class-icon">
+                <i class="fas fa-school" aria-hidden="true"></i>
+              </div>
+              <h2 class="adm-class-title"><%= cls.class_name %></h2>
+              <span class="adm-class-section">Section: <%= cls.section %></span>
+              
+              <% if (typeof isSuperAdmin !== 'undefined' && isSuperAdmin && cls.campus_name) { %>
+                <span class="adm-badge adm-badge-blue" style="margin-top:0.5rem;"><%= cls.campus_name %></span>
+              <% } %>
+
+              <div class="adm-class-footer">
+                <span class="adm-class-students-count"><%= cls.student_count %> Students</span>
+                <span class="adm-class-link-label">
+                  Open Block <i class="fas fa-chevron-right" style="font-size:0.65rem;" aria-hidden="true"></i>
+                </span>
+              </div>
+            </a>
+          <% }) %>
+        </div>
+
+      <!-- ══════════════════════════════════════════════════════════
+           VIEW MODE: STUDENTS TABLE LIST
+           ══════════════════════════════════════════════════════════ -->
+      <% } else { %>
+        <div class="adm-card">
+          
+          <!-- Table Control Header -->
+          <div class="adm-card-header">
+            <div>
+              <h2 class="adm-card-title">Class Member List</h2>
+              <p class="adm-card-subtitle">Manage block enrollments and security details</p>
+            </div>
+            
+            <div style="display: flex; gap: 0.75rem; align-items: center;">
+              <!-- Inline Filter Search -->
+              <div style="position: relative; width: 260px;">
+                <i class="fas fa-search adm-topbar-search-icon" aria-hidden="true"></i>
+                <input 
+                  type="text" 
+                  id="studentSearch" 
+                  placeholder="Filter members..." 
+                  aria-label="Filter students in table"
+                  style="width: 100%; padding: 0.5rem 1rem 0.5rem 2.25rem; border-radius: var(--adm-r-full); border: 1px solid var(--adm-border); background: var(--adm-bg-canvas); color: var(--adm-text-primary); font-family: inherit; font-size: 0.8rem;"
+                  onkeyup="filterTable('studentSearch', 'studentTableBody')"
+                >
+              </div>
+              
+              <span class="adm-badge adm-badge-blue">
+                <%= students.length %> Enrolled
+              </span>
+            </div>
+          </div>
+
+          <!-- Table Container -->
+          <div class="adm-table-wrap">
+            <table class="adm-table">
+              <thead>
+                <tr>
+                  <th scope="col">Roll No</th>
+                  <% if (typeof isSuperAdmin !== 'undefined' && isSuperAdmin) { %>
+                    <th scope="col">Campus</th>
+                  <% } %>
+                  <th scope="col">Student Name</th>
+                  <th scope="col">Father Name</th>
+                  <th scope="col">User ID</th>
+                  <th scope="col">Status</th>
+                  <th scope="col">Credentials</th>
+                  <th scope="col" style="text-align:right;">Actions</th>
+                </tr>
+              </thead>
+              <tbody id="studentTableBody">
+                <% students.forEach(student => { %>
+                  <tr>
+                    <td style="font-weight: 700; color: var(--adm-indigo);"><%= student.roll_no %></td>
+                    <% if (typeof isSuperAdmin !== 'undefined' && isSuperAdmin) { %>
+                      <td>
+                        <span class="adm-badge adm-badge-blue"><%= student.campus_name || '-' %></span>
+                      </td>
+                    <% } %>
+                    <td>
+                      <div style="display: flex; align-items: center; gap: 0.65rem;">
+                        <div class="adm-avatar" aria-hidden="true" style="width: 32px; height: 32px; font-size: 0.75rem; border-radius: var(--adm-r-sm);">
+                          <%= student.full_name.charAt(0) %>
+                        </div>
+                        <span style="font-weight: 600; color: var(--adm-text-primary);"><%= student.full_name %></span>
+                      </div>
+                    </td>
+                    <td><%= student.father_name || 'N/A' %></td>
+                    <td>
+                      <span style="font-family: 'JetBrains Mono', monospace; font-size: 0.8rem; background: var(--adm-bg-canvas); padding: 0.2rem 0.5rem; border-radius: var(--adm-r-xs); color: var(--adm-text-secondary);">
+                        @<%= student.username %>
+                      </span>
+                    </td>
+                    <td>
+                      <span class="adm-badge adm-badge-green">Active</span>
+                    </td>
+                    <td>
+                      <button 
+                        class="adm-btn adm-btn-ghost" 
+                        style="min-height: 28px; padding: 0.2rem 0.65rem; font-size: 0.75rem;" 
+                        onclick="openCredsModal('<%= student.user_id %>', '<%= student.username %>')"
+                        type="button"
+                      >
+                        <i class="fas fa-key" aria-hidden="true"></i> Reset
+                      </button>
+                    </td>
+                    <td style="text-align:right;">
+                      <a 
+                        href="/admin/students/delete/<%= student.id %>" 
+                        class="adm-btn adm-btn-ghost" 
+                        style="min-height:30px; width:30px; padding:0; display:inline-flex; align-items:center; justify-content:center; border-color:transparent; color: var(--adm-red); background: var(--adm-red-bg);"
+                        onclick="return confirm('Remove student from this block?')"
+                        aria-label="Delete <%= student.full_name %>"
+                      >
+                        <i class="fas fa-trash" aria-hidden="true"></i>
+                      </a>
+                    </td>
+                  </tr>
+                <% }) %>
+
+                <% if (students.length === 0) { %>
+                  <tr>
+                    <td colspan="<%= typeof isSuperAdmin !== 'undefined' && isSuperAdmin ? 8 : 7 %>" style="padding: 4.5rem; text-align: center; color: var(--adm-text-muted);">
+                      <i class="fas fa-user-slash" style="font-size: 2.5rem; opacity: 0.25; display: block; margin-bottom: 1rem;" aria-hidden="true"></i>
+                      This block is currently empty.
+                    </td>
+                  </tr>
+                <% } %>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      <% } %>
+
+    </main>
+  </div>
+
+  <!-- ════════════════════════════════════════════════════════════
+       ADD MODAL (Register Student)
+       ════════════════════════════════════════════════════════════ -->
+  <div id="addModal" class="adm-modal-overlay" role="dialog" aria-modal="true" aria-labelledby="addModalTitle">
+    <div class="adm-modal-container">
+      <button class="adm-modal-close-btn" onclick="window.closeModal('addModal')" aria-label="Close modal" type="button">
+        <i class="fas fa-times" aria-hidden="true"></i>
+      </button>
+
+      <h2 id="addModalTitle" style="font-weight: 700; font-size:1.35rem; margin-bottom: 0.25rem;">Register New Student</h2>
+      <p style="color: var(--adm-text-muted); font-size: 0.85rem; margin-bottom: 1.75rem;">The student will be automatically added to the selected block.</p>
+
+      <form action="/admin/students/add" method="POST" class="adm-form-grid">
+        <!-- CSRF Protection -->
+        <% if (typeof csrfToken !== 'undefined' && csrfToken) { %>
+          <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+        <% } %>
+
+        <div class="adm-form-group adm-form-group-full">
+          <label class="adm-label" for="add_full_name">Full Name</label>
+          <input type="text" name="full_name" id="add_full_name" class="adm-input" required autocomplete="name">
+        </div>
+
+        <div class="adm-form-group">
+          <label class="adm-label" for="add_username">Username</label>
+          <input type="text" name="username" id="add_username" class="adm-input" required autocomplete="username">
+        </div>
+
+        <div class="adm-form-group">
+          <label class="adm-label" for="add_password">Password</label>
+          <input type="password" name="password" id="add_password" class="adm-input" required autocomplete="new-password">
+        </div>
+
+        <div class="adm-form-group">
+          <label class="adm-label" for="add_roll_no">Roll No</label>
+          <input type="text" name="roll_no" id="add_roll_no" class="adm-input" required>
+        </div>
+
+        <div class="adm-form-group">
+          <label class="adm-label" for="add_class_id">Assign to Block</label>
+          <select name="class_id" id="add_class_id" class="adm-select" required>
+            <% classes.forEach(cls => { %>
+              <option value="<%= cls.id %>" <%= (typeof selectedClass !== 'undefined' && selectedClass == cls.id) ? 'selected' : '' %>>
+                <%= cls.class_name %> - <%= cls.section %>
+              </option>
+            <% }) %>
+          </select>
+        </div>
+
+        <div class="adm-form-group adm-form-group-full">
+          <label class="adm-label" for="add_father_name">Father's Name</label>
+          <input type="text" name="father_name" id="add_father_name" class="adm-input" required>
+        </div>
+
+        <div class="adm-form-group">
+          <label class="adm-label" for="add_phone">Contact Number</label>
+          <input type="tel" name="phone" id="add_phone" placeholder="03XX-XXXXXXX" class="adm-input" autocomplete="tel">
+        </div>
+
+        <div class="adm-form-group">
+          <label class="adm-label" for="add_email">Email Address</label>
+          <input type="email" name="email" id="add_email" class="adm-input" autocomplete="email">
+        </div>
+
+        <div class="adm-form-group adm-form-group-full">
+          <label class="adm-label" for="add_address">Home Address</label>
+          <textarea name="address" id="add_address" rows="2" class="adm-textarea"></textarea>
+        </div>
+
+        <div class="adm-form-group adm-form-group-full" style="margin-top: 0.5rem;">
+          <button type="submit" class="adm-btn adm-btn-primary" style="width: 100%; min-height:44px; justify-content:center;">
+            Securely Register Student
+          </button>
+        </div>
+      </form>
     </div>
+  </div>
 
-    <style>
-        .hover-scale {
-            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-        }
+  <!-- ════════════════════════════════════════════════════════════
+       IMPORT MODAL (Bulk CSV)
+       ════════════════════════════════════════════════════════════ -->
+  <div id="importModal" class="adm-modal-overlay" role="dialog" aria-modal="true" aria-labelledby="importModalTitle">
+    <div class="adm-modal-container" style="max-width: 500px;">
+      <button class="adm-modal-close-btn" onclick="window.closeModal('importModal')" aria-label="Close modal" type="button">
+        <i class="fas fa-times" aria-hidden="true"></i>
+      </button>
 
-        .hover-scale:hover {
-            transform: translateY(-10px);
-            background: white;
-            border-color: var(--accent);
-            box-shadow: 0 20px 40px rgba(59, 130, 246, 0.1);
-        }
-    </style>
+      <h2 id="importModalTitle" style="font-weight: 700; font-size:1.35rem; margin-bottom: 0.25rem;">Bulk Student Import</h2>
+      <p style="color: var(--adm-text-muted); font-size: 0.85rem; margin-bottom: 1.5rem;">Upload a CSV file to add multiple students at once.</p>
 
-    <script>
-        window.onclick = function (event) {
-            let modal = document.getElementById('addModal');
-            if (event.target == modal) { modal.style.display = "none"; }
-            let credsModal = document.getElementById('credsModal');
-            if (event.target == credsModal) { credsModal.style.display = "none"; }
-            let importModal = document.getElementById('importModal');
-            if (event.target == importModal) { importModal.style.display = "none"; }
-        }
+      <!-- CSV Info Banner -->
+      <div class="adm-banner adm-banner-warning" style="margin-bottom: 1.5rem; border-radius: var(--adm-r-sm); padding: 1rem 1.125rem;">
+        <i class="fas fa-info-circle adm-banner-icon" aria-hidden="true" style="font-size:1.1rem; color:var(--adm-amber);"></i>
+        <div class="adm-banner-content">
+          <div class="adm-banner-title" style="font-size:0.85rem; color:var(--adm-text-primary);">CSV Requirements:</div>
+          <div class="adm-banner-body" style="font-size:0.78rem;">
+            <ol style="margin: 0.25rem 0 0 0; padding-left: 1rem; line-height: 1.5;">
+              <li>Required headers: <code>full_name, username, password, class_name, section</code></li>
+              <li>Optional headers: <code>roll_no, father_name, phone, email</code></li>
+              <li>Usernames must be unique across the entire school system</li>
+              <li>Class names &amp; sections must already match existing records</li>
+            </ol>
+            <a href="/admin/students/import/template" class="adm-class-link-label" style="display:inline-flex; margin-top:0.75rem; color:var(--adm-indigo); font-weight:700;">
+              <i class="fas fa-download" style="font-size:0.75rem;" aria-hidden="true"></i> Download Template CSV
+            </a>
+          </div>
+        </div>
+      </div>
 
-        function openCredsModal(userId, username) {
-            document.getElementById('credsModal').style.display = 'flex';
-            document.getElementById('credsUserId').value = userId;
-            document.getElementById('credsUsername').innerText = '@' + username;
-            document.querySelector('input[name="return_url"]').value = window.location.href;
-        }
+      <form action="/admin/students/import/csv" method="POST" enctype="multipart/form-data">
+        <!-- CSRF Protection -->
+        <% if (typeof csrfToken !== 'undefined' && csrfToken) { %>
+          <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+        <% } %>
 
-        // Generic Table Filter Function
-        function filterTable(inputId, tableId) {
-            const input = document.getElementById(inputId);
-            const filter = input.value.toLowerCase();
-            const tbody = document.getElementById(tableId);
-            const rows = tbody.getElementsByTagName('tr');
+        <div class="adm-form-group" style="margin-bottom: 1.5rem;">
+          <label class="adm-label" for="csv_file_input" style="margin-bottom:0.25rem;">Select CSV File</label>
+          <div class="adm-file-upload">
+            <i class="fas fa-cloud-upload-alt adm-file-upload-icon" aria-hidden="true"></i>
+            <div class="adm-file-upload-text">Click to browse or drag file here</div>
+            <div class="adm-file-upload-subtext">Supports .csv files up to 5MB</div>
+            <input type="file" name="csvFile" id="csv_file_input" accept=".csv" required class="adm-file-upload-input">
+          </div>
+        </div>
 
-            for (let i = 0; i < rows.length; i++) {
-                const row = rows[i];
-                const text = row.textContent.toLowerCase();
-                if (text.includes(filter)) {
-                    row.style.display = "";
-                } else {
-                    row.style.display = "none";
-                }
-            }
-        }
-    </script>
-    </body>
+        <button type="submit" class="adm-btn adm-btn-primary" style="width: 100%; min-height:44px; justify-content:center;">
+          Start Bulk Import
+        </button>
+      </form>
+    </div>
+  </div>
 
-    </html>
+  <!-- ════════════════════════════════════════════════════════════
+       CREDENTIALS MODAL (Reset Password)
+       ════════════════════════════════════════════════════════════ -->
+  <div id="credsModal" class="adm-modal-overlay" role="dialog" aria-modal="true" aria-labelledby="credsModalTitle">
+    <div class="adm-modal-container adm-modal-container-sm">
+      <button class="adm-modal-close-btn" onclick="window.closeModal('credsModal')" aria-label="Close modal" type="button">
+        <i class="fas fa-times" aria-hidden="true"></i>
+      </button>
+
+      <div style="text-align: center; margin-bottom: 1.5rem;">
+        <div style="width: 54px; height: 54px; background: var(--adm-indigo-bg); color: var(--adm-indigo); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.35rem; margin: 0 auto 0.75rem;">
+          <i class="fas fa-key" aria-hidden="true"></i>
+        </div>
+        <h2 id="credsModalTitle" style="font-weight: 700; font-size:1.25rem;">Manage Credentials</h2>
+        <p style="color: var(--adm-text-muted); font-size: 0.85rem; margin-top:0.25rem;">
+          Reset password for <span id="credsUsername" style="font-weight: 700; color: var(--adm-text-primary);"></span>
+        </p>
+      </div>
+
+      <form action="/admin/users/reset-password" method="POST">
+        <input type="hidden" name="_csrf" value="<%= typeof csrfToken !== 'undefined' ? csrfToken : '' %>">
+        <input type="hidden" name="user_id" id="credsUserId">
+        <input type="hidden" name="return_url" id="credsReturnUrl" value="/admin/students">
+
+        <div class="adm-form-group" style="margin-bottom: 1.5rem;">
+          <label class="adm-label" for="reset_new_password">New Password</label>
+          <input type="text" name="new_password" id="reset_new_password" required placeholder="Enter new password" class="adm-input" style="font-family:'JetBrains Mono', monospace; font-weight: 600;">
+        </div>
+
+        <button type="submit" class="adm-btn adm-btn-primary" style="width: 100%; min-height:42px; justify-content:center;">
+          Update Password
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <!-- Table Filter Script -->
+  <script>
+    function openCredsModal(userId, username) {
+      window.openModal('credsModal');
+      document.getElementById('credsUserId').value = userId;
+      document.getElementById('credsUsername').innerText = '@' + username;
+      document.getElementById('credsReturnUrl').value = window.location.href;
+    }
+
+    // Filter table content locally
+    function filterTable(inputId, tableId) {
+      const input = document.getElementById(inputId);
+      if (!input) return;
+      const filter = input.value.toLowerCase();
+      const tbody = document.getElementById(tableId);
+      if (!tbody) return;
+      const rows = tbody.getElementsByTagName('tr');
+
+      for (let i = 0; i < rows.length; i++) {
+        const row = rows[i];
+        const text = row.textContent.toLowerCase();
+        row.style.display = text.includes(filter) ? "" : "none";
+      }
+    }
+  </script>
+
+<%- include('../partials/footer') %>

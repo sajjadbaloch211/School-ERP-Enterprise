@@ -1,0 +1,108 @@
+<%- include('../partials/header') %>
+
+    <div class="admin-layout animate-fade-in" style="margin-top: 80px;">
+        <!-- Sidebar (Same as dashboard for consistency) -->
+        <aside class="sidebar glass"
+            style="margin: 20px; border-radius: 24px; border: 1px solid rgba(0,0,0,0.05); box-shadow: var(--card-shadow);">
+            <div style="margin-bottom: 3rem; text-align: center;">
+                <div
+                    style="width: 80px; height: 80px; background: #eff6ff; border-radius: 24px; display: flex; align-items: center; justify-content: center; margin: 0 auto 1rem; border: 3px solid var(--accent);">
+                    <i class="fas fa-user-graduate" style="font-size: 2rem; color: var(--accent);"></i>
+                </div>
+                <h3 style="color: var(--primary); font-weight: 800;">Student Portal</h3>
+            </div>
+            <ul class="sidebar-nav">
+                <li><a href="/student/dashboard"><i class="fas fa-th-large"></i> Overview</a></li>
+                <li><a href="/student/attendance"><i class="fas fa-calendar-check"></i> Attendance</a></li>
+                <li><a href="/student/timetable"><i class="fas fa-calendar-alt"></i> Timetable</a></li>
+                <li><a href="/student/results" class="active"><i class="fas fa-poll"></i> Exam Results</a></li>
+                <li><a href="/student/fees"><i class="fas fa-file-invoice-dollar"></i> Fee History</a></li>
+                <li><a href="/library"><i class="fas fa-book-reader"></i> E-Library</a></li>
+                <li style="margin-top: 2rem;"><a href="/logout" style="color: var(--danger);"><i
+                            class="fas fa-sign-out-alt"></i> Sign Out</a></li>
+            </ul>
+        </aside>
+
+        <main class="main-content">
+            <header style="margin-bottom: 3rem;">
+                <h2 style="font-size: 2.2rem; font-weight: 900; color: var(--primary);">Exam Academic Record</h2>
+                <p style="color: var(--text-muted); font-weight: 500;">Review your complete history of marks and grades.
+                </p>
+            </header>
+
+            <% if (Object.keys(groupedResults).length===0) { %>
+                <div class="card animate-slide-up" style="text-align: center; padding: 5rem;">
+                    <div
+                        style="width: 100px; height: 100px; background: #f1f5f9; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 1.5rem;">
+                        <i class="fas fa-file-invoice" style="font-size: 3rem; color: #cbd5e1;"></i>
+                    </div>
+                    <h3 style="font-weight: 800; color: var(--primary);">No Results Found</h3>
+                    <p style="color: var(--text-muted);">Your exam results will appear here once they are released.</p>
+                </div>
+                <% } %>
+
+                    <% Object.keys(groupedResults).forEach(examName=> { %>
+                        <div class="card animate-slide-up"
+                            style="margin-bottom: 2rem; padding: 0; overflow: hidden; border-radius: 20px;">
+                            <div
+                                style="padding: 1.5rem; background: linear-gradient(90deg, #f8fafc 0%, white 100%); border-bottom: 1px solid #edf2f7;">
+                                <h3
+                                    style="font-weight: 900; color: var(--primary); display: flex; align-items: center; gap: 10px;">
+                                    <i class="fas fa-award" style="color: var(--accent);"></i>
+                                    <%= examName %>
+                                </h3>
+                            </div>
+                            <div style="padding: 1.5rem;">
+                                <table style="width: 100%; border-collapse: collapse;">
+                                    <thead>
+                                        <tr style="text-align: left; border-bottom: 2px solid #f1f5f9;">
+                                            <th
+                                                style="padding: 15px; color: #64748b; font-size: 0.8rem; text-transform: uppercase; font-weight: 800;">
+                                                Subject</th>
+                                            <th
+                                                style="padding: 15px; color: #64748b; font-size: 0.8rem; text-transform: uppercase; font-weight: 800;">
+                                                Marks</th>
+                                            <th
+                                                style="padding: 15px; color: #64748b; font-size: 0.8rem; text-transform: uppercase; font-weight: 800;">
+                                                Total</th>
+                                            <th
+                                                style="padding: 15px; color: #64748b; font-size: 0.8rem; text-transform: uppercase; font-weight: 800; text-align: right;">
+                                                Grade</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <% groupedResults[examName].forEach(r=> {
+                                            let gradeColor = '#10b981';
+                                            if(r.grade === 'F') gradeColor = '#ef4444';
+                                            else if(r.grade === 'D') gradeColor = '#f59e0b';
+                                            %>
+                                            <tr style="border-bottom: 1px solid #f8fafc; transition: background 0.2s;"
+                                                onmouseover="this.style.background='#f8fafc'"
+                                                onmouseout="this.style.background='transparent'">
+                                                <td
+                                                    style="padding: 18px 15px; font-weight: 800; color: var(--primary);">
+                                                    <%= r.subject %>
+                                                </td>
+                                                <td style="padding: 18px 15px; font-weight: 700; color: var(--accent);">
+                                                    <%= r.marks_obtained %>
+                                                </td>
+                                                <td style="padding: 18px 15px; font-weight: 600; color: #64748b;">
+                                                    <%= r.total_marks %>
+                                                </td>
+                                                <td style="padding: 18px 15px; text-align: right;">
+                                                    <span
+                                                        style="background: <%= gradeColor %>15; color: <%= gradeColor %>; padding: 6px 15px; border-radius: 10px; font-weight: 900; font-size: 0.9rem; border: 1px solid <%= gradeColor %>30;">
+                                                        <%= r.grade %>
+                                                    </span>
+                                                </td>
+                                            </tr>
+                                            <% }) %>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                        <% }) %>
+        </main>
+    </div>
+
+    <%- include('../partials/footer') %>

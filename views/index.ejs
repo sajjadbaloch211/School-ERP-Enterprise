@@ -371,70 +371,40 @@
         </div>
 
         <div class="gallery-masonry reveal">
-            <div class="gallery-item" onclick="openLightbox(this.querySelector('img').src, 'Annual Sports Day')">
-                <div style="width:100%;height:100%;background:linear-gradient(135deg,#0B1C3D,#1a3560);display:flex;align-items:center;justify-content:center;">
-                    <div style="text-align:center;color:rgba(255,255,255,0.5);">
-                        <i class="fas fa-running" style="font-size:4rem;margin-bottom:12px;color:var(--gold);display:block;"></i>
-                        <span style="font-size:1.1rem;font-weight:700;color:white;">Annual Sports Day</span>
-                    </div>
-                </div>
+            <div class="gallery-item" onclick="openLightbox('/images/event1.jpg', 'Annual Sports Day')">
+                <img src="/images/event1.jpg" alt="Annual Sports Day" style="width:100%;height:100%;object-fit:cover;display:block;">
                 <div class="gallery-overlay">
                     <span class="gallery-caption"><i class="fas fa-expand-alt"></i> Annual Sports Day</span>
                 </div>
             </div>
-            <div class="gallery-item" onclick="openLightbox('', 'Classroom Sessions')">
-                <div style="width:100%;height:100%;background:linear-gradient(135deg,#112347,#0d3267);display:flex;align-items:center;justify-content:center;">
-                    <div style="text-align:center;">
-                        <i class="fas fa-chalkboard-teacher" style="font-size:3rem;margin-bottom:10px;color:var(--gold);display:block;"></i>
-                        <span style="font-size:0.95rem;font-weight:700;color:white;">Classroom Sessions</span>
-                    </div>
-                </div>
+            <div class="gallery-item" onclick="openLightbox('/images/classroom_boys.jpg', 'Classroom Sessions')">
+                <img src="/images/classroom_boys.jpg" alt="Classroom Sessions" style="width:100%;height:100%;object-fit:cover;display:block;">
                 <div class="gallery-overlay">
                     <span class="gallery-caption"><i class="fas fa-expand-alt"></i> Classroom Sessions</span>
                 </div>
             </div>
-            <div class="gallery-item" onclick="openLightbox('', 'Prize Distribution')">
-                <div style="width:100%;height:100%;background:linear-gradient(135deg,#7c3c00,#a05010);display:flex;align-items:center;justify-content:center;">
-                    <div style="text-align:center;">
-                        <i class="fas fa-trophy" style="font-size:3rem;margin-bottom:10px;color:var(--gold);display:block;"></i>
-                        <span style="font-size:0.95rem;font-weight:700;color:white;">Prize Distribution</span>
-                    </div>
-                </div>
+            <div class="gallery-item" onclick="openLightbox('/images/award.jpg', 'Prize Distribution')">
+                <img src="/images/award.jpg" alt="Prize Distribution" style="width:100%;height:100%;object-fit:cover;display:block;">
                 <div class="gallery-overlay">
                     <span class="gallery-caption"><i class="fas fa-expand-alt"></i> Prize Distribution</span>
                 </div>
             </div>
-            <div class="gallery-item" onclick="openLightbox('', 'Science Exhibition')">
-                <div style="width:100%;height:100%;background:linear-gradient(135deg,#0a2540,#153d6b);display:flex;align-items:center;justify-content:center;">
-                    <div style="text-align:center;">
-                        <i class="fas fa-flask" style="font-size:3rem;margin-bottom:10px;color:var(--gold);display:block;"></i>
-                        <span style="font-size:0.95rem;font-weight:700;color:white;">Science Exhibition</span>
-                    </div>
-                </div>
+            <div class="gallery-item" onclick="openLightbox('/images/classroom_girls.jpg', 'Practical Science Labs')">
+                <img src="/images/classroom_girls.jpg" alt="Practical Science Labs" style="width:100%;height:100%;object-fit:cover;display:block;">
                 <div class="gallery-overlay">
-                    <span class="gallery-caption"><i class="fas fa-expand-alt"></i> Science Exhibition</span>
+                    <span class="gallery-caption"><i class="fas fa-expand-alt"></i> Practical Science Labs</span>
                 </div>
             </div>
-            <div class="gallery-item" onclick="openLightbox('', 'Graduation Ceremony')">
-                <div style="width:100%;height:100%;background:linear-gradient(135deg,#1a1a2e,#16213e);display:flex;align-items:center;justify-content:center;">
-                    <div style="text-align:center;">
-                        <i class="fas fa-user-graduate" style="font-size:3rem;margin-bottom:10px;color:var(--gold);display:block;"></i>
-                        <span style="font-size:0.95rem;font-weight:700;color:white;">Graduation</span>
-                    </div>
-                </div>
+            <div class="gallery-item" onclick="openLightbox('/images/student1.jpg', 'Graduation Ceremony')">
+                <img src="/images/student1.jpg" alt="Graduation Ceremony" style="width:100%;height:100%;object-fit:cover;display:block;">
                 <div class="gallery-overlay">
                     <span class="gallery-caption"><i class="fas fa-expand-alt"></i> Graduation Ceremony</span>
                 </div>
             </div>
-            <div class="gallery-item" onclick="openLightbox('', 'Cultural Events')">
-                <div style="width:100%;height:100%;background:linear-gradient(135deg,#2d1b00,#4a2f00);display:flex;align-items:center;justify-content:center;">
-                    <div style="text-align:center;">
-                        <i class="fas fa-music" style="font-size:3rem;margin-bottom:10px;color:var(--gold);display:block;"></i>
-                        <span style="font-size:0.95rem;font-weight:700;color:white;">Cultural Events</span>
-                    </div>
-                </div>
+            <div class="gallery-item" onclick="openLightbox('/images/library_hero.png', 'Campus Activities')">
+                <img src="/images/library_hero.png" alt="Campus Activities" style="width:100%;height:100%;object-fit:cover;display:block;">
                 <div class="gallery-overlay">
-                    <span class="gallery-caption"><i class="fas fa-expand-alt"></i> Cultural Events</span>
+                    <span class="gallery-caption"><i class="fas fa-expand-alt"></i> Campus Activities</span>
                 </div>
             </div>
         </div>
@@ -599,45 +569,58 @@
                             </div>
                         </div>
                         <div class="col-12">
-                            <div class="form-field">
-                                <label for="contact-message">Message</label>
-                                <textarea id="contact-message" placeholder="Write your message here..." rows="5" required></textarea>
-                            </div>
-                        </div>
-                        <div class="col-12">
-                            <button type="button" class="btn-primary-wphss" style="width:100%;justify-content:center;padding:16px;">
-                                <i class="fas fa-paper-plane"></i> Send Message
-                            </button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
+             <div class="lightbox" id="lightbox" role="dialog" aria-modal="true" aria-label="Image lightbox">
+    <button class="lightbox-close" onclick="closeLightbox()" aria-label="Close">&times;</button>
+    <div id="lightboxContent" style="text-align:center;color:white;max-width:90%;max-height:80%;">
+        <img id="lightboxImage" src="" alt="Lightbox Image" style="max-width:100%;max-height:70vh;border-radius:12px;box-shadow:0 10px 40px rgba(0,0,0,0.5);margin-bottom:20px;">
+        <p id="lightboxCaption" style="font-size:1.2rem;font-weight:700;margin:0;"></p>
     </div>
-</section>
+</div>
 
 <!-- ═══════════════════════════════════════════════
-     CTA BANNER
-═══════════════════════════════════════════════ -->
-<section class="cta-section">
-    <div class="container">
-        <div class="cta-content reveal">
-            <span class="overline" style="color:var(--gold);">Ready to Begin?</span>
-            <h2>Join WPHSS — Shape Your Future Today</h2>
-            <p>Applications for 2025–26 session are now open. Limited seats available. Don't miss your chance to be part of a legacy of excellence.</p>
-            <div style="display:flex;gap:16px;justify-content:center;flex-wrap:wrap;">
-                <a href="/admissions" class="btn-gold" style="padding:16px 44px;font-size:1rem;">
-                    <i class="fas fa-graduation-cap"></i> Apply Online Now
-                </a>
-                <a href="/contact" class="btn-outline-white" style="padding:15px 36px;font-size:1rem;">
-                    <i class="fas fa-phone"></i> Call Us
-                </a>
-            </div>
-        </div>
-    </div>
-</section>
+     PAGE SCRIPTS
+ ═══════════════════════════════════════════════ -->
+<script>
+// Animated counter
+(function() {
+    const counters = document.querySelectorAll('.counter');
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (!entry.isIntersecting) return;
+            const el = entry.target;
+            const target = +el.dataset.target;
+            let count = 0;
+            const step = target / 60;
+            const timer = setInterval(() => {
+                count = Math.min(count + step, target);
+                el.textContent = Math.ceil(count).toLocaleString();
+                if (count >= target) clearInterval(timer);
+            }, 25);
+            observer.unobserve(el);
+        });
+    }, { threshold: 0.3 });
+    counters.forEach(c => observer.observe(c));
+})();
 
-<!-- ═══════════════════════════════════════════════
+// Lightbox
+function openLightbox(src, caption) {
+    const lb = document.getElementById('lightbox');
+    const img = document.getElementById('lightboxImage');
+    const capt = document.getElementById('lightboxCaption');
+    img.src = src;
+    capt.textContent = caption;
+    lb.classList.add('active');
+    document.body.style.overflow = 'hidden';
+}
+function closeLightbox() {
+    document.getElementById('lightbox').classList.remove('active');
+    document.body.style.overflow = '';
+}
+document.getElementById('lightbox').addEventListener('click', function(e) {
+    if (e.target === this) closeLightbox();
+});
+document.addEventListener('keydown', e => { if (e.key === 'Escape') closeLightbox(); });
+</script>�══════════════════════════
      LIGHTBOX (Gallery)
 ═══════════════════════════════════════════════ -->
 <div class="lightbox" id="lightbox" role="dialog" aria-modal="true" aria-label="Image lightbox">

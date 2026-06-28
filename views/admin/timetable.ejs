@@ -1,179 +1,182 @@
 <%- include('../partials/header') %>
 
-    <div class="admin-layout animate-fade-in" style="margin-top: 80px;">
-        <!-- Sidebar -->
-        <!-- Sidebar -->
-        <%- include('../partials/sidebar', { active: 'timetable' }) %>
+  <!-- ════════════════════════════════════════════════════════════
+       ADMIN LAYOUT
+       ════════════════════════════════════════════════════════════ -->
+  <div class="adm-layout">
 
-            <main class="main-content">
-                <header
-                    style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 3rem;">
-                    <div>
-                        <h2 style="font-size: 2rem; font-weight: 800; color: var(--primary);">Timetable Management</h2>
-                        <p style="color: var(--text-muted);">Schedule classes and assign teachers</p>
-                    </div>
-                    <button class="btn-primary"
-                        onclick="document.getElementById('addTimetableModal').style.display='flex'"
-                        style="padding: 12px 25px; border-radius: 50px; display: flex; align-items: center; gap: 10px;">
-                        <i class="fas fa-plus"></i> Add Schedule
-                    </button>
-                </header>
+    <!-- Sidebar -->
+    <%- include('../partials/sidebar', { active: 'timetable' }) %>
 
-                <!-- Timetable View -->
-                <div class="card animate-slide-up" style="overflow-x: auto;">
-                    <table class="data-table" style="width: 100%; border-collapse: collapse;">
-                        <thead>
-                            <tr style="background: var(--bg-light); text-align: left;">
-                                <th style="padding: 1rem; border-radius: 12px 0 0 12px;">Day</th>
-                                <th style="padding: 1rem;">Time Slot</th>
-                                <th style="padding: 1rem;">Class</th>
-                                <% if (typeof isSuperAdmin !=='undefined' && isSuperAdmin) { %>
-                                    <th style="padding: 1rem;">Campus</th>
-                                    <% } %>
-                                        <th style="padding: 1rem;">Subject</th>
-                                        <th style="padding: 1rem;">Teacher</th>
-                                        <th style="padding: 1rem; border-radius: 0 12px 12px 0;">Actions</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <% if(timetable.length===0) { %>
-                                <tr>
-                                    <td colspan="<%= (typeof isSuperAdmin !== 'undefined' && isSuperAdmin) ? 7 : 6 %>"
-                                        style="padding: 2rem; text-align: center; color: var(--text-muted);">
-                                        No schedules found. Click "Add Schedule" to create one.
-                                    </td>
-                                </tr>
-                                <% } %>
-                                    <% timetable.forEach(entry=> { %>
-                                        <tr style="border-bottom: 1px solid rgba(0,0,0,0.05);">
-                                            <td style="padding: 1rem; font-weight: 700;">
-                                                <span
-                                                    style="background: #e0f2fe; color: #0284c7; padding: 5px 10px; border-radius: 12px; font-size: 0.9rem;">
-                                                    <%= entry.day %>
-                                                </span>
-                                            </td>
-                                            <td style="padding: 1rem; font-family: monospace; color: var(--text-main);">
-                                                <%= entry.start_time %> - <%= entry.end_time %>
-                                            </td>
-                                            <td style="padding: 1rem;">
-                                                <div style="font-weight: 600;">
-                                                    <%= entry.class_name %>
-                                                </div>
-                                                <div style="font-size: 0.8rem; color: var(--text-muted);">Sec: <%=
-                                                        entry.section %>
-                                                </div>
-                                            </td>
-                                            <% if (typeof isSuperAdmin !=='undefined' && isSuperAdmin) { %>
-                                                <td style="padding: 1rem;">
-                                                    <span class="badge badge-sm badge-info"
-                                                        style="background: #e0f2fe; color: var(--primary); padding: 4px 10px; border-radius: 8px; font-weight: 600; font-size: 0.8rem;">
-                                                        <%= entry.campus_name || '-' %>
-                                                    </span>
-                                                </td>
-                                                <% } %>
-                                                    <td style="padding: 1rem; font-weight: 600; color: var(--primary);">
-                                                        <%= entry.subject %>
-                                                    </td>
-                                                    <td style="padding: 1rem;">
-                                                        <div style="display: flex; align-items: center; gap: 10px;">
-                                                            <div
-                                                                style="width: 30px; height: 30px; background: var(--bg-light); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 0.8rem;">
-                                                                <i class="fas fa-user-tie"
-                                                                    style="color: var(--text-muted);"></i>
-                                                            </div>
-                                                            <span>
-                                                                <%= entry.teacher_name || 'Unassigned' %>
-                                                            </span>
-                                                        </div>
-                                                    </td>
-                                                    <td style="padding: 1rem;">
-                                                        <a href="/admin/timetable/delete/<%= entry.id %>"
-                                                            onclick="return confirm('Remove this schedule?')"
-                                                            style="color: var(--danger); background: rgba(239, 68, 68, 0.1); width: 32px; height: 32px; display: flex; align-items: center; justify-content: center; border-radius: 8px; text-decoration: none;">
-                                                            <i class="fas fa-trash"></i>
-                                                        </a>
-                                                    </td>
-                                        </tr>
-                                        <% }); %>
-                        </tbody>
-                    </table>
-                </div>
-            </main>
-    </div>
+    <!-- ══ MAIN CONTENT ══════════════════════════════════════════ -->
+    <main class="adm-main" role="main" aria-label="Timetable Management">
 
-    <!-- Add Modal -->
-    <div id="addTimetableModal" class="modal"
-        style="display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.5); backdrop-filter: blur(4px); z-index: 9999; align-items: center; justify-content: center;">
-        <div class="glass animate-slide-up"
-            style="width: 100%; max-width: 500px; padding: 2rem; border-radius: 24px; background: white;">
-            <h3 style="margin-bottom: 1.5rem; color: var(--primary);">Add New Schedule</h3>
-            <form action="/admin/timetable/add" method="POST">
-                <input type="hidden" name="_csrf" value="<%= typeof csrfToken !== 'undefined' ? csrfToken : '' %>">
-                <div class="form-group mb-3">
-                    <label style="font-weight: 600; margin-bottom: 0.5rem; display: block;">Select Class</label>
-                    <select name="class_id" required class="form-control"
-                        style="width: 100%; padding: 12px; border-radius: 12px; border: 1px solid #ddd;">
-                        <% classes.forEach(cls=> { %>
-                            <option value="<%= cls.id %>">
-                                <%= cls.class_name %> - Section <%= cls.section %>
-                            </option>
-                            <% }); %>
-                    </select>
-                </div>
-
-                <div class="form-group mb-3">
-                    <label style="font-weight: 600; margin-bottom: 0.5rem; display: block;">Day of Week</label>
-                    <select name="day" required class="form-control"
-                        style="width: 100%; padding: 12px; border-radius: 12px; border: 1px solid #ddd;">
-                        <option value="Monday">Monday</option>
-                        <option value="Tuesday">Tuesday</option>
-                        <option value="Wednesday">Wednesday</option>
-                        <option value="Thursday">Thursday</option>
-                        <option value="Friday">Friday</option>
-                        <option value="Saturday">Saturday</option>
-                    </select>
-                </div>
-
-                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1rem;">
-                    <div class="form-group">
-                        <label style="font-weight: 600; margin-bottom: 0.5rem; display: block;">Start Time</label>
-                        <input type="time" name="start_time" required class="form-control"
-                            style="width: 100%; padding: 12px; border-radius: 12px; border: 1px solid #ddd;">
-                    </div>
-                    <div class="form-group">
-                        <label style="font-weight: 600; margin-bottom: 0.5rem; display: block;">End Time</label>
-                        <input type="time" name="end_time" required class="form-control"
-                            style="width: 100%; padding: 12px; border-radius: 12px; border: 1px solid #ddd;">
-                    </div>
-                </div>
-
-                <div class="form-group mb-3">
-                    <label style="font-weight: 600; margin-bottom: 0.5rem; display: block;">Subject</label>
-                    <input type="text" name="subject" required placeholder="e.g. Mathematics" class="form-control"
-                        style="width: 100%; padding: 12px; border-radius: 12px; border: 1px solid #ddd;">
-                </div>
-
-                <div class="form-group mb-4">
-                    <label style="font-weight: 600; margin-bottom: 0.5rem; display: block;">Assign Teacher</label>
-                    <select name="teacher_id" class="form-control"
-                        style="width: 100%; padding: 12px; border-radius: 12px; border: 1px solid #ddd;">
-                        <option value="">-- No Teacher Assigned --</option>
-                        <% teachers.forEach(t=> { %>
-                            <option value="<%= t.id %>">
-                                <%= t.full_name %>
-                            </option>
-                            <% }); %>
-                    </select>
-                </div>
-
-                <div style="display: flex; gap: 10px; justify-content: flex-end;">
-                    <button type="button" onclick="document.getElementById('addTimetableModal').style.display='none'"
-                        class="btn"
-                        style="background: transparent; color: var(--text-muted); font-weight: 600;">Cancel</button>
-                    <button type="submit" class="btn-primary" style="padding: 12px 25px;">Save Schedule</button>
-                </div>
-            </form>
+      <!-- ── Page Header ── -->
+      <div class="adm-page-header">
+        <div>
+          <h1 class="adm-page-title">Timetable Management</h1>
+          <p class="adm-page-subtitle">Schedule classes, time slots, and assign teachers</p>
         </div>
-    </div>
+        <div>
+          <button class="adm-btn adm-btn-primary" onclick="window.openModal('addTimetableModal')">
+            <i class="fas fa-plus-circle" aria-hidden="true"></i> Add Schedule
+          </button>
+        </div>
+      </div>
 
-    <%- include('../partials/footer') %>
+      <!-- ── Timetable View ── -->
+      <div class="adm-card" style="padding: 0; overflow: hidden;">
+        
+        <div style="overflow-x: auto;">
+          <table class="adm-table" aria-label="Class Schedule">
+            <thead>
+              <tr>
+                <th scope="col">Day</th>
+                <th scope="col">Time Slot</th>
+                <th scope="col">Class</th>
+                <% if (typeof isSuperAdmin !=='undefined' && isSuperAdmin) { %>
+                  <th scope="col">Campus</th>
+                <% } %>
+                <th scope="col">Subject</th>
+                <th scope="col">Teacher</th>
+                <th scope="col" style="text-align: right;">Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              <% if(timetable.length === 0) { %>
+                <tr>
+                  <td colspan="<%= (typeof isSuperAdmin !== 'undefined' && isSuperAdmin) ? 7 : 6 %>" style="text-align: center; padding: 4rem 1rem;">
+                    <div class="adm-empty-state">
+                      <i class="fas fa-calendar-times adm-empty-icon" aria-hidden="true"></i>
+                      <h3>No Schedules Found</h3>
+                      <p>Click "Add Schedule" to create a new class timetable entry.</p>
+                    </div>
+                  </td>
+                </tr>
+              <% } %>
+              
+              <% timetable.forEach(entry => { 
+                // Determine badge color for day
+                let dayBadge = 'adm-badge-blue';
+                if(['Saturday', 'Sunday'].includes(entry.day)) { dayBadge = 'adm-badge-purple'; }
+              %>
+                <tr>
+                  <td>
+                    <span class="adm-badge <%= dayBadge %>" style="font-weight: 700; font-size: 0.8rem;"><%= entry.day %></span>
+                  </td>
+                  <td style="font-family: 'JetBrains Mono', monospace; font-weight: 600; color: var(--adm-text-primary);">
+                    <%= entry.start_time %> - <%= entry.end_time %>
+                  </td>
+                  <td>
+                    <div style="font-weight: 700; color: var(--adm-text-primary);"><%= entry.class_name %></div>
+                    <div style="font-size: 0.75rem; color: var(--adm-text-muted); font-weight: 600;">Sec: <%= entry.section %></div>
+                  </td>
+                  <% if (typeof isSuperAdmin !=='undefined' && isSuperAdmin) { %>
+                    <td>
+                      <span class="adm-badge adm-badge-blue" style="font-size: 0.75rem;"><%= entry.campus_name || '-' %></span>
+                    </td>
+                  <% } %>
+                  <td style="font-weight: 700; color: var(--adm-indigo);">
+                    <%= entry.subject %>
+                  </td>
+                  <td>
+                    <div style="display: flex; align-items: center; gap: 0.75rem;">
+                      <div class="adm-avatar" style="background: var(--adm-bg-elevated); color: var(--adm-text-muted); width: 32px; height: 32px; border: 1px solid var(--adm-border);">
+                        <i class="fas fa-user-tie" aria-hidden="true"></i>
+                      </div>
+                      <span style="font-weight: 600; color: var(--adm-text-primary);">
+                        <%= entry.teacher_name || 'Unassigned' %>
+                      </span>
+                    </div>
+                  </td>
+                  <td style="text-align: right;">
+                    <a href="/admin/timetable/delete/<%= entry.id %>" onclick="return confirm('Remove this schedule?')" class="adm-btn adm-btn-ghost adm-btn-danger" style="padding: 0.5rem 0.75rem;" aria-label="Delete Schedule">
+                      <i class="fas fa-trash-alt" aria-hidden="true"></i>
+                    </a>
+                  </td>
+                </tr>
+              <% }); %>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+    </main>
+  </div>
+
+  <!-- ══ MODALS ══════════════════════════════════════════════════ -->
+
+  <!-- Add Timetable Modal -->
+  <div id="addTimetableModal" class="adm-modal" aria-labelledby="addTimetableModalTitle" aria-hidden="true" role="dialog">
+    <div class="adm-modal-content">
+      <div class="adm-modal-header">
+        <h2 id="addTimetableModalTitle" class="adm-modal-title">Add New Schedule</h2>
+        <button type="button" class="adm-modal-close" onclick="window.closeModal('addTimetableModal')" aria-label="Close modal">
+          <i class="fas fa-times" aria-hidden="true"></i>
+        </button>
+      </div>
+      <div class="adm-modal-body">
+        <form action="/admin/timetable/add" method="POST">
+          <input type="hidden" name="_csrf" value="<%= typeof csrfToken !== 'undefined' ? csrfToken : '' %>">
+          
+          <div class="adm-form-group">
+            <label for="classIdInput" class="adm-label">Select Class</label>
+            <select name="class_id" id="classIdInput" required class="adm-input">
+              <% classes.forEach(cls => { %>
+                <option value="<%= cls.id %>">
+                  <%= cls.class_name %> - Section <%= cls.section %>
+                </option>
+              <% }); %>
+            </select>
+          </div>
+
+          <div class="adm-form-group">
+            <label for="dayInput" class="adm-label">Day of Week</label>
+            <select name="day" id="dayInput" required class="adm-input">
+              <option value="Monday">Monday</option>
+              <option value="Tuesday">Tuesday</option>
+              <option value="Wednesday">Wednesday</option>
+              <option value="Thursday">Thursday</option>
+              <option value="Friday">Friday</option>
+              <option value="Saturday">Saturday</option>
+            </select>
+          </div>
+
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1.5rem;">
+            <div>
+              <label for="startTimeInput" class="adm-label">Start Time</label>
+              <input type="time" name="start_time" id="startTimeInput" required class="adm-input">
+            </div>
+            <div>
+              <label for="endTimeInput" class="adm-label">End Time</label>
+              <input type="time" name="end_time" id="endTimeInput" required class="adm-input">
+            </div>
+          </div>
+
+          <div class="adm-form-group">
+            <label for="subjectInput" class="adm-label">Subject</label>
+            <input type="text" name="subject" id="subjectInput" required placeholder="e.g. Mathematics" class="adm-input">
+          </div>
+
+          <div class="adm-form-group" style="margin-bottom: 2rem;">
+            <label for="teacherIdInput" class="adm-label">Assign Teacher</label>
+            <select name="teacher_id" id="teacherIdInput" class="adm-input">
+              <option value="">-- No Teacher Assigned --</option>
+              <% teachers.forEach(t => { %>
+                <option value="<%= t.id %>">
+                  <%= t.full_name %>
+                </option>
+              <% }); %>
+            </select>
+          </div>
+
+          <div class="adm-modal-footer">
+            <button type="button" class="adm-btn adm-btn-ghost" onclick="window.closeModal('addTimetableModal')">Cancel</button>
+            <button type="submit" class="adm-btn adm-btn-primary">Save Schedule</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+<%- include('../partials/footer') %>

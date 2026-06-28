@@ -1,0 +1,167 @@
+<%- include('partials/header') %>
+
+    <div class="container my-5">
+        <div class="row">
+            <div class="col-12 text-center mb-5">
+                <h1 class="display-4 fw-bold">About Us</h1>
+                <p class="lead text-muted">A legacy of excellence in education.</p>
+            </div>
+        </div>
+
+        <div class="row align-items-center mb-5">
+            <div class="col-md-6">
+                <img src="/images/award.jpg" alt="About School" class="img-fluid rounded shadow">
+            </div>
+            <div class="col-md-6">
+                <h3>Our Story</h3>
+                <p>
+                    <strong>
+                        <%= (typeof settings !=='undefined' && settings.site_name) ? settings.site_name
+                            : 'Waqar Public Higher Secondary School' %>
+                    </strong>
+                    has been a beacon of academic excellence in Khairpur Mir's for over two decades. Founded with a
+                    vision to provide quality education to the youth of Sindh, we have consistently produced top-tier
+                    students who are now leading in various professional fields.
+                </p>
+                <p>
+                    Our approach combines rigorous academic training with a strong focus on character development,
+                    sports, and cultural awareness. We believe in nurturing well-rounded individuals ready to face
+                    global challenges.
+                </p>
+            </div>
+        </div>
+
+        <div class="row text-center">
+            <div class="col-md-4 mb-4">
+                <div class="p-4 border rounded shadow-sm h-100">
+                    <i class="fas fa-bullseye fa-3x text-primary mb-3"></i>
+                    <h4>Our Mission</h4>
+                    <p class="text-muted">To provide affordable, high-quality education that empowers students to
+                        achieve academic excellence and moral integrity.</p>
+                </div>
+            </div>
+            <div class="col-md-4 mb-4">
+                <div class="p-4 border rounded shadow-sm h-100">
+                    <i class="fas fa-eye fa-3x text-success mb-3"></i>
+                    <h4>Our Vision</h4>
+                    <p class="text-muted">To be a leading institution that fosters innovation, leadership, and a
+                        lifelong passion for learning in every student.</p>
+                </div>
+            </div>
+            <div class="col-md-4 mb-4">
+                <div class="p-4 border rounded shadow-sm h-100">
+                    <i class="fas fa-heart fa-3x text-danger mb-3"></i>
+                    <h4>Core Values</h4>
+                    <p class="text-muted">Integrity, Discipline, Respect, Excellence, and Community Service are the
+                        pillars of our institution.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <%- include('partials/footer') %>
+
+        <!-- PAGE HEADER -->
+        <header class="hero-section"
+            style="min-height: 50vh; background-image: url('/images/event1.jpg'); align-items: center;">
+            <div class="hero-overlay"></div>
+            <div class="container hero-content text-center animate-up">
+                <h1 class="display-3 fw-bold">About <span class="text-accent">Us</span></h1>
+                <p class="lead text-white-50 mx-auto" style="max-width: 600px;">
+                    A legacy of excellence since 1995. Discover our story, mission, and vision.
+                </p>
+            </div>
+        </header>
+
+        <section class="section-padding bg-white">
+            <div class="container">
+                <div class="row align-items-center g-5">
+                    <div class="col-lg-6 animate-up">
+                        <img src="/images/award.jpg" alt="About School" class="img-fluid rounded-4 shadow-lg w-100">
+                    </div>
+                    <div class="col-lg-6 animate-up delay-100">
+                        <span class="section-label">Our Story</span>
+                        <h2 class="section-title mb-4">Empowering <span class="text-gradient">Minds</span></h2>
+                        <div class="text-muted lead">
+                            <p>
+                                <strong>
+                                    <%= (typeof settings !=='undefined' && settings.site_name) ? settings.site_name
+                                        : 'Waqar Public Higher Secondary School' %>
+                                </strong>
+                                has been a beacon of academic excellence in Khairpur Mir's for over two decades. Founded
+                                with a vision to provide quality education to the youth of Sindh, we have consistently
+                                produced top-tier students who are now leading in various professional fields.
+                            </p>
+                            <p>
+                                Our approach combines rigorous academic training with a strong focus on character
+                                development, sports, and cultural awareness. We believe in nurturing well-rounded
+                                individuals ready to face global challenges.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row g-4 mt-5">
+                    <div class="col-md-4 animate-up delay-200">
+                        <div class="card-feature text-start">
+                            <div class="icon-box ms-0 bg-primary-subtle text-primary">
+                                <i class="fas fa-bullseye"></i>
+                            </div>
+                            <h4>Our Mission</h4>
+                            <p class="text-muted">To provide affordable, high-quality education that empowers students
+                                to
+                                achieve academic excellence and moral integrity.</p>
+                        </div>
+                    </div>
+                    <div class="col-md-4 animate-up delay-300">
+                        <div class="card-feature text-start">
+                            <div class="icon-box ms-0 bg-success-subtle text-success">
+                                <i class="fas fa-eye"></i>
+                            </div>
+                            <h4>Our Vision</h4>
+                            <p class="text-muted">To be a leading institution that fosters innovation, leadership, and a
+                                lifelong passion for learning in every student.</p>
+                        </div>
+                    </div>
+                    <div class="col-md-4 animate-up delay-400">
+                        <div class="card-feature text-start">
+                            <div class="icon-box ms-0 bg-warning-subtle text-warning">
+                                <i class="fas fa-heart"></i>
+                            </div>
+                            <h4>Core Values</h4>
+                            <p class="text-muted">Integrity, Discipline, Respect, Excellence, and Community Service are
+                                the
+                                pillars of our institution.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- PRINCIPAL MESSAGE (Optional) -->
+        <section class="section-padding bg-light">
+            <div class="container">
+                <div class="row justify-content-center">
+                    <div class="col-lg-10">
+                        <div class="bg-white p-5 rounded-4 shadow-sm border animate-up">
+                            <div class="text-center mb-4">
+                                <i class="fas fa-quote-left fa-3x text-primary opacity-25"></i>
+                            </div>
+                            <figure class="text-center">
+                                <blockquote class="blockquote mb-4">
+                                    <p class="mb-0 fs-5 text-muted fst-italic">"Education is not just about filling a
+                                        bucket, but lighting a fire. At Waqar Public School, we strive to ignite that
+                                        spark
+                                        of curiosity and ambition in every child."</p>
+                                </blockquote>
+                                <figcaption class="blockquote-footer mt-2">
+                                    Principal <cite title="Source Title">Waqar Public School</cite>
+                                </figcaption>
+                            </figure>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <%- include('partials/frontend_footer') %>

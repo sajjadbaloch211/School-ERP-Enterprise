@@ -33,7 +33,27 @@
         :root {
             /* Dynamic theme from CMS — overrides CSS variables */
             --navy: <%=(typeof theme !=='undefined' && theme.colors && theme.colors.primary) ? theme.colors.primary: '#0B1C3D' %>;
+            --navy-mid: <%=(typeof theme !=='undefined' && theme.colors && theme.colors.secondary) ? theme.colors.secondary: '#112347' %>;
+            --navy-light: <%=(typeof theme !=='undefined' && theme.colors && theme.colors.accent) ? theme.colors.accent: '#1a3560' %>;
             --gold:  <%=(typeof theme !=='undefined' && theme.colors && theme.colors.accent)  ? theme.colors.accent  : '#F5A623' %>;
+            --text-main: <%=(typeof theme !=='undefined' && theme.colors && theme.colors.text) ? theme.colors.text: '#0B1C3D' %>;
+            --text-muted: <%=(typeof theme !=='undefined' && theme.colors && theme.colors.textLight) ? theme.colors.textLight: '#64748b' %>;
+            
+            /* Typography mapping */
+            --heading-font: <%=(typeof theme !=='undefined' && theme.fonts && theme.fonts.heading) ? theme.fonts.heading : "'Playfair Display', Georgia, serif" %>;
+            --body-font: <%=(typeof theme !=='undefined' && theme.fonts && theme.fonts.body) ? theme.fonts.body : "'Inter', sans-serif" %>;
+            
+            /* Buttons */
+            --btn-radius: <%=(typeof theme !=='undefined' && theme.button_styles && theme.button_styles.borderRadius) ? theme.button_styles.borderRadius : '8px' %>;
+            --btn-shadow: <%=(typeof theme !=='undefined' && theme.button_styles && theme.button_styles.shadow) ? theme.button_styles.shadow : '0 4px 6px rgba(0,0,0,0.1)' %>;
+        }
+
+        body {
+            font-family: var(--body-font) !important;
+        }
+
+        h1, h2, h3, h4, h5, h6, .display-1, .display-2, .display-3, .display-4 {
+            font-family: var(--heading-font) !important;
         }
     </style>
 </head>

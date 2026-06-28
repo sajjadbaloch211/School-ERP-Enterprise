@@ -1,125 +1,142 @@
 <%- include('../partials/header') %>
 
-    <div class="admin-layout animate-fade-in" style="margin-top: 80px;">
-        <!-- Sidebar -->
-        <%- include('../partials/sidebar', { active: 'departments' }) %>
+  <!-- ════════════════════════════════════════════════════════════
+       ADMIN LAYOUT
+       ════════════════════════════════════════════════════════════ -->
+  <div class="adm-layout">
 
-            <!-- Main Content -->
-            <main class="main-content">
-                <header
-                    style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 3rem;">
-                    <div>
-                        <h2 style="font-size: 2rem; font-weight: 800; color: var(--primary);">Departments</h2>
-                        <p style="color: var(--text-muted);">Manage academic departments and faculties</p>
-                    </div>
-                    <button onclick="document.getElementById('addDeptModal').style.display='flex'" class="btn-primary"
-                        style="padding: 12px 25px; border-radius: 50px; display: flex; align-items: center; gap: 10px;">
-                        <i class="fas fa-plus"></i> Add Department
-                    </button>
-                </header>
+    <!-- Sidebar -->
+    <%- include('../partials/sidebar', { active: 'departments' }) %>
 
-                <!-- Stats Mockup -->
-                <div class="stat-group animate-slide-up" style="margin-bottom: 2rem;">
-                    <div class="stat-card card">
-                        <div class="stat-icon" style="background: rgba(59, 130, 246, 0.1); color: var(--accent);">
-                            <i class="fas fa-building"></i>
-                        </div>
-                        <div>
-                            <p
-                                style="color: var(--text-muted); font-size: 0.9rem; font-weight: 600; text-transform: uppercase;">
-                                Total Depts</p>
-                            <h3 style="font-size: 2rem; font-weight: 800; color: var(--primary);">
-                                <%= departments.length %>
-                            </h3>
-                        </div>
-                    </div>
-                </div>
+    <!-- ══ MAIN CONTENT ══════════════════════════════════════════ -->
+    <main class="adm-main" role="main" aria-label="Departments Management">
 
-                <!-- Departments Grid -->
-                <div class="grid animate-slide-up"
-                    style="grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1.5rem;">
-                    <% departments.forEach(dept=> { %>
-                        <div class="card department-card" style="position: relative; padding: 1.5rem;">
-                            <div
-                                style="display: flex; justify-content: space-between; align-items: start; margin-bottom: 1rem;">
-                                <div
-                                    style="width: 50px; height: 50px; border-radius: 12px; background: var(--light-accent); color: var(--accent); display: flex; align-items: center; justify-content: center; font-size: 1.5rem;">
-                                    <i class="fas fa-university"></i>
-                                </div>
-                                <a href="/admin/departments/delete/<%= dept.id %>"
-                                    onclick="return confirm('Delete this department?')"
-                                    style="color: var(--danger); background: rgba(239,68,68,0.1); padding: 8px; border-radius: 8px;">
-                                    <i class="fas fa-trash"></i>
-                                </a>
-                            </div>
-                            <h3
-                                style="color: var(--primary); font-size: 1.25rem; font-weight: 700; margin-bottom: 0.5rem;">
-                                <%= dept.name %> <span
-                                        style="font-size: 0.8rem; color: var(--text-muted); font-weight: normal;">(<%=
-                                            dept.code %>)</span>
-                            </h3>
-                            <p
-                                style="color: var(--text-muted); font-size: 0.9rem; margin-bottom: 1rem; line-height: 1.5;">
-                                <%= dept.description || 'No description provided.' %>
-                            </p>
-                            <div
-                                style="border-top: 1px solid rgba(0,0,0,0.05); padding-top: 1rem; display: flex; align-items: center; gap: 10px;">
-                                <i class="fas fa-user-tie" style="color: var(--accent);"></i>
-                                <span style="font-size: 0.9rem; font-weight: 600; color: var(--text-main);">
-                                    Head: <%= dept.head_name || 'Not Assigned' %>
-                                </span>
-                            </div>
-                        </div>
-                        <% }); %>
-                            <% if (departments.length===0) { %>
-                                <div
-                                    style="grid-column: 1/-1; text-align: center; color: var(--text-muted); padding: 3rem;">
-                                    <i class="fas fa-folder-open"
-                                        style="font-size: 3rem; margin-bottom: 1rem; opacity: 0.5;"></i>
-                                    <p>No departments found. Add one to get started.</p>
-                                </div>
-                                <% } %>
-                </div>
-            </main>
-    </div>
-
-    <!-- Modal -->
-    <div id="addDeptModal" class="modal"
-        style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 1000; align-items: center; justify-content: center;">
-        <div class="glass"
-            style="width: 100%; max-width: 500px; padding: 2rem; border-radius: 24px; animation: slideUp 0.3s ease;">
-            <h3 style="margin-bottom: 1.5rem; color: var(--primary);">Add New Department</h3>
-            <form action="/admin/departments/add" method="POST">
-                <div class="form-group mb-3">
-                    <label>Department Name</label>
-                    <input type="text" name="name" required class="form-control" placeholder="e.g. Computer Science">
-                </div>
-                <div class="form-group mb-3">
-                    <label>Code</label>
-                    <input type="text" name="code" required class="form-control" placeholder="e.g. CS">
-                </div>
-                <div class="form-group mb-3">
-                    <label>Head of Department</label>
-                    <select name="head_of_department" class="form-control">
-                        <option value="">-- Select Faculty --</option>
-                        <% teachers.forEach(teacher=> { %>
-                            <option value="<%= teacher.user_id %>">
-                                <%= teacher.full_name %>
-                            </option>
-                            <% }); %>
-                    </select>
-                </div>
-                <div class="form-group mb-4">
-                    <label>Description</label>
-                    <textarea name="description" class="form-control" rows="3"></textarea>
-                </div>
-                <div style="display: flex; gap: 10px; justify-content: flex-end;">
-                    <button type="button" onclick="document.getElementById('addDeptModal').style.display='none'"
-                        class="btn" style="background: transparent; color: var(--text-muted);">Cancel</button>
-                    <button type="submit" class="btn-primary">Create Department</button>
-                </div>
-            </form>
+      <!-- ── Page Header ── -->
+      <div class="adm-page-header">
+        <div>
+          <h1 class="adm-page-title">Departments</h1>
+          <p class="adm-page-subtitle">Manage academic departments, codes, and assigned faculty heads</p>
         </div>
-    </div>
+        <div>
+          <button class="adm-btn adm-btn-primary" onclick="window.openModal('addDeptModal')">
+            <i class="fas fa-plus-circle" aria-hidden="true"></i> Add Department
+          </button>
+        </div>
+      </div>
 
-    <%- include('../partials/footer') %>
+      <!-- ── KPI Cards ── -->
+      <div style="margin-bottom: 2rem;">
+        <article class="adm-kpi-card" style="border-left-color: var(--adm-indigo); max-width: 320px;">
+          <div class="adm-kpi-icon" style="background: var(--adm-indigo-bg); color: var(--adm-indigo);">
+            <i class="fas fa-university" aria-hidden="true"></i>
+          </div>
+          <div class="adm-kpi-content">
+            <h3 class="adm-kpi-title">Total Departments</h3>
+            <div class="adm-kpi-value" data-target="<%= departments.length %>">
+              <%= departments.length %>
+            </div>
+          </div>
+        </article>
+      </div>
+
+      <!-- ── Departments Grid ── -->
+      <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 1.5rem;">
+        
+        <% if (departments.length === 0) { %>
+          <div style="grid-column: 1 / -1; padding: 4.5rem; text-align: center; color: var(--adm-text-muted); background: var(--adm-bg-surface); border-radius: var(--adm-r-lg); border: 1px dashed var(--adm-border);">
+            <i class="fas fa-folder-open" style="font-size: 3rem; opacity: 0.25; display: block; margin-bottom: 1rem;" aria-hidden="true"></i>
+            <h3 style="color: var(--adm-text-primary); font-weight: 700; margin-bottom: 0.5rem;">No Departments Found</h3>
+            <p>Click "Add Department" to create your first academic faculty.</p>
+          </div>
+        <% } %>
+
+        <% departments.forEach(dept => { %>
+          <article class="adm-card" style="padding: 1.5rem; display: flex; flex-direction: column;">
+            
+            <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 1.25rem;">
+              <div class="adm-avatar" style="width: 48px; height: 48px; border-radius: var(--adm-r-sm); background: var(--adm-blue-bg); color: var(--adm-blue); font-size: 1.25rem;">
+                <i class="fas fa-university" aria-hidden="true"></i>
+              </div>
+              <a href="/admin/departments/delete/<%= dept.id %>" onclick="return confirm('Delete this department completely?')" class="adm-btn adm-btn-ghost adm-btn-danger" style="padding: 0.5rem; margin: -0.5rem;" aria-label="Delete Department">
+                <i class="fas fa-trash-alt" aria-hidden="true"></i>
+              </a>
+            </div>
+
+            <h3 style="font-size: 1.25rem; font-weight: 800; color: var(--adm-text-primary); margin-bottom: 0.25rem;">
+              <%= dept.name %> 
+              <span style="font-family: 'JetBrains Mono', monospace; font-size: 0.85rem; color: var(--adm-text-muted); font-weight: 600; margin-left: 0.25rem;">(<%= dept.code %>)</span>
+            </h3>
+
+            <p style="color: var(--adm-text-muted); font-size: 0.9rem; line-height: 1.5; margin-bottom: 1.5rem; flex-grow: 1;">
+              <%= dept.description || 'No description provided.' %>
+            </p>
+
+            <div style="border-top: 1px solid var(--adm-border); padding-top: 1rem; display: flex; align-items: center; gap: 0.75rem;">
+              <div class="adm-avatar" style="width: 28px; height: 28px; background: var(--adm-bg-elevated); color: var(--adm-text-muted); border: 1px solid var(--adm-border); font-size: 0.75rem;">
+                <i class="fas fa-user-tie" aria-hidden="true"></i>
+              </div>
+              <span style="font-size: 0.9rem; font-weight: 700; color: var(--adm-text-primary);">
+                <span style="color: var(--adm-text-muted); font-weight: 600; margin-right: 0.25rem;">Head:</span> <%= dept.head_name || 'Unassigned' %>
+              </span>
+            </div>
+
+          </article>
+        <% }); %>
+
+      </div>
+    </main>
+  </div>
+
+  <!-- ══ MODALS ══════════════════════════════════════════════════ -->
+
+  <!-- Add Department Modal -->
+  <div id="addDeptModal" class="adm-modal" aria-labelledby="addDeptModalTitle" aria-hidden="true" role="dialog">
+    <div class="adm-modal-content">
+      <div class="adm-modal-header">
+        <h2 id="addDeptModalTitle" class="adm-modal-title">Add New Department</h2>
+        <button type="button" class="adm-modal-close" onclick="window.closeModal('addDeptModal')" aria-label="Close modal">
+          <i class="fas fa-times" aria-hidden="true"></i>
+        </button>
+      </div>
+      <div class="adm-modal-body">
+        <form action="/admin/departments/add" method="POST">
+          <!-- Security Token (Restored) -->
+          <input type="hidden" name="_csrf" value="<%= typeof csrfToken !== 'undefined' ? csrfToken : '' %>">
+          
+          <div class="adm-form-group">
+            <label for="deptNameInput" class="adm-label">Department Name</label>
+            <input type="text" name="name" id="deptNameInput" required placeholder="e.g. Computer Science" class="adm-input">
+          </div>
+          
+          <div class="adm-form-group">
+            <label for="deptCodeInput" class="adm-label">Department Code</label>
+            <input type="text" name="code" id="deptCodeInput" required placeholder="e.g. CS" class="adm-input" style="font-family: 'JetBrains Mono', monospace;">
+          </div>
+          
+          <div class="adm-form-group">
+            <label for="headInput" class="adm-label">Head of Department (Faculty)</label>
+            <select name="head_of_department" id="headInput" class="adm-input">
+              <option value="">-- No Head Assigned --</option>
+              <% teachers.forEach(teacher => { %>
+                <option value="<%= teacher.user_id %>">
+                  <%= teacher.full_name %>
+                </option>
+              <% }); %>
+            </select>
+          </div>
+          
+          <div class="adm-form-group" style="margin-bottom: 2rem;">
+            <label for="descInput" class="adm-label">Description (Optional)</label>
+            <textarea name="description" id="descInput" class="adm-input" rows="3" placeholder="Briefly describe the department's focus..."></textarea>
+          </div>
+          
+          <div class="adm-modal-footer">
+            <button type="button" class="adm-btn adm-btn-ghost" onclick="window.closeModal('addDeptModal')">Cancel</button>
+            <button type="submit" class="adm-btn adm-btn-primary">Create Department</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+<%- include('../partials/footer') %>

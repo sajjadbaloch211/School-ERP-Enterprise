@@ -1,0 +1,31 @@
+<!-- Dynamic Features Section -->
+<section class="dynamic-features" style="padding: 100px 5%; background: <%= content.backgroundColor || '#f8fafc' %>;">
+    <div class="container" style="max-width: 1400px; margin: 0 auto;">
+        <div style="text-align: center; margin-bottom: 4rem;">
+            <h2 style="font-size: 3rem; font-weight: 900; color: #0f172a;">
+                <%= content.title %>
+            </h2>
+            <p style="font-size: 1.25rem; color: #64748b; max-width: 700px; margin: 1.5rem auto 0;">
+                <%= content.subtitle %>
+            </p>
+        </div>
+
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 2.5rem;">
+            <% (content.items || []).forEach(item=> { %>
+                <div class="feature-card"
+                    style="background: white; padding: 3rem; border-radius: 24px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); border: 1px solid #e2e8f0; transition: all 0.3s ease;">
+                    <div
+                        style="width: 70px; height: 70px; background: #eff6ff; color: #3b82f6; border-radius: 18px; display: flex; align-items: center; justify-content: center; font-size: 2rem; margin-bottom: 1.5rem;">
+                        <i class="fas <%= item.icon %>"></i>
+                    </div>
+                    <h3 style="font-size: 1.5rem; font-weight: 800; color: #0f172a; margin-bottom: 1rem;">
+                        <%= item.title %>
+                    </h3>
+                    <p style="color: #64748b; line-height: 1.7;">
+                        <%= item.description %>
+                    </p>
+                </div>
+                <% }) %>
+        </div>
+    </div>
+</section>

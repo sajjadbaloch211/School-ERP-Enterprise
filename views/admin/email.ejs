@@ -1,78 +1,76 @@
 <%- include('../partials/header') %>
 
-    <div class="admin-layout animate-fade-in" style="margin-top: 80px;">
-        <!-- Sidebar -->
-        <!-- Sidebar -->
-        <%- include('../partials/sidebar', { active: 'email' }) %>
+  <!-- ════════════════════════════════════════════════════════════
+       ADMIN LAYOUT
+       ════════════════════════════════════════════════════════════ -->
+  <div class="adm-layout">
 
-            <!-- Main Content -->
-            <main class="main-content">
-                <header
-                    style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 3rem;">
-                    <div>
-                        <h2 style="font-size: 2rem; font-weight: 800; color: var(--primary);">Email Communication</h2>
-                        <p style="color: var(--text-muted);">Send bulk emails to students and teachers.</p>
-                    </div>
-                </header>
+    <!-- Sidebar -->
+    <%- include('../partials/sidebar', { active: 'email' }) %>
 
-                <div class="animate-slide-up"
-                    style="background: white; width: 100%; max-width: 800px; margin: 0 auto; border-radius: 24px; padding: 3rem; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);">
-                    <form action="/admin/send-email" method="POST">
-                        <input type="hidden" name="_csrf"
-                            value="<%= typeof csrfToken !== 'undefined' ? csrfToken : '' %>">
+    <!-- ══ MAIN CONTENT ══════════════════════════════════════════ -->
+    <main class="adm-main" role="main" aria-label="Email Communication">
 
-                        <% if (typeof success !=='undefined' && success) { %>
-                            <div
-                                style="background-color: #dcfce7; color: #166534; padding: 1rem; border-radius: 12px; margin-bottom: 1.5rem; border: 1px solid #bbf7d0;">
-                                <i class="fas fa-check-circle"></i>
-                                <%= success %>
-                            </div>
-                            <% } %>
+      <div style="max-width: 800px; margin: 0 auto; width: 100%;">
+        
+        <!-- ── Page Header ── -->
+        <div class="adm-page-header" style="margin-bottom: 2rem;">
+          <div>
+            <h1 class="adm-page-title">Email Communication</h1>
+            <p class="adm-page-subtitle">Send bulk announcements and notifications to students and teachers.</p>
+          </div>
+        </div>
 
-                                <% if (typeof error !=='undefined' && error) { %>
-                                    <div
-                                        style="background-color: #fee2e2; color: #991b1b; padding: 1rem; border-radius: 12px; margin-bottom: 1.5rem; border: 1px solid #fecaca;">
-                                        <i class="fas fa-exclamation-circle"></i>
-                                        <%= error %>
-                                    </div>
-                                    <% } %>
+        <!-- ── Email Composer ── -->
+        <article class="adm-card" style="padding: 2.5rem;">
+          
+          <!-- Flash Messages -->
+          <% if (typeof success !== 'undefined' && success) { %>
+            <div style="background: var(--adm-green-bg); color: var(--adm-green); padding: 1rem 1.5rem; border-radius: var(--adm-r-md); margin-bottom: 2rem; font-weight: 600; display: flex; align-items: center; gap: 0.75rem;">
+              <i class="fas fa-check-circle" aria-hidden="true" style="font-size: 1.25rem;"></i>
+              <%= success %>
+            </div>
+          <% } %>
 
-                                        <div style="margin-bottom: 1.5rem;">
-                                            <label
-                                                style="display: block; font-weight: 700; margin-bottom: 8px; font-size: 0.9rem;">Recipient
-                                                Group</label>
-                                            <select name="recipient_group" required
-                                                style="width: 100%; padding: 12px 16px; border-radius: 12px; border: 1px solid #e2e8f0; background: #f8fafc; font-size: 1rem;">
-                                                <option value="both">Both (All Students & Teachers)</option>
-                                                <option value="students">All Students</option>
-                                                <option value="teachers">All Teachers</option>
-                                            </select>
-                                        </div>
+          <% if (typeof error !== 'undefined' && error) { %>
+            <div style="background: var(--adm-red-bg); color: var(--adm-red); padding: 1rem 1.5rem; border-radius: var(--adm-r-md); margin-bottom: 2rem; font-weight: 600; display: flex; align-items: center; gap: 0.75rem;">
+              <i class="fas fa-exclamation-circle" aria-hidden="true" style="font-size: 1.25rem;"></i>
+              <%= error %>
+            </div>
+          <% } %>
 
-                                        <div style="margin-bottom: 1.5rem;">
-                                            <label
-                                                style="display: block; font-weight: 700; margin-bottom: 8px; font-size: 0.9rem;">Subject</label>
-                                            <input type="text" name="subject" required
-                                                placeholder="e.g. Important Announcement"
-                                                style="width: 100%; padding: 12px 16px; border-radius: 12px; border: 1px solid #e2e8f0; background: #f8fafc; font-size: 1rem;">
-                                        </div>
+          <!-- Composer Form -->
+          <form action="/admin/send-email" method="POST">
+            <input type="hidden" name="_csrf" value="<%= typeof csrfToken !== 'undefined' ? csrfToken : '' %>">
 
-                                        <div style="margin-bottom: 2rem;">
-                                            <label
-                                                style="display: block; font-weight: 700; margin-bottom: 8px; font-size: 0.9rem;">Message</label>
-                                            <textarea name="message" required rows="10"
-                                                placeholder="Type your message here..."
-                                                style="width: 100%; padding: 12px 16px; border-radius: 12px; border: 1px solid #e2e8f0; background: #f8fafc; resize: vertical; font-size: 1rem;"></textarea>
-                                        </div>
+            <div class="adm-form-group">
+              <label class="adm-label" for="recipientGroup">Recipient Group <span style="color: var(--adm-red);">*</span></label>
+              <select name="recipient_group" id="recipientGroup" required class="adm-input">
+                <option value="both">Both (All Students & Teachers)</option>
+                <option value="students">All Students</option>
+                <option value="teachers">All Teachers</option>
+              </select>
+            </div>
 
-                                        <button type="submit" class="btn btn-primary"
-                                            style="width: 100%; padding: 15px; font-size: 1.1rem; display: flex; align-items: center; justify-content: center; gap: 10px;">
-                                            <i class="fas fa-paper-plane"></i> Send Email
-                                        </button>
-                    </form>
-                </div>
-            </main>
-    </div>
-    </body>
+            <div class="adm-form-group">
+              <label class="adm-label" for="subjectInput">Subject <span style="color: var(--adm-red);">*</span></label>
+              <input type="text" name="subject" id="subjectInput" required placeholder="e.g. Important Announcement: Term Finals Schedule" class="adm-input">
+            </div>
 
-    </html>
+            <div class="adm-form-group" style="margin-bottom: 2.5rem;">
+              <label class="adm-label" for="messageInput">Message <span style="color: var(--adm-red);">*</span></label>
+              <textarea name="message" id="messageInput" required rows="10" placeholder="Type your broadcast message here..." class="adm-input" style="resize: vertical; font-family: inherit;"></textarea>
+            </div>
+
+            <button type="submit" class="adm-btn adm-btn-primary" style="width: 100%; justify-content: center; padding: 1rem; font-size: 1.1rem; box-shadow: 0 4px 12px rgba(99, 102, 241, 0.25);">
+              <i class="fas fa-paper-plane" aria-hidden="true"></i> Send Email Broadcast
+            </button>
+            
+          </form>
+        </article>
+
+      </div>
+    </main>
+  </div>
+
+<%- include('../partials/footer') %>

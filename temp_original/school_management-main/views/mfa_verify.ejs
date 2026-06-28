@@ -1,0 +1,132 @@
+<%- include('partials/header') %>
+
+    <div class="auth-layout"
+        style="min-height: 100vh; display: flex; align-items: center; justify-content: center; background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%); padding: 20px;">
+
+        <div class="card glass animate-slide-up"
+            style="max-width: 450px; width: 100%; padding: 3.5rem; border-radius: 40px; box-shadow: 0 50px 100px -20px rgba(0, 0, 0, 0.1);">
+
+            <div style="text-align: center; margin-bottom: 3rem;">
+                <div
+                    style="width: 70px; height: 70px; background: var(--accent); color: white; border-radius: 20px; display: flex; align-items: center; justify-content: center; margin: 0 auto 1.5rem; font-size: 2rem; box-shadow: 0 10px 20px rgba(59, 130, 246, 0.3);">
+                    <i class="fas fa-user-shield"></i>
+                </div>
+                <h2
+                    style="font-weight: 900; color: var(--primary); font-size: 2rem; margin-bottom: 0.5rem; letter-spacing: -1px;">
+                    Verify Identity</h2>
+                <p style="color: var(--text-muted); font-size: 0.95rem; line-height: 1.6;">Two-factor authentication is
+                    enabled. Please enter the code from your authenticator app.</p>
+
+                <!-- 📱 Magic Login QR -->
+                <% if (typeof qrCode !=='undefined' && qrCode) { %>
+                    <div id="qrAuthContainer"
+                        style="margin-top: 1.5rem; background: #fff; padding: 12px; border-radius: 20px; border: 1px solid #e2e8f0; display: flex; align-items: center; gap: 15px; text-align: left; max-width: 250px; margin-left: auto; margin-right: auto; transition: all 0.3s ease;">
+                        <img src="<%= qrCode %>"
+                            style="width: 50px; height: 50px; border-radius: 8px; border: 1px solid #eee;"
+                            alt="QR Code">
+                        <div>
+                            <h4 style="margin: 0; font-size: 0.75rem; font-weight: 800; color: var(--primary);">Magic
+                                Login QR</h4>
+                            <p id="qrStatusText"
+                                style="margin: 1px 0 0; font-size: 0.65rem; color: var(--text-muted); line-height: 1.2;">
+                                Scan with logged-in phone to bypass code.</p>
+                        </div>
+                    </div>
+
+                    <script>
+                        (function () {
+                            const token = "<%= qrToken %>";
+                            const container = document.getElementById('qrAuthContainer');
+                            const statusText = document.getElementById('qrStatusText');
+
+                            let pollInterval = setInterval(async () => {
+                                try {
+                                    const response = await fetch('/auth/qr-check?token=' + token);
+                                    const data = await response.json();
+
+                                    if (data.status === 'authorized') {
+                                        clearInterval(pollInterval);
+                                        statusText.innerText = "Authorized! Redirecting...";
+                                        container.style.borderColor = "#10b981";
+                                        container.style.background = "#ecfdf5";
+
+                                        setTimeout(() => {
+                                            window.location.href = "/" + data.role + "/dashboard";
+                                        }, 1000);
+                                    } else if (data.status === 'expired') {
+                                        clearInterval(pollInterval);
+                                        statusText.innerText = "QR Expired. Please refresh.";
+                                        container.style.opacity = "0.5";
+                                    }
+                                } catch (e) {
+                                    console.error("Polling error", e);
+                                }
+                            }, 3000);
+                        })();
+                    </script>
+                    <% } %>
+            </div>
+
+            <% if (error) { %>
+                <div
+                    style="background: #fef2f2; color: #991b1b; padding: 1rem 1.5rem; border-radius: 15px; margin-bottom: 2rem; text-align: center; font-weight: 600; font-size: 0.9rem; border: 1px solid #fee2e2;">
+                    <%= error %>
+                </div>
+                <% } %>
+
+                    <form action="/auth/mfa-verify" method="POST">
+                        <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+
+                        <!-- 📍 Location Capture (Hidden) -->
+                        <input type="hidden" name="latitude" id="lat">
+                        <input type="hidden" name="longitude" id="lng">
+
+                        <div style="margin-bottom: 2.5rem;">
+                            <label
+                                style="display: block; font-weight: 700; color: var(--primary); margin-bottom: 12px; font-size: 0.85rem; text-transform: uppercase; letter-spacing: 1px;">Authenticator
+                                Code</label>
+                            <input type="text" name="token" placeholder="000 000" maxlength="6" required autofocus
+                                style="width: 100%; padding: 20px; border-radius: 20px; border: 2px solid #e2e8f0; background: #f8fafc; font-size: 2rem; text-align: center; letter-spacing: 12px; font-weight: 900; color: var(--primary); transition: all 0.4s ease; outline: none;"
+                                onfocus="this.style.borderColor = 'var(--accent)'; this.style.background = 'white'; this.style.boxShadow = '0 10px 15px -3px rgba(59, 130, 246, 0.1)';"
+                                onblur="this.style.borderColor = '#e2e8f0'; this.style.background = '#f8fafc';">
+                        </div>
+
+                        <button type="submit" class="btn btn-primary"
+                            style="width: 100%; padding: 1.2rem; border-radius: 20px; font-weight: 800; font-size: 1.1rem; display: flex; align-items: center; justify-content: center; gap: 12px; transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);">
+                            <i class="fas fa-check-circle"></i> Verify & Sign In
+                        </button>
+                    </form>
+
+                    <script>
+                        // 📍 Capture Location Automatically
+                        document.addEventListener('DOMContentLoaded', () => {
+                            if (navigator.geolocation) {
+                                navigator.geolocation.getCurrentPosition(
+                                    (position) => {
+                                        const latField = document.getElementById('lat');
+                                        const lngField = document.getElementById('lng');
+                                        if (latField) latField.value = position.coords.latitude;
+                                        if (lngField) lngField.value = position.coords.longitude;
+                                    },
+                                    (error) => console.log("Location access denied:", error.message),
+                                    { enableHighAccuracy: true }
+                                );
+                            }
+                        });
+                    </script>
+
+
+
+                    <p style="text-align: center; margin-top: 2.5rem;">
+                        <a href="/login"
+                            style="color: var(--text-muted); text-decoration: none; font-weight: 600; font-size: 0.9rem; transition: color 0.3s;"
+                            onmouseover="this.style.color='var(--accent)'"
+                            onmouseout="this.style.color='var(--text-muted)'">
+                            <i class="fas fa-arrow-left"></i> Back to Login
+                        </a>
+                    </p>
+
+        </div>
+    </div>
+
+    <%- include('partials/footer') %>

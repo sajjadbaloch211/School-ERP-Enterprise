@@ -1,125 +1,118 @@
 <%- include('../../partials/header') %>
-    <div class="admin-layout animate-fade-in" style="margin-top: 80px;">
-        <%- include('../../partials/sidebar', { active: 'cms' }) %>
+<div class="adm-layout">
+    <%- include('../../partials/sidebar', { active: 'cms' }) %>
 
-            <main class="main-content">
-                <div style="margin-bottom: 2rem;">
-                    <a href="/admin/cms" style="color: var(--text-muted); text-decoration: none; font-weight: 600;">
-                        <i class="fas fa-arrow-left"></i> Back to Dashboard
-                    </a>
-                    <h1 style="font-size: 2rem; color: var(--primary); font-weight: 800; margin-top: 1rem;">Menu Manager
-                    </h1>
-                    <p style="color: var(--text-muted);">Manage links in Header and Footer navigation.</p>
+    <main class="adm-main" role="main" aria-label="Menu Manager">
+        <div style="margin-bottom: 2rem;">
+            <a href="/admin/cms/pages" style="color: var(--adm-text-muted); text-decoration: none; font-weight: 500; font-size: 0.9rem; display: inline-flex; align-items: center; gap: 0.5rem; transition: var(--adm-t-fast);" onmouseover="this.style.color='var(--adm-indigo)';" onmouseout="this.style.color='var(--adm-text-muted)';">
+                <i class="fas fa-arrow-left"></i> Back to Dashboard
+            </a>
+            <h1 class="adm-page-title" style="margin-top: 1rem;">Menu Manager</h1>
+            <p class="adm-page-subtitle">Manage links in Header and Footer navigation.</p>
+        </div>
+
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(400px, 1fr)); gap: 2rem;">
+
+            <!-- HEADER MENU -->
+            <div class="adm-card" style="padding: 2rem;">
+                <h3 style="margin-bottom: 1.5rem; color: var(--adm-indigo); font-weight: 600; font-size: 1.25rem;">
+                    <i class="fas fa-layer-group" style="margin-right: 0.5rem;"></i> Header Menu
+                </h3>
+
+                <div style="display: flex; flex-direction: column; gap: 0.75rem; margin-bottom: 2.5rem;">
+                    <% menus.filter(m => m.menu_location === 'header').forEach(item => { %>
+                        <div style="display: flex; align-items: center; justify-content: space-between; background: var(--adm-bg-elevated); padding: 1rem; border-radius: var(--adm-r-md); border: 1px solid var(--adm-border);">
+                            <div>
+                                <span style="font-weight: 600; color: var(--adm-text-primary); display: block; margin-bottom: 0.25rem;">
+                                    <%= item.label %>
+                                </span>
+                                <small style="color: var(--adm-text-muted); font-family: monospace;">
+                                    <%= item.url %>
+                                </small>
+                            </div>
+                            <form action="/admin/cms/menus/delete/<%= item.id %>" method="POST" onsubmit="return confirm('Delete this menu item?');">
+                                <input type="hidden" name="_csrf" value="<%= locals.csrfToken %>">
+                                <button type="submit" style="background: none; border: none; color: var(--adm-danger); cursor: pointer; opacity: 0.7; transition: var(--adm-t-fast);" onmouseover="this.style.opacity='1';" onmouseout="this.style.opacity='0.7';" aria-label="Delete link">
+                                    <i class="fas fa-trash"></i>
+                                </button>
+                            </form>
+                        </div>
+                    <% }) %>
+                    <% if (menus.filter(m => m.menu_location === 'header').length === 0) { %>
+                        <div style="text-align: center; padding: 2rem; border: 2px dashed var(--adm-border); border-radius: var(--adm-r-md); color: var(--adm-text-muted);">
+                            No header links defined.
+                        </div>
+                    <% } %>
                 </div>
 
-                <!-- Header & Footer Menus -->
-                <div class="grid" style="grid-template-columns: repeat(auto-fit, minmax(400px, 1fr)); gap: 2rem;">
+                <form action="/admin/cms/menus/add" method="POST" style="background: var(--adm-bg-canvas); padding: 1.5rem; border-radius: var(--adm-r-md); border: 1px solid var(--adm-border);">
+                    <h4 style="margin-bottom: 1.25rem; font-size: 1rem; font-weight: 600;">Add Header Link</h4>
+                    <input type="hidden" name="_csrf" value="<%= locals.csrfToken %>">
+                    <input type="hidden" name="menu_location" value="header">
 
-                    <!-- HEADER MENU -->
-                    <div class="card" style="padding: 2rem;">
-                        <h3 style="margin-bottom: 1.5rem; color: var(--primary);"><i class="fas fa-layer-group"></i>
-                            Header Menu</h3>
-
-                        <div style="display: flex; flex-direction: column; gap: 10px; margin-bottom: 2rem;">
-                            <% menus.filter(m=> m.menu_location === 'header').forEach(item => { %>
-                                <div
-                                    style="display: flex; align-items: center; justify-content: space-between; background: #f8fafc; padding: 10px 15px; border-radius: 8px; border: 1px solid #e2e8f0;">
-                                    <div>
-                                        <span style="font-weight: 700; color: var(--text-main);">
-                                            <%= item.label %>
-                                        </span>
-                                        <small style="display: block; color: var(--text-muted);">
-                                            <%= item.url %>
-                                        </small>
-                                    </div>
-                                    <form action="/admin/cms/menus/delete/<%= item.id %>" method="POST"
-                                        onsubmit="return confirm('Delete this menu item?');">
-                                        <input type="hidden" name="_csrf" value="<%= locals.csrfToken %>">
-                                        <button type="submit"
-                                            style="background: none; border: none; color: #ef4444; cursor: pointer;">
-                                            <i class="fas fa-trash"></i>
-                                        </button>
-                                    </form>
-                                </div>
-                                <% }) %>
-                        </div>
-
-                        <form action="/admin/cms/menus/add" method="POST"
-                            style="background: #f1f5f9; padding: 1.5rem; border-radius: 12px;">
-                            <h4 style="margin-bottom: 1rem; font-size: 1rem;">Add Header Link</h4>
-                            <input type="hidden" name="_csrf" value="<%= locals.csrfToken %>">
-                            <input type="hidden" name="menu_location" value="header">
-
-                            <div class="form-group">
-                                <input type="text" name="label" class="form-control" placeholder="Label (e.g. Home)"
-                                    required>
-                            </div>
-                            <div class="form-group">
-                                <input type="text" name="url" class="form-control" placeholder="URL (e.g. /home)"
-                                    required>
-                            </div>
-                            <div class="form-group">
-                                <input type="number" name="display_order" class="form-control"
-                                    placeholder="Order (e.g. 1, 2, 3)" value="0">
-                            </div>
-                            <button type="submit" class="btn-primary" style="width: 100%;">Add to Header</button>
-                        </form>
+                    <div class="adm-form-group">
+                        <input type="text" name="label" class="adm-input" placeholder="Label (e.g. Home)" required>
                     </div>
-
-                    <!-- FOOTER MENU -->
-                    <div class="card" style="padding: 2rem;">
-                        <h3 style="margin-bottom: 1.5rem; color: var(--secondary);"><i class="fas fa-shoe-prints"></i>
-                            Footer Menu</h3>
-
-                        <div style="display: flex; flex-direction: column; gap: 10px; margin-bottom: 2rem;">
-                            <% menus.filter(m=> m.menu_location === 'footer').forEach(item => { %>
-                                <div
-                                    style="display: flex; align-items: center; justify-content: space-between; background: #f8fafc; padding: 10px 15px; border-radius: 8px; border: 1px solid #e2e8f0;">
-                                    <div>
-                                        <span style="font-weight: 700; color: var(--text-main);">
-                                            <%= item.label %>
-                                        </span>
-                                        <small style="display: block; color: var(--text-muted);">
-                                            <%= item.url %>
-                                        </small>
-                                    </div>
-                                    <form action="/admin/cms/menus/delete/<%= item.id %>" method="POST"
-                                        onsubmit="return confirm('Delete this menu item?');">
-                                        <input type="hidden" name="_csrf" value="<%= locals.csrfToken %>">
-                                        <button type="submit"
-                                            style="background: none; border: none; color: #ef4444; cursor: pointer;">
-                                            <i class="fas fa-trash"></i>
-                                        </button>
-                                    </form>
-                                </div>
-                                <% }) %>
-                        </div>
-
-                        <form action="/admin/cms/menus/add" method="POST"
-                            style="background: #f1f5f9; padding: 1.5rem; border-radius: 12px;">
-                            <h4 style="margin-bottom: 1rem; font-size: 1rem;">Add Footer Link</h4>
-                            <input type="hidden" name="_csrf" value="<%= locals.csrfToken %>">
-                            <input type="hidden" name="menu_location" value="footer">
-
-                            <div class="form-group">
-                                <input type="text" name="label" class="form-control" placeholder="Label (e.g. Policies)"
-                                    required>
-                            </div>
-                            <div class="form-group">
-                                <input type="text" name="url" class="form-control" placeholder="URL (e.g. /policies)"
-                                    required>
-                            </div>
-                            <div class="form-group">
-                                <input type="number" name="display_order" class="form-control"
-                                    placeholder="Order (e.g. 1)" value="0">
-                            </div>
-                            <button type="submit" class="btn-primary" style="width: 100%;">Add to Footer</button>
-                        </form>
+                    <div class="adm-form-group">
+                        <input type="text" name="url" class="adm-input" placeholder="URL (e.g. /home)" required>
                     </div>
+                    <div class="adm-form-group">
+                        <input type="number" name="display_order" class="adm-input" placeholder="Order (e.g. 1, 2, 3)" value="0">
+                    </div>
+                    <button type="submit" class="adm-btn adm-btn-primary" style="width: 100%;">Add to Header</button>
+                </form>
+            </div>
 
+            <!-- FOOTER MENU -->
+            <div class="adm-card" style="padding: 2rem;">
+                <h3 style="margin-bottom: 1.5rem; color: var(--adm-text-primary); font-weight: 600; font-size: 1.25rem;">
+                    <i class="fas fa-shoe-prints" style="margin-right: 0.5rem;"></i> Footer Menu
+                </h3>
+
+                <div style="display: flex; flex-direction: column; gap: 0.75rem; margin-bottom: 2.5rem;">
+                    <% menus.filter(m => m.menu_location === 'footer').forEach(item => { %>
+                        <div style="display: flex; align-items: center; justify-content: space-between; background: var(--adm-bg-elevated); padding: 1rem; border-radius: var(--adm-r-md); border: 1px solid var(--adm-border);">
+                            <div>
+                                <span style="font-weight: 600; color: var(--adm-text-primary); display: block; margin-bottom: 0.25rem;">
+                                    <%= item.label %>
+                                </span>
+                                <small style="color: var(--adm-text-muted); font-family: monospace;">
+                                    <%= item.url %>
+                                </small>
+                            </div>
+                            <form action="/admin/cms/menus/delete/<%= item.id %>" method="POST" onsubmit="return confirm('Delete this menu item?');">
+                                <input type="hidden" name="_csrf" value="<%= locals.csrfToken %>">
+                                <button type="submit" style="background: none; border: none; color: var(--adm-danger); cursor: pointer; opacity: 0.7; transition: var(--adm-t-fast);" onmouseover="this.style.opacity='1';" onmouseout="this.style.opacity='0.7';" aria-label="Delete link">
+                                    <i class="fas fa-trash"></i>
+                                </button>
+                            </form>
+                        </div>
+                    <% }) %>
+                    <% if (menus.filter(m => m.menu_location === 'footer').length === 0) { %>
+                        <div style="text-align: center; padding: 2rem; border: 2px dashed var(--adm-border); border-radius: var(--adm-r-md); color: var(--adm-text-muted);">
+                            No footer links defined.
+                        </div>
+                    <% } %>
                 </div>
-            </main>
-    </div>
-    </body>
 
-    </html>
+                <form action="/admin/cms/menus/add" method="POST" style="background: var(--adm-bg-canvas); padding: 1.5rem; border-radius: var(--adm-r-md); border: 1px solid var(--adm-border);">
+                    <h4 style="margin-bottom: 1.25rem; font-size: 1rem; font-weight: 600;">Add Footer Link</h4>
+                    <input type="hidden" name="_csrf" value="<%= locals.csrfToken %>">
+                    <input type="hidden" name="menu_location" value="footer">
+
+                    <div class="adm-form-group">
+                        <input type="text" name="label" class="adm-input" placeholder="Label (e.g. Privacy Policy)" required>
+                    </div>
+                    <div class="adm-form-group">
+                        <input type="text" name="url" class="adm-input" placeholder="URL (e.g. /privacy)" required>
+                    </div>
+                    <div class="adm-form-group">
+                        <input type="number" name="display_order" class="adm-input" placeholder="Order (e.g. 1, 2, 3)" value="0">
+                    </div>
+                    <button type="submit" class="adm-btn adm-btn-primary" style="width: 100%;">Add to Footer</button>
+                </form>
+            </div>
+        </div>
+    </main>
+</div>
+<%- include('../../partials/footer') %>

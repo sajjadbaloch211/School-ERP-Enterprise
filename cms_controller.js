@@ -141,34 +141,88 @@ module.exports = function (app, db, csrfProtection, logSecurityEvent, requireAdm
 
     app.post('/admin/cms/sections/update/:id', requireAdmin, upload.single('image'), csrfProtection, (req, res) => {
         const sectionId = req.params.id;
-        const { heading, subheading, title, description, body } = req.body;
 
-        // Fetch current content first to merge
-        db.query('SELECT content, page_id FROM cms_sections WHERE id = ?', [sectionId], (err, results) => {
+        db.query('SELECT content, page_id, section_type FROM cms_sections WHERE id = ?', [sectionId], (err, results) => {
             if (err || !results.length) return res.status(500).send('Error');
 
-            const section = results[0];
-            let content = JSON.parse(section.content);
+            const row = results[0];
+            let content = {};
+            try { content = JSON.parse(row.content); } catch(e) { content = {}; }
 
-            // Update fields based on what was submitted
-            if (heading) content.heading = heading;
-            if (subheading) content.subheading = subheading;
-            if (title) content.title = title;
-            if (description) content.description = description;
-            if (body) content.body = body;
+            const stype = row.section_type;
+            const body = req.body;
 
-            // Handle Image Upload
-            if (req.file) {
-                content.image = '/uploads/cms/' + req.file.filename;
+            // ── HERO ────────────────────────────────────────────
+            if (stype === 'hero') {
+                if (body.headline !== undefined)          content.headline          = body.headline;
+                if (body.subheadline !== undefined)       content.subheadline       = body.subheadline;
+                if (body.primary_cta_text !== undefined)  content.primary_cta_text  = body.primary_cta_text;
+                if (body.primary_cta_link !== undefined)  content.primary_cta_link  = body.primary_cta_link;
+                if (body.secondary_cta_text !== undefined) content.secondary_cta_text = body.secondary_cta_text;
+                if (body.secondary_cta_link !== undefined) content.secondary_cta_link = body.secondary_cta_link;
+                // Uploaded file takes priority, then URL field
+                if (req.file) {
+                    content.image_url = '/uploads/cms/' + req.file.filename;
+                } else if (body.image_url) {
+                    content.image_url = body.image_url;
+                }
+
+            // ── FEATURES ────────────────────────────────────────
+            } else if (stype === 'features') {
+                if (body.title !== undefined)    content.title    = body.title;
+                if (body.subtitle !== undefined) content.subtitle = body.subtitle;
+
+                // Rebuild items array from individual named fields
+                const items = content.items || [];
+                for (let i = 0; i < items.length; i++) {
+                    if (body[`feature_title_${i}`] !== undefined)  items[i].title       = body[`feature_title_${i}`];
+                    if (body[`feature_desc_${i}`] !== undefined)   items[i].description = body[`feature_desc_${i}`];
+                    if (body[`feature_icon_${i}`] !== undefined)   items[i].icon        = body[`feature_icon_${i}`];
+                }
+                content.items = items;
+
+            // ── STATS ────────────────────────────────────────────
+            } else if (stype === 'stats') {
+                if (body.stats && Array.isArray(body.stats)) {
+                    content.items = body.stats.map(s => ({ number: s.number, label: s.label }));
+                }
+
+            // ── TEXT / CONTENT ───────────────────────────────────
+            } else if (stype === 'text' || stype === 'content') {
+                if (body.title !== undefined) content.title = body.title;
+                if (body.body  !== undefined) content.body  = body.body;
+
+            // ── GALLERY ──────────────────────────────────────────
+            } else if (stype === 'gallery') {
+                if (body.title !== undefined) content.title = body.title;
+                const imgs = content.images || [];
+                // Update existing URLs
+                imgs.forEach((img, i) => {
+                    if (body[`gallery_url_${i}`]) {
+                        imgs[i] = { url: body[`gallery_url_${i}`] };
+                    }
+                });
+                // Add new image if provided
+                if (body.new_gallery_url && body.new_gallery_url.trim()) {
+                    imgs.push({ url: body.new_gallery_url.trim() });
+                }
+                content.images = imgs;
+
+            // ── RAW JSON (custom type) ───────────────────────────
+            } else {
+                if (body.raw_json) {
+                    try { content = JSON.parse(body.raw_json); } catch(e) { /* keep old content */ }
+                }
             }
 
-            db.query('UPDATE cms_sections SET content = ? WHERE id = ?', [JSON.stringify(content), sectionId], (err) => {
-                if (err) console.error(err);
+            db.query('UPDATE cms_sections SET content = ? WHERE id = ?', [JSON.stringify(content), sectionId], (err2) => {
+                if (err2) console.error(err2);
                 logSecurityEvent(req, req.session.user, 'UPDATE_SECTION', { sectionId });
-                res.redirect('/admin/cms/pages/edit/' + section.page_id);
+                res.redirect('/admin/cms/pages/edit/' + row.page_id + '?saved=true');
             });
         });
     });
+
 
     // 4b. ADD SECTION
     app.post('/admin/cms/sections/add', requireAdmin, csrfProtection, (req, res) => {

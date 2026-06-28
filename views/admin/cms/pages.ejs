@@ -1,60 +1,59 @@
 <%- include('../../partials/header') %>
-    <div class="admin-layout animate-fade-in" style="margin-top: 80px;">
-        <%- include('../../partials/sidebar', { active: 'cms' }) %>
+<div class="adm-layout">
+    <%- include('../../partials/sidebar', { active: 'cms' }) %>
 
-            <main class="main-content">
-                <header class="page-header"
-                    style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
-                    <div>
-                        <h1 style="font-size: 2rem; color: var(--primary); font-weight: 800;">Website Content Manager
-                        </h1>
-                        <p style="color: var(--text-muted);">Manage your website pages and content simply.</p>
-                    </div>
-                    <div style="display: flex; gap: 10px;">
-                        <a href="/admin/cms/menus" class="btn-primary" style="background: var(--success);">
-                            <i class="fas fa-list"></i> Menus
-                        </a>
-                        <a href="/admin/cms/settings" class="btn-primary" style="background: var(--secondary);">
-                            <i class="fas fa-cog"></i> Global Settings
-                        </a>
-                    </div>
-                </header>
+    <main class="adm-main" role="main" aria-label="CMS Pages">
+        <header class="adm-page-header">
+            <div>
+                <h1 class="adm-page-title">Website Content Manager</h1>
+                <p class="adm-page-subtitle">Manage your website pages and content simply.</p>
+            </div>
+            <div style="display: flex; gap: 10px;">
+                <a href="/admin/cms/menus" class="adm-btn adm-btn-secondary">
+                    <i class="fas fa-list"></i> Menus
+                </a>
+                <a href="/admin/cms/settings" class="adm-btn adm-btn-secondary">
+                    <i class="fas fa-cog"></i> Global Settings
+                </a>
+            </div>
+        </header>
 
-                <div class="grid" style="grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 2rem;">
-                    <% pages.forEach(page=> { %>
-                        <div class="card animate-slide-up"
-                            style="border-top: 5px solid <%= page.is_homepage ? 'var(--primary)' : '#cbd5e1' %>; position: relative;">
+        <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 1.5rem;">
+            <% pages.forEach(page => { %>
+                <div class="adm-card" style="<%= page.is_homepage ? 'border-top: 4px solid var(--adm-indigo);' : '' %> position: relative;">
+                    
+                    <% if (page.is_homepage) { %>
+                        <span class="adm-badge adm-badge-primary" style="position: absolute; top: 1rem; right: 1rem;">HOMEPAGE</span>
+                    <% } %>
 
-                            <% if (page.is_homepage) { %>
-                                <div
-                                    style="position: absolute; top: 10px; right: 10px; background: var(--primary); color: white; padding: 5px 10px; border-radius: 20px; font-size: 0.7rem; font-weight: 700;">
-                                    HOMEPAGE</div>
-                                <% } %>
+                    <div style="padding: 1.5rem;">
+                        <h3 style="margin: 0 0 0.5rem 0; font-weight: 600; font-size: 1.1rem; color: var(--adm-text-primary);">
+                            <%= page.title %>
+                        </h3>
+                        <p style="margin: 0 0 1.5rem 0; color: var(--adm-text-muted); font-size: 0.9rem; font-family: monospace;">
+                            /<%= page.slug %>
+                        </p>
 
-                                    <h3 style="margin-bottom: 0.5rem; font-weight: 700;">
-                                        <%= page.title %>
-                                    </h3>
-                                    <p style="color: var(--text-muted); font-size: 0.9rem; margin-bottom: 1.5rem;">/<%=
-                                            page.slug %>
-                                    </p>
-
-                                    <div
-                                        style="display: flex; justify-content: space-between; align-items: center; background: #f8fafc; padding: 10px; border-radius: 10px;">
-                                        <span class="status-badge <%= page.status %>"
-                                            style="text-transform: capitalize;">
-                                            <%= page.status %>
-                                        </span>
-                                        <a href="/admin/cms/pages/edit/<%= page.id %>" class="btn-sm"
-                                            style="background: var(--primary); color: white; text-decoration: none; padding: 8px 15px; border-radius: 8px;">
-                                            Edit Content <i class="fas fa-arrow-right"></i>
-                                        </a>
-                                    </div>
+                        <div style="display: flex; justify-content: space-between; align-items: center; background: var(--adm-bg-elevated); padding: 0.75rem 1rem; border-radius: var(--adm-r-md); border: 1px solid var(--adm-border);">
+                            <span class="adm-badge <%= page.status === 'published' ? 'adm-badge-success' : (page.status === 'draft' ? 'adm-badge-warning' : 'adm-badge-neutral') %>">
+                                <%= page.status %>
+                            </span>
+                            <a href="/admin/cms/pages/edit/<%= page.id %>" class="adm-btn adm-btn-primary adm-btn-sm" style="display: inline-flex; align-items: center; gap: 0.5rem;">
+                                Edit <i class="fas fa-arrow-right"></i>
+                            </a>
                         </div>
-                        <% }) %>
+                    </div>
                 </div>
-            </main>
-
-    </div>
-    </body>
-
-    </html>
+            <% }) %>
+            
+            <!-- Create New Page Card -->
+            <div class="adm-card" style="display: flex; align-items: center; justify-content: center; min-height: 200px; border: 2px dashed var(--adm-border); background: var(--adm-bg-canvas); cursor: pointer; transition: var(--adm-t-fast);" onclick="window.location.href='/admin/cms/pages/new'" onmouseover="this.style.borderColor='var(--adm-indigo)'; this.style.backgroundColor='var(--adm-indigo-bg)';" onmouseout="this.style.borderColor='var(--adm-border)'; this.style.backgroundColor='var(--adm-bg-canvas)';">
+                <div style="text-align: center; color: var(--adm-text-secondary);">
+                    <i class="fas fa-plus-circle" style="font-size: 2rem; margin-bottom: 0.5rem; color: var(--adm-indigo);"></i>
+                    <p style="margin: 0; font-weight: 500;">Create New Page</p>
+                </div>
+            </div>
+        </div>
+    </main>
+</div>
+<%- include('../../partials/footer') %>

@@ -1,94 +1,75 @@
-<!DOCTYPE html>
-<html lang="en">
+<%- include('../../partials/header') %>
+<style>
+    .brand-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+        gap: 30px;
+        margin-top: 30px;
+    }
+    .identity-card {
+        background: white;
+        border-radius: 24px;
+        padding: 35px;
+        box-shadow: 0 10px 40px -10px rgba(0, 0, 0, 0.05);
+        border: 1.5px solid #f1f5f9;
+        transition: all 0.3s ease;
+    }
+    .identity-card:hover {
+        transform: translateY(-5px);
+        border-color: #3b82f6;
+    }
+    .swatch-group {
+        display: flex;
+        align-items: center;
+        gap: 20px;
+        padding: 15px;
+        background: #f8fafc;
+        border-radius: 16px;
+        margin-bottom: 20px;
+        border: 1.5px solid #f1f5f9;
+    }
+    .swatch-picker {
+        width: 60px;
+        height: 60px;
+        border: none;
+        border-radius: 12px;
+        cursor: pointer;
+        padding: 0;
+        overflow: hidden;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    }
+    .identity-label {
+        font-size: 0.95rem;
+        font-weight: 800;
+        color: #334155;
+        margin-bottom: 5px;
+        display: block;
+    }
+    .identity-desc {
+        font-size: 0.8rem;
+        color: #94a3b8;
+    }
+    .premium-select {
+        width: 100%;
+        padding: 14px 18px;
+        border: 2px solid #f1f5f9;
+        border-radius: 14px;
+        font-size: 1rem;
+        background: #f8fafc;
+        cursor: pointer;
+        transition: all 0.2s;
+    }
+    .premium-select:focus {
+        border-color: #3b82f6;
+        background: white;
+        outline: none;
+    }
+</style>
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Brand Identity - CMS</title>
-    <link rel="stylesheet" href="/style.css">
-    <link rel="stylesheet" href="/cms_styles.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <style>
-        .brand-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
-            gap: 30px;
-            margin-top: 30px;
-        }
-
-        .identity-card {
-            background: white;
-            border-radius: 24px;
-            padding: 35px;
-            box-shadow: 0 10px 40px -10px rgba(0, 0, 0, 0.05);
-            border: 1.5px solid #f1f5f9;
-            transition: all 0.3s ease;
-        }
-
-        .identity-card:hover {
-            transform: translateY(-5px);
-            border-color: #3b82f6;
-        }
-
-        .swatch-group {
-            display: flex;
-            align-items: center;
-            gap: 20px;
-            padding: 15px;
-            background: #f8fafc;
-            border-radius: 16px;
-            margin-bottom: 20px;
-            border: 1.5px solid #f1f5f9;
-        }
-
-        .swatch-picker {
-            width: 60px;
-            height: 60px;
-            border: none;
-            border-radius: 12px;
-            cursor: pointer;
-            padding: 0;
-            overflow: hidden;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-        }
-
-        .identity-label {
-            font-size: 0.95rem;
-            font-weight: 800;
-            color: #334155;
-            margin-bottom: 5px;
-            display: block;
-        }
-
-        .identity-desc {
-            font-size: 0.8rem;
-            color: #94a3b8;
-        }
-
-        .premium-select {
-            width: 100%;
-            padding: 14px 18px;
-            border: 2px solid #f1f5f9;
-            border-radius: 14px;
-            font-size: 1rem;
-            background: #f8fafc;
-            cursor: pointer;
-            transition: all 0.2s;
-        }
-
-        .premium-select:focus {
-            border-color: #3b82f6;
-            background: white;
-            outline: none;
-        }
-    </style>
-</head>
-
-<body style="background: #f8fafc;">
-    <div class="admin-layout" style="margin-top: 80px;">
-        <%- include('../../partials/sidebar') %>
-            <main class="main-content">
-                <div class="cms-dashboard-container">
+<div class="adm-layout">
+    <%- include('../../partials/sidebar', { active: 'cms_theme' }) %>
+    <main class="adm-main" role="main">
+        <div class="cms-dashboard-container" style="padding: 2rem;">
 
                     <header style="margin-bottom: 40px;">
                         <h1 style="font-size: 2.5rem; font-weight: 900; color: #0f172a; letter-spacing: -1px;">
@@ -223,8 +204,7 @@
                         </div>
                     </form>
                 </div>
-            </main>
-    </div>
-</body>
-
-</html>
+        </div>
+    </main>
+</div>
+<%- include('../../partials/footer') %>

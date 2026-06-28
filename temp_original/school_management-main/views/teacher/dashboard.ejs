@@ -1,0 +1,80 @@
+<%- include('../partials/header') %>
+
+    <div class="admin-layout animate-fade-in" style="margin-top: 80px;">
+        <!-- Sidebar -->
+        <%- include('../partials/sidebar_teacher', { active: 'dashboard' }) %>
+
+            <main class="main-content">
+                <header
+                    style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 3rem;">
+                    <div>
+                        <h2 style="font-size: 2rem; font-weight: 800; color: var(--primary);">Welcome, Prof. <%=
+                                user.full_name %>
+                        </h2>
+                        <p style="color: var(--text-muted);">Manage your curriculum and students effectively.</p>
+                    </div>
+                </header>
+
+                <div class="stat-group animate-slide-up">
+                    <div class="stat-card card">
+                        <div class="stat-icon" style="background: rgba(16, 185, 129, 0.1); color: var(--success);">
+                            <i class="fas fa-check-double"></i>
+                        </div>
+                        <div>
+                            <p style="color: var(--text-muted); font-size: 0.9rem; font-weight: 600;">Attendance</p>
+                            <h3 style="font-size: 1.8rem; font-weight: 800;">94%</h3>
+                        </div>
+                    </div>
+                    <div class="stat-card card">
+                        <div class="stat-icon" style="background: rgba(59, 130, 246, 0.1); color: var(--accent);">
+                            <i class="fas fa-book-open"></i>
+                        </div>
+                        <div>
+                            <p style="color: var(--text-muted); font-size: 0.9rem; font-weight: 600;">Active Courses</p>
+                            <h3 style="font-size: 1.8rem; font-weight: 800;">4</h3>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="grid animate-slide-up" style="grid-template-columns: 2fr 1fr; margin-top: 2rem;">
+                    <div>
+                        <h3 style="margin-bottom: 1.5rem; font-weight: 800;">Latest Notices</h3>
+                        <% notices.forEach(notice=> { %>
+                            <div class="card" style="margin-bottom: 1.5rem; padding: 1.5rem;">
+                                <h4 style="font-weight: 800; color: var(--primary);">
+                                    <%= notice.title %>
+                                </h4>
+                                <p style="font-size: 0.9rem; color: var(--text-muted); margin-bottom: 1rem;">
+                                    <%= new Date(notice.created_at).toLocaleDateString() %>
+                                </p>
+                                <p style="font-size: 0.95rem; line-height: 1.6;">
+                                    <%= notice.content %>
+                                </p>
+                            </div>
+                            <% }) %>
+                    </div>
+                    <div class="card" style="height: fit-content;">
+                        <h3 style="margin-bottom: 1.5rem; font-weight: 800;">Quick Tasks</h3>
+                        <ul style="list-style: none;">
+                            <li
+                                style="padding: 12px 0; border-bottom: 1px solid #f1f5f9; display: flex; gap: 10px; align-items: center;">
+                                <i class="far fa-circle" style="color: var(--accent);"></i>
+                                <span style="font-weight: 600;">Upload Grade 10 Results</span>
+                            </li>
+                            <li
+                                style="padding: 12px 0; border-bottom: 1px solid #f1f5f9; display: flex; gap: 10px; align-items: center;">
+                                <i class="far fa-circle" style="color: var(--accent);"></i>
+                                <span style="font-weight: 600;">Mark Morning Attendance</span>
+                            </li>
+                            <li style="padding: 12px 0; display: flex; gap: 10px; align-items: center;">
+                                <i class="far fa-circle" style="color: var(--accent);"></i>
+                                <span style="font-weight: 600;">Staff Meeting at 2:00 PM</span>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </main>
+    </div>
+    </body>
+
+    </html>

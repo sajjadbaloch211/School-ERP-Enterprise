@@ -1,0 +1,174 @@
+<%- include('../partials/header') %>
+
+<div class="adm-layout">
+  <%- include('../partials/sidebar', { active: 'finance' }) %>
+
+  <main class="adm-main" role="main" aria-label="Financial Statements & Reports">
+
+    <!-- Page Header -->
+    <div class="adm-page-header">
+      <div>
+        <h1 class="adm-page-title">
+          <i class="fas fa-file-invoice" style="color: var(--adm-indigo); margin-right: 0.5rem;"></i>
+          Financial Statements
+        </h1>
+        <p class="adm-page-subtitle">Generate Trial Balance, Profit & Loss (Income Statement), and balance configurations.</p>
+      </div>
+
+      <div style="display:flex;gap:0.75rem;align-items:center;">
+        
+        <a href="/admin/finance" class="adm-btn adm-btn-ghost">
+          <i class="fas fa-book"></i> General Ledger Logs
+        </a>
+
+      </div>
+    </div>
+
+    <!-- Interactive Navigation Tabs -->
+    <div class="adm-card" style="padding: 0; margin-bottom: 1.5rem; overflow: hidden; background: var(--adm-bg-surface);">
+      <div style="display:flex; border-bottom:1px solid var(--adm-border);">
+        <button class="tab-btn active" onclick="switchTab('trialBalanceTab')" style="flex:1;padding:1rem;background:none;border:none;border-bottom:2px solid var(--adm-indigo);font-weight:700;color:var(--adm-text-primary);cursor:pointer;outline:none;">
+          <i class="fas fa-scale-balanced" style="margin-right:0.25rem;"></i> Trial Balance
+        </button>
+        <button class="tab-btn" onclick="switchTab('profitLossTab')" style="flex:1;padding:1rem;background:none;border:none;border-bottom:2px solid transparent;font-weight:700;color:var(--adm-text-muted);cursor:pointer;outline:none;">
+          <i class="fas fa-chart-line" style="margin-right:0.25rem;"></i> Profit & Loss (Income Statement)
+        </button>
+      </div>
+    </div>
+
+    <!-- TAB 1: TRIAL BALANCE -->
+    <div id="trialBalanceTab" class="tab-content">
+      
+      <div class="adm-card" style="padding:0;overflow:hidden;margin-bottom:1.5rem;">
+        <div style="padding:1.25rem 1.5rem;border-bottom:1px solid var(--adm-border);background:var(--adm-bg-surface);display:flex;justify-content:space-between;align-items:center;">
+          <h3 style="font-size:1rem;font-weight:700;margin:0;color:var(--adm-text-primary);">
+            Adjusted Trial Balance Sheet
+          </h3>
+          <span style="font-size:0.82rem;color:var(--adm-text-muted);font-weight:600;">As of Today</span>
+        </div>
+
+        <div style="overflow-x:auto;">
+          <table class="adm-table">
+            <thead>
+              <tr>
+                <th>Account Code</th>
+                <th>Account Title</th>
+                <th>Classification</th>
+                <th style="text-align:right;">Debit Balance</th>
+                <th style="text-align:right;">Credit Balance</th>
+              </tr>
+            </thead>
+            <tbody>
+              <% trialBalance.lines.forEach(line => { %>
+                <% if (line.debit > 0 || line.credit > 0) { %>
+                  <tr>
+                    <td style="font-family:'JetBrains Mono',monospace;font-weight:700;"><%= line.account_code %></td>
+                    <td style="font-weight:600;color:var(--adm-text-primary);"><%= line.name %></td>
+                    <td>
+                      <span class="adm-badge <%= line.type === 'Asset' ? 'adm-badge-indigo' : line.type === 'Liability' ? 'adm-badge-red' : line.type === 'Income' ? 'adm-badge-green' : 'adm-badge-amber' %>" style="font-size:0.7rem;font-weight:800;">
+                        <%= line.type.toUpperCase() %>
+                      </span>
+                    </td>
+                    <td style="text-align:right;font-family:'JetBrains Mono',monospace;font-weight:700;color:var(--adm-text-primary);">
+                      <%= line.debit > 0 ? `Rs. ${line.debit.toLocaleString()}` : '—' %>
+                    </td>
+                    <td style="text-align:right;font-family:'JetBrains Mono',monospace;font-weight:700;color:var(--adm-text-primary);">
+                      <%= line.credit > 0 ? `Rs. ${line.credit.toLocaleString()}` : '—' %>
+                    </td>
+                  </tr>
+                <% } %>
+              <% }); %>
+              
+              <!-- Total row -->
+              <tr style="background:var(--adm-bg-surface);border-top:2px solid var(--adm-text-primary);font-weight:800;font-size:1.05rem;">
+                <td colspan="3" style="color:var(--adm-text-primary);">GRAND TOTAL:</td>
+                <td style="text-align:right;font-family:'JetBrains Mono',monospace;color:var(--adm-text-primary);">
+                  Rs. <%= trialBalance.totalDebit.toLocaleString() %>
+                </td>
+                <td style="text-align:right;font-family:'JetBrains Mono',monospace;color:var(--adm-text-primary);">
+                  Rs. <%= trialBalance.totalCredit.toLocaleString() %>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- TAB 2: PROFIT & LOSS -->
+    <div id="profitLossTab" class="tab-content" style="display:none;">
+      
+      <div class="adm-card" style="padding:2rem;max-width:680px;margin:0 auto 1.5rem;font-family:'Inter',sans-serif;">
+        
+        <div style="text-align:center;border-bottom:2px solid var(--adm-border);padding-bottom:1.5rem;margin-bottom:2rem;">
+          <h2 style="font-size:1.35rem;font-weight:800;color:var(--adm-text-primary);margin:0 0 0.25rem;">Waqar Public School System</h2>
+          <h3 style="font-size:1rem;font-weight:700;color:var(--adm-text-muted);margin:0 0 0.5rem;">Profit & Loss Statement (Income Statement)</h3>
+          <span style="font-size:0.8rem;color:var(--adm-text-muted);font-weight:600;">For Period Ending Today</span>
+        </div>
+
+        <!-- 1. Income section -->
+        <div style="margin-bottom:2rem;">
+          <h4 style="font-size:1rem;font-weight:800;color:var(--adm-indigo);margin:0 0 0.75rem;border-bottom:1px solid var(--adm-border);padding-bottom:0.25rem;">1. OPERATING REVENUE (INCOME)</h4>
+          <% profitLoss.incomeLines.forEach(line => { %>
+            <div style="display:flex;justify-content:space-between;font-size:0.92rem;padding:0.4rem 0;color:var(--adm-text-primary);">
+              <span><%= line.name %> (<%= line.code %>)</span>
+              <span style="font-family:'JetBrains Mono',monospace;font-weight:600;">Rs. <%= line.amount.toLocaleString() %></span>
+            </div>
+          <% }); %>
+          <div style="display:flex;justify-content:space-between;font-size:1rem;font-weight:800;color:var(--adm-text-primary);margin-top:0.75rem;padding-top:0.5rem;border-top:1px dashed var(--adm-border);">
+            <span>TOTAL REVENUE:</span>
+            <span style="font-family:'JetBrains Mono',monospace;">Rs. <%= profitLoss.totalIncome.toLocaleString() %></span>
+          </div>
+        </div>
+
+        <!-- 2. Expenses section -->
+        <div style="margin-bottom:2.5rem;">
+          <h4 style="font-size:1rem;font-weight:800;color:#ef4444;margin:0 0 0.75rem;border-bottom:1px solid var(--adm-border);padding-bottom:0.25rem;">2. OPERATING EXPENSES</h4>
+          <% profitLoss.expenseLines.forEach(line => { %>
+            <div style="display:flex;justify-content:space-between;font-size:0.92rem;padding:0.4rem 0;color:var(--adm-text-primary);">
+              <span><%= line.name %> (<%= line.code %>)</span>
+              <span style="font-family:'JetBrains Mono',monospace;font-weight:600;">Rs. <%= line.amount.toLocaleString() %></span>
+            </div>
+          <% }); %>
+          <div style="display:flex;justify-content:space-between;font-size:1rem;font-weight:800;color:var(--adm-text-primary);margin-top:0.75rem;padding-top:0.5rem;border-top:1px dashed var(--adm-border);">
+            <span>TOTAL EXPENSES:</span>
+            <span style="font-family:'JetBrains Mono',monospace;color:#ef4444;">Rs. <%= profitLoss.totalExpense.toLocaleString() %></span>
+          </div>
+        </div>
+
+        <!-- 3. Net profit -->
+        <div style="display:flex;justify-content:space-between;align-items:center;background:var(--adm-bg-surface);border:1px solid var(--adm-border);padding:1rem 1.5rem;border-radius:12px;font-size:1.15rem;font-weight:900;">
+          <span style="color:var(--adm-text-primary);">NET OPERATING PROFIT / LOSS:</span>
+          <span style="font-family:'JetBrains Mono',monospace;color:<%= profitLoss.netProfit >= 0 ? '#10b981' : '#ef4444' %>;">
+            <%= profitLoss.netProfit >= 0 ? '+' : '-' %> Rs. <%= Math.abs(profitLoss.netProfit).toLocaleString() %>
+          </span>
+        </div>
+
+      </div>
+
+    </div>
+
+  </main>
+</div>
+
+<script>
+  function switchTab(tabId) {
+    // Hide all contents
+    document.querySelectorAll('.tab-content').forEach(c => c.style.display = "none");
+    // Show current content
+    document.getElementById(tabId).style.display = "";
+
+    // Toggle active button style
+    document.querySelectorAll('.tab-btn').forEach(btn => {
+      btn.style.borderBottomColor = "transparent";
+      btn.style.color = "var(--adm-text-muted)";
+    });
+
+    const targetBtn = window.event.currentTarget;
+    targetBtn.style.borderBottomColor = "var(--adm-indigo)";
+    targetBtn.style.color = "var(--adm-text-primary)";
+  }
+</script>
+
+<%- include('../partials/footer') %>

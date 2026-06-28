@@ -1,0 +1,208 @@
+<%- include('partials/header') %>
+
+    <div class="container my-5">
+        <div class="row text-center mb-5">
+            <div class="col-12">
+                <h1 class="display-4 fw-bold">Contact Us</h1>
+                <p class="lead text-muted">We'd love to hear from you.</p>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-5 mb-4">
+                <div class="card h-100 shadow-sm">
+                    <div class="card-body p-4">
+                        <h3>Get in Touch</h3>
+                        <p class="mb-4">Have questions? Our team is ready to help.</p>
+
+                        <div class="d-flex mb-3">
+                            <i class="fas fa-map-marker-alt fa-fw me-3 mt-1 text-primary"></i>
+                            <div>
+                                <h6 class="fw-bold mb-0">Our Location</h6>
+                                <p>
+                                    <%= (typeof settings !=='undefined' && settings.school_address) ?
+                                        settings.school_address : "Main Road, Khairpur Mir's, Sindh" %>
+                                </p>
+                            </div>
+                        </div>
+
+                        <div class="d-flex mb-3">
+                            <i class="fas fa-phone-alt fa-fw me-3 mt-1 text-primary"></i>
+                            <div>
+                                <h6 class="fw-bold mb-0">Phone Number</h6>
+                                <p>
+                                    <%= (typeof settings !=='undefined' && settings.school_phone) ?
+                                        settings.school_phone : "+92 123 4567890" %>
+                                </p>
+                            </div>
+                        </div>
+
+                        <div class="d-flex mb-3">
+                            <i class="fas fa-envelope fa-fw me-3 mt-1 text-primary"></i>
+                            <div>
+                                <h6 class="fw-bold mb-0">Email Address</h6>
+                                <p>
+                                    <%= (typeof settings !=='undefined' && settings.school_email) ?
+                                        settings.school_email : "info@waqar.edu.pk" %>
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-7 mb-4">
+                <div class="card shadow-sm h-100">
+                    <div class="card-body p-4">
+                        <h3>Send us a Message</h3>
+                        <form>
+                            <div class="mb-3">
+                                <label class="form-label">Name</label>
+                                <input type="text" class="form-control" placeholder="Your Name">
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">Email</label>
+                                <input type="email" class="form-control" placeholder="Your Email">
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">Message</label>
+                                <textarea class="form-control" rows="5" placeholder="Your Message"></textarea>
+                            </div>
+                            <button type="submit" class="btn btn-primary px-4">Send Message</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <%- include('partials/footer') %>
+
+        <header class="hero-section"
+            style="min-height: 50vh; background-image: url('/images/classroom_boys.jpg'); align-items: center;">
+            <div class="hero-overlay"></div>
+            <div class="container hero-content text-center animate-up">
+                <h1 class="display-3 fw-bold">Contact <span class="text-accent">Us</span></h1>
+                <p class="lead text-white-50 mx-auto" style="max-width: 600px;">
+                    We'd love to hear from you. Get in touch with us for any queries.
+                </p>
+            </div>
+        </header>
+
+        <section class="section-padding bg-white">
+            <div class="container">
+                <div class="row g-5">
+                    <!-- Contact Info -->
+                    <div class="col-lg-5 animate-up">
+                        <div class="pe-lg-5">
+                            <span class="section-label">Get in Touch</span>
+                            <h2 class="section-title mb-4">Contact Information</h2>
+                            <p class="text-muted mb-5">Have unique administration needs or questions about admissions?
+                                Our
+                                team is ready to help you.</p>
+
+                            <div class="d-flex gap-4 mb-4">
+                                <div class="flex-shrink-0 icon-box ms-0 mb-0 bg-primary-subtle text-primary"
+                                    style="width: 50px; height: 50px; font-size: 1.2rem;">
+                                    <i class="fas fa-map-marker-alt"></i>
+                                </div>
+                                <div>
+                                    <h5 class="fw-bold mb-1">Our Location</h5>
+                                    <p class="text-muted">
+                                        <%= (typeof settings !=='undefined' && settings.school_address) ?
+                                            settings.school_address : "Main Road, Khairpur Mir's, Sindh" %>
+                                    </p>
+                                </div>
+                            </div>
+
+                            <div class="d-flex gap-4 mb-4">
+                                <div class="flex-shrink-0 icon-box ms-0 mb-0 bg-primary-subtle text-primary"
+                                    style="width: 50px; height: 50px; font-size: 1.2rem;">
+                                    <i class="fas fa-phone-alt"></i>
+                                </div>
+                                <div>
+                                    <h5 class="fw-bold mb-1">Phone Number</h5>
+                                    <p class="text-muted">
+                                        <%= (typeof settings !=='undefined' && settings.school_phone) ?
+                                            settings.school_phone : "+92 123 4567890" %>
+                                    </p>
+                                </div>
+                            </div>
+
+                            <div class="d-flex gap-4 mb-4">
+                                <div class="flex-shrink-0 icon-box ms-0 mb-0 bg-primary-subtle text-primary"
+                                    style="width: 50px; height: 50px; font-size: 1.2rem;">
+                                    <i class="fas fa-envelope"></i>
+                                </div>
+                                <div>
+                                    <h5 class="fw-bold mb-1">Email Address</h5>
+                                    <p class="text-muted">
+                                        <%= (typeof settings !=='undefined' && settings.school_email) ?
+                                            settings.school_email : "info@waqar.edu.pk" %>
+                                    </p>
+                                </div>
+                            </div>
+
+                            <div class="mt-5">
+                                <h6 class="fw-bold mb-3">Follow Us</h6>
+                                <div class="d-flex gap-2">
+                                    <a href="<%= (typeof settings !== 'undefined' && settings.social_facebook) ? settings.social_facebook : '#' %>"
+                                        class="social-icon bg-light text-dark shadow-sm"><i
+                                            class="fab fa-facebook-f"></i></a>
+                                    <a href="<%= (typeof settings !== 'undefined' && settings.social_twitter) ? settings.social_twitter : '#' %>"
+                                        class="social-icon bg-light text-dark shadow-sm"><i
+                                            class="fab fa-twitter"></i></a>
+                                    <a href="<%= (typeof settings !== 'undefined' && settings.social_instagram) ? settings.social_instagram : '#' %>"
+                                        class="social-icon bg-light text-dark shadow-sm"><i
+                                            class="fab fa-instagram"></i></a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Contact Form -->
+                    <div class="col-lg-7 animate-up delay-200">
+                        <div class="card border-0 shadow-lg rounded-4 p-5">
+                            <h3 class="fw-bold mb-4">Send us a Message</h3>
+                            <form>
+                                <div class="row g-3">
+                                    <div class="col-md-6">
+                                        <label class="form-label fw-bold small">Your Name</label>
+                                        <input type="text" class="form-control bg-light border-0 py-3 rounded-3"
+                                            placeholder="John Doe">
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label class="form-label fw-bold small">Email Address</label>
+                                        <input type="email" class="form-control bg-light border-0 py-3 rounded-3"
+                                            placeholder="john@example.com">
+                                    </div>
+                                    <div class="col-12">
+                                        <label class="form-label fw-bold small">Subject</label>
+                                        <input type="text" class="form-control bg-light border-0 py-3 rounded-3"
+                                            placeholder="Admission Inquiry">
+                                    </div>
+                                    <div class="col-12">
+                                        <label class="form-label fw-bold small">Message</label>
+                                        <textarea class="form-control bg-light border-0 py-3 rounded-3" rows="5"
+                                            placeholder="Write your message here..."></textarea>
+                                    </div>
+                                    <div class="col-12">
+                                        <button type="button" class="btn btn-login px-5 py-3 w-100">Send
+                                            Message</button>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Map Section (Optional Placeholder) -->
+        <section class="w-100 bg-light" style="height: 400px;">
+            <iframe
+                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d14041.015243874312!2d68.75!3d27.53!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3935db0000000001%3A0x123456789abcdef!2sKhairpur%20Mirs%2C%20Sindh%2C%20Pakistan!5e0!3m2!1sen!2s!4v1600000000000!5m2!1sen!2s"
+                width="100%" height="100%" style="border:0;" allowfullscreen="" loading="lazy"></iframe>
+        </section>
+
+        <%- include('partials/frontend_footer') %>

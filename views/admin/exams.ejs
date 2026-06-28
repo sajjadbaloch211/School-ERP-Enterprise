@@ -1,116 +1,118 @@
 <%- include('../partials/header') %>
 
-    <div class="admin-layout animate-fade-in" style="margin-top: 80px;">
-        <!-- Sidebar -->
-        <!-- Sidebar -->
-        <%- include('../partials/sidebar', { active: 'exams' }) %>
+  <!-- ════════════════════════════════════════════════════════════
+       ADMIN LAYOUT
+       ════════════════════════════════════════════════════════════ -->
+  <div class="adm-layout">
 
-            <main class="main-content">
-                <header
-                    style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 3rem;">
-                    <div>
-                        <h2 style="font-size: 2rem; font-weight: 800; color: var(--primary);">Exam Management</h2>
-                        <p style="color: var(--text-muted);">Create exams and manage results</p>
-                    </div>
-                    <button class="btn-primary" onclick="document.getElementById('addExamModal').style.display='flex'"
-                        style="padding: 12px 25px; border-radius: 50px; display: flex; align-items: center; gap: 10px;">
-                        <i class="fas fa-plus"></i> Create Exam
-                    </button>
-                </header>
+    <!-- Sidebar -->
+    <%- include('../partials/sidebar', { active: 'exams' }) %>
 
-                <!-- Exams Grid -->
-                <div class="grid" style="grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 2rem;">
-                    <% if(exams.length===0) { %>
-                        <div style="grid-column: 1/-1; text-align: center; padding: 5rem; opacity: 0.6;">
-                            <i class="fas fa-clipboard-list"
-                                style="font-size: 4rem; color: var(--text-muted); margin-bottom: 1.5rem;"></i>
-                            <h3 style="color: var(--primary); font-weight: 700;">No Exams Created</h3>
-                            <p>Click "Create Exam" to start.</p>
-                        </div>
-                        <% } %>
+    <!-- ══ MAIN CONTENT ══════════════════════════════════════════ -->
+    <main class="adm-main" role="main" aria-label="Exam Management">
 
-                            <% exams.forEach(exam=> { %>
-                                <div class="card animate-slide-up" style="position: relative;">
-                                    <div
-                                        style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 1rem;">
-                                        <span
-                                            style="background: #ecfdf5; color: #10b981; padding: 5px 12px; border-radius: 20px; font-weight: 600; font-size: 0.8rem;">
-                                            <i class="fas fa-calendar-check" style="margin-right: 5px;"></i> Active
-                                        </span>
-                                        <a href="/admin/exams/delete/<%= exam.id %>"
-                                            onclick="return confirm('Delete this exam? All results will be lost.')"
-                                            style="color: var(--text-muted); padding: 5px;">
-                                            <i class="fas fa-trash"></i>
-                                        </a>
-                                    </div>
-
-                                    <h3
-                                        style="font-size: 1.4rem; font-weight: 800; color: var(--primary); margin-bottom: 0.5rem;">
-                                        <%= exam.exam_name %>
-                                    </h3>
-                                    <% if (typeof isSuperAdmin !=='undefined' && isSuperAdmin && exam.campus_name) { %>
-                                        <div style="margin-bottom: 0.5rem;">
-                                            <span
-                                                style="background: #e0f2fe; color: var(--primary); padding: 4px 10px; border-radius: 8px; font-size: 0.8rem; font-weight: 600;">
-                                                <i class="fas fa-building"></i>
-                                                <%= exam.campus_name %>
-                                            </span>
-                                        </div>
-                                        <% } %>
-                                            <div
-                                                style="color: var(--text-muted); font-size: 0.9rem; margin-bottom: 1.5rem;">
-                                                <i class="far fa-clock" style="margin-right: 5px;"></i>
-                                                <%= new Date(exam.start_date).toLocaleDateString() %> - <%=
-                                                        exam.end_date ? new Date(exam.end_date).toLocaleDateString()
-                                                        : 'Ongoing' %>
-                                            </div>
-
-                                            <a href="/admin/exams/<%= exam.id %>/results" class="btn-primary"
-                                                style="display: block; text-align: center; border-radius: 12px; padding: 12px;">
-                                                View Results <i class="fas fa-arrow-right"
-                                                    style="margin-left: 5px;"></i>
-                                            </a>
-                                </div>
-                                <% }); %>
-                </div>
-            </main>
-    </div>
-
-    <!-- Add Modal -->
-    <div id="addExamModal" class="modal"
-        style="display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.5); backdrop-filter: blur(4px); z-index: 9999; align-items: center; justify-content: center;">
-        <div class="glass animate-slide-up"
-            style="width: 100%; max-width: 500px; padding: 2rem; border-radius: 24px; background: white;">
-            <h3 style="margin-bottom: 1.5rem; color: var(--primary);">Create New Exam</h3>
-            <form action="/admin/exams/add" method="POST">
-                <input type="hidden" name="_csrf" value="<%= typeof csrfToken !== 'undefined' ? csrfToken : '' %>">
-                <div class="form-group mb-3">
-                    <label style="font-weight: 600; margin-bottom: 0.5rem; display: block;">Exam Name</label>
-                    <input type="text" name="exam_name" required placeholder="e.g. Mid Term 2024" class="form-control"
-                        style="width: 100%; padding: 12px; border-radius: 12px; border: 1px solid #ddd;">
-                </div>
-
-                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1.5rem;">
-                    <div class="form-group">
-                        <label style="font-weight: 600; margin-bottom: 0.5rem; display: block;">Start Date</label>
-                        <input type="date" name="start_date" required class="form-control"
-                            style="width: 100%; padding: 12px; border-radius: 12px; border: 1px solid #ddd;">
-                    </div>
-                    <div class="form-group">
-                        <label style="font-weight: 600; margin-bottom: 0.5rem; display: block;">End Date</label>
-                        <input type="date" name="end_date" class="form-control"
-                            style="width: 100%; padding: 12px; border-radius: 12px; border: 1px solid #ddd;">
-                    </div>
-                </div>
-
-                <div style="display: flex; gap: 10px; justify-content: flex-end;">
-                    <button type="button" onclick="document.getElementById('addExamModal').style.display='none'"
-                        class="btn"
-                        style="background: transparent; color: var(--text-muted); font-weight: 600;">Cancel</button>
-                    <button type="submit" class="btn-primary" style="padding: 12px 25px;">Create Exam</button>
-                </div>
-            </form>
+      <!-- ── Page Header ── -->
+      <div class="adm-page-header">
+        <div>
+          <h1 class="adm-page-title">Exam Management</h1>
+          <p class="adm-page-subtitle">Create exams, manage schedules, and track results</p>
         </div>
-    </div>
+        <div>
+          <button class="adm-btn adm-btn-primary" onclick="window.openModal('addExamModal')">
+            <i class="fas fa-plus-circle" aria-hidden="true"></i> Create Exam
+          </button>
+        </div>
+      </div>
 
-    <%- include('../partials/footer') %>
+      <!-- ── Exams Grid ── -->
+      <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 1.5rem;">
+        
+        <% if (exams.length === 0) { %>
+          <div style="grid-column: 1 / -1; padding: 4.5rem; text-align: center; color: var(--adm-text-muted); background: var(--adm-bg-surface); border-radius: var(--adm-r-lg); border: 1px dashed var(--adm-border);">
+            <i class="fas fa-clipboard-list" style="font-size: 2.5rem; opacity: 0.25; display: block; margin-bottom: 1rem;" aria-hidden="true"></i>
+            <h3 style="color: var(--adm-text-primary); font-weight: 700; margin-bottom: 0.5rem;">No Exams Created</h3>
+            <p>Click "Create Exam" to schedule your first assessment.</p>
+          </div>
+        <% } %>
+
+        <% exams.forEach(exam => { %>
+          <article class="adm-card" style="padding: 1.5rem; display: flex; flex-direction: column;">
+            
+            <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 1rem;">
+              <span class="adm-badge adm-badge-green" style="font-size: 0.75rem;">
+                <i class="fas fa-calendar-check" aria-hidden="true" style="margin-right: 0.25rem;"></i> Active
+              </span>
+              <a href="/admin/exams/delete/<%= exam.id %>" onclick="return confirm('Delete this exam? All results will be lost forever.')" class="adm-btn adm-btn-ghost adm-btn-danger" style="padding: 0.5rem; margin: -0.5rem;" aria-label="Delete Exam">
+                <i class="fas fa-trash-alt" aria-hidden="true"></i>
+              </a>
+            </div>
+
+            <h3 style="font-size: 1.3rem; font-weight: 800; color: var(--adm-text-primary); margin-bottom: 0.5rem;">
+              <%= exam.exam_name %>
+            </h3>
+
+            <% if (typeof isSuperAdmin !== 'undefined' && isSuperAdmin && exam.campus_name) { %>
+              <div style="margin-bottom: 0.5rem;">
+                <span class="adm-badge adm-badge-blue" style="font-size: 0.75rem;">
+                  <i class="fas fa-building" aria-hidden="true" style="margin-right: 0.25rem;"></i> <%= exam.campus_name %>
+                </span>
+              </div>
+            <% } %>
+
+            <div style="color: var(--adm-text-muted); font-size: 0.85rem; font-weight: 600; margin-bottom: 1.5rem; display: flex; align-items: center; gap: 0.5rem;">
+              <i class="far fa-clock" aria-hidden="true"></i>
+              <%= new Date(exam.start_date).toLocaleDateString() %> - <%= exam.end_date ? new Date(exam.end_date).toLocaleDateString() : 'Ongoing' %>
+            </div>
+
+            <a href="/admin/exams/<%= exam.id %>/results" class="adm-btn adm-btn-ghost" style="width: 100%; justify-content: center; background: var(--adm-indigo-bg); color: var(--adm-indigo); margin-top: auto;">
+              View Results <i class="fas fa-arrow-right" aria-hidden="true" style="margin-left: 0.25rem; font-size: 0.8rem;"></i>
+            </a>
+
+          </article>
+        <% }); %>
+
+      </div>
+    </main>
+  </div>
+
+  <!-- ══ MODALS ══════════════════════════════════════════════════ -->
+
+  <!-- Add Exam Modal -->
+  <div id="addExamModal" class="adm-modal" aria-labelledby="addExamModalTitle" aria-hidden="true" role="dialog">
+    <div class="adm-modal-content">
+      <div class="adm-modal-header">
+        <h2 id="addExamModalTitle" class="adm-modal-title">Create New Exam</h2>
+        <button type="button" class="adm-modal-close" onclick="window.closeModal('addExamModal')" aria-label="Close modal">
+          <i class="fas fa-times" aria-hidden="true"></i>
+        </button>
+      </div>
+      <div class="adm-modal-body">
+        <form action="/admin/exams/add" method="POST">
+          <input type="hidden" name="_csrf" value="<%= typeof csrfToken !== 'undefined' ? csrfToken : '' %>">
+          
+          <div class="adm-form-group">
+            <label for="examNameInput" class="adm-label">Exam Name</label>
+            <input type="text" name="exam_name" id="examNameInput" required placeholder="e.g. Mid Term 2024" class="adm-input">
+          </div>
+
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 2rem;">
+            <div>
+              <label for="startDateInput" class="adm-label">Start Date</label>
+              <input type="date" name="start_date" id="startDateInput" required class="adm-input">
+            </div>
+            <div>
+              <label for="endDateInput" class="adm-label">End Date (Optional)</label>
+              <input type="date" name="end_date" id="endDateInput" class="adm-input">
+            </div>
+          </div>
+
+          <div class="adm-modal-footer">
+            <button type="button" class="adm-btn adm-btn-ghost" onclick="window.closeModal('addExamModal')">Cancel</button>
+            <button type="submit" class="adm-btn adm-btn-primary">Create Exam</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+<%- include('../partials/footer') %>
